@@ -1,7 +1,0 @@
-表的命名复数形式
-自增主键了
-file应该用id标明
-Ownership这个名字。。。。
-private Integer begin;
-private Integer end;
-end是SQL语句中的保留字
