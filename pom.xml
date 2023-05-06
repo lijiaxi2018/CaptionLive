@@ -11,7 +11,7 @@
     <groupId>com.example</groupId>
     <artifactId>CaptionLive</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>LL</name>
+    <name>CaptionLive</name>
     <description>LL</description>
     <properties>
         <java.version>17</java.version>
