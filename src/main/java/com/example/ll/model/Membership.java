@@ -5,11 +5,11 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table
-public class MemberShip {
+@Table(name = "memberships")
+public class Membership {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long memberShipId;
+    private Long membershipId;
 
     private Long userId;
 
