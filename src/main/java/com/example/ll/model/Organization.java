@@ -1,0 +1,22 @@
+package com.example.ll.model;
+
+
+import jakarta.persistence.*;
+import lombok.Data;
+
+@Data
+@Entity
+@Table
+public class Organization {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long organizationId;
+
+    private String name;
+
+    private String description;
+
+    private String avatar;
+
+}
