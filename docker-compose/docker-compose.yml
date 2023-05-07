@@ -1,0 +1,19 @@
+version: "3.7"
+
+services:
+  db:
+    image: postgres:14.7
+    container_name: captionlive_db
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=114514
+
+  api:
+    image: cl_api
+    depends_on:
+      - db
+    container_name: captionlive_api
+    ports:
+      - "8081:8081"
