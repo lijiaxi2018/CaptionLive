@@ -3,7 +3,13 @@ spring:
     url: jdbc:postgresql://localhost:5432/postgres
     username: postgres
     password: 114514
+  
   jpa:
     hibernate:
       ddl-auto: validate
     show-sql: true
+
+# Swagger UI Description
+apiTitle: "CaptionLive! API"
+apiDescription: "A Project Management System for Fansub Group, developed by Aguri's GRavity Lab. See the GitHub page for more information at https://github.com/lijiaxi2018/CaptionLive"
+apiVersion: "0.1"
