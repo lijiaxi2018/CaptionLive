@@ -34,3 +34,6 @@ build/
 
 ### Mac Environment ###
 .DS_Store
+
+### Docker Data ###
+.docker-data/
