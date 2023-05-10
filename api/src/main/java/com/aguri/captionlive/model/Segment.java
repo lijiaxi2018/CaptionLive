@@ -3,8 +3,11 @@ package com.aguri.captionlive.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -22,10 +25,14 @@ public class Segment {
 
     private String summary;
 
-//    @Temporal(TemporalType.TIMESTAMP)
     private Integer beginTime;
 
-//    @Temporal(TemporalType.TIMESTAMP)
     private Integer endTime;
+
+    @UpdateTimestamp
+    private LocalDateTime updateTime;
+
+    @CreationTimestamp
+    private LocalDateTime createTime;
 
 }

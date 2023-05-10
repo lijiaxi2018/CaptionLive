@@ -3,6 +3,10 @@ package com.aguri.captionlive.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -16,5 +20,11 @@ public class Ownership {
     private Long projectId;
 
     private Long organizationId;
+
+    @UpdateTimestamp
+    private LocalDateTime updateTime;
+
+    @CreationTimestamp
+    private LocalDateTime createTime;
 
 }
