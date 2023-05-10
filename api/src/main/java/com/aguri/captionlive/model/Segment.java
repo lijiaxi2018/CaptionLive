@@ -29,9 +29,9 @@ public class Segment {
     private Integer endTime;
 
     @UpdateTimestamp
-    private LocalDateTime updateTime;
+    private LocalDateTime lastUpdatedTime;
 
     @CreationTimestamp
-    private LocalDateTime createTime;
+    private LocalDateTime createdTime;
 
 }

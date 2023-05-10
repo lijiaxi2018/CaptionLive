@@ -22,9 +22,9 @@ public class Ownership {
     private Long organizationId;
 
     @UpdateTimestamp
-    private LocalDateTime updateTime;
+    private LocalDateTime lastUpdatedTime;
 
     @CreationTimestamp
-    private LocalDateTime createTime;
+    private LocalDateTime createdTime;
 
 }

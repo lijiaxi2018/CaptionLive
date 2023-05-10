@@ -29,9 +29,9 @@ public class User {
     private String email;
 
     @UpdateTimestamp
-    private LocalDateTime updateTime;
+    private LocalDateTime lastUpdatedTime;
 
     @CreationTimestamp
-    private LocalDateTime createTime;
+    private LocalDateTime createdTime;
 
 }

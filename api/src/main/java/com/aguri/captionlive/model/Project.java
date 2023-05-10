@@ -22,9 +22,9 @@ public class Project {
     private Integer type;
 
     @UpdateTimestamp
-    private LocalDateTime updateTime;
+    private LocalDateTime lastUpdatedTime;
 
     @CreationTimestamp
-    private LocalDateTime createTime;
+    private LocalDateTime createdTime;
 
 }

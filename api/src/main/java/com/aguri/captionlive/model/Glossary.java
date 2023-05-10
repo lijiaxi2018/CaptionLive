@@ -30,8 +30,8 @@ public class Glossary {
     private String category;
 
     @UpdateTimestamp
-    private LocalDateTime updateTime;
+    private LocalDateTime lastUpdatedTime;
 
     @CreationTimestamp
-    private LocalDateTime createTime;
+    private LocalDateTime createdTime;
 }
