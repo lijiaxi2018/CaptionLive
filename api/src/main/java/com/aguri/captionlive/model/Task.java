@@ -2,8 +2,11 @@ package com.aguri.captionlive.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
-import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -21,8 +24,14 @@ public class Task {
 
     private Long Worker;
 
-    private Timestamp acceptedTime;
+    private LocalDate acceptedTime;
 
     private Long FileId;
+
+    @UpdateTimestamp
+    private LocalDateTime lastUpdatedTime;
+
+    @CreationTimestamp
+    private LocalDateTime createdTime;
 
 }
