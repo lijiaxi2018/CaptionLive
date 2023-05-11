@@ -1,4 +1,4 @@
-name: Push Images to DockerHub
+name: Push Docker Images to DockerHub
 
 on:
   push:
@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Build API Image
+      - name: Build Images
         working-directory: ./api
         run: |
           docker build --no-cache -t cl_api -f DockerFile .
