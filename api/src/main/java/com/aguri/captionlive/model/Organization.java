@@ -1,6 +1,7 @@
 package com.aguri.captionlive.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -23,9 +24,11 @@ public class Organization {
 
     private String avatar;
 
+    @JsonIgnore
     @UpdateTimestamp
     private LocalDateTime lastUpdatedTime;
 
+    @JsonIgnore
     @CreationTimestamp
     private LocalDateTime createdTime;
 
