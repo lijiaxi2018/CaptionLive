@@ -1,6 +1,7 @@
 package com.aguri.captionlive.controller;
 
 
+import com.aguri.captionlive.common.exception.resp.Resp;
 import com.aguri.captionlive.model.User;
 import com.aguri.captionlive.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,34 +10,35 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 public class UserController {
 
     @Autowired
     private UserService userService;
 
     @GetMapping("/")
-    public List<User> getAllUsers() {
-        return userService.getAllUsers();
+    public Resp getAllUsers() {
+        return Resp.success(userService.getAllUsers());
     }
 
     @GetMapping("/{id}")
-    public User getUserById(@PathVariable Long id) {
-        return userService.getUserById(id);
+    public Resp getUserById(@PathVariable Long id) {
+        return Resp.success(userService.getUserById(id));
     }
 
     @PostMapping("/")
-    public User createUser(@RequestBody User user) {
-        return userService.createUser(user);
+    public Resp createUser(@RequestBody User user) {
+        return Resp.success(userService.createUser(user));
     }
 
     @PutMapping("/{id}")
-    public User updateUser(@PathVariable Long id, @RequestBody User user) {
-        return userService.updateUser(id, user);
+    public Resp updateUser(@PathVariable Long id, @RequestBody User user) {
+        return Resp.success(userService.updateUser(id, user));
     }
 
     @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable Long id) {
+        //actually, we need one column called "deleted" to impl logical delete.
         userService.deleteUser(id);
     }
 }
