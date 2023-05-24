@@ -1,4 +1,4 @@
-package com.aguri.captionlive.common.exception.resp;
+package com.aguri.captionlive.common.resp;
 
 public class Resp {
     public String message;

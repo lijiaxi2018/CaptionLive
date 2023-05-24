@@ -1,13 +1,11 @@
 package com.aguri.captionlive.controller;
 
 
-import com.aguri.captionlive.common.exception.resp.Resp;
+import com.aguri.captionlive.common.resp.Resp;
 import com.aguri.captionlive.model.User;
 import com.aguri.captionlive.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
