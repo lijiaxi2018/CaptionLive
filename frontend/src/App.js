@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
-import Sidebar from './components/Sidebar/Sidebar';
+import Sidebar from './components/Layout/Sidebar/Sidebar';
 import MyHome from './pages/MyHome';
 import MyOrganizations from './pages/MyOrganizations';
 import MyProjects from './pages/MyProjects';
