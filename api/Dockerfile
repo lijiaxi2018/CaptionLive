@@ -4,9 +4,7 @@ RUN apk add --no-cache curl tar bash procps
 
 ARG MAVEN_VERSION=3.9.1
 
-# 创建存储文件的目录
 RUN mkdir -p /app/files
-# 定义工作目录
 WORKDIR /app
 
 ARG USER_HOME_DIR="/root"
