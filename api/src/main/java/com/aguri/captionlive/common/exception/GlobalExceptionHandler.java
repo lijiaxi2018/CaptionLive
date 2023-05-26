@@ -21,8 +21,5 @@ public class GlobalExceptionHandler {
         System.out.println(ex.fillInStackTrace());
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
-
-    // 其他异常处理方法...
-
 }
 
