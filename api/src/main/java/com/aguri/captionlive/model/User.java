@@ -25,9 +25,12 @@ public class User {
 
     private String qq;
 
-    private String avatar;
+    private Long avatar;
 
     private String email;
+
+    @Column(columnDefinition = "TEXT")
+    private String description;
 
     @JsonIgnore
     @UpdateTimestamp
