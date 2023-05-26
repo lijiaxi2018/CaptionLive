@@ -22,7 +22,7 @@ public class Organization {
 
     private String description;
 
-    private String avatar;
+    private Long avatar;
 
     @JsonIgnore
     @UpdateTimestamp

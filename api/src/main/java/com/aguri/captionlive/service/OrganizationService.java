@@ -1,6 +1,7 @@
 package com.aguri.captionlive.service;
 
 import com.aguri.captionlive.model.Organization;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -15,4 +16,6 @@ public interface OrganizationService {
     Organization updateOrganization(Long id, Organization organization);
 
     void deleteOrganization(Long id);
+
+    Organization saveAvatarToStorage(Long id, MultipartFile file);
 }

@@ -63,13 +63,6 @@ public class UserController {
         return Resp.success(userService.updateUser(id, user));
     }
 
-    @PostMapping("/uploadAvatar/{id}")
-    public Resp uploadAvatar(@PathVariable Long id, @RequestParam MultipartFile file) {
-        User user = userService.saveAvatarToStorage(id, file);
-        return Resp.success(user);
-    }
-
-
     @PostMapping("/signIn")
     public Resp signIn(@RequestBody SignInRequest signInRequest) {
         String password = signInRequest.getPassword();
@@ -84,15 +77,10 @@ public class UserController {
         return Resp.success(data);
     }
 
-    @GetMapping("/avatar/{fileRecordId}")
-    public ResponseEntity<Resource> getAvatar(@PathVariable Long fileRecordId) {
-        FileRecord fileRecord = fileRecordService.getFileRecordById(fileRecordId);
-        String filePath = fileRecord.getPath();
-        String storedName = fileRecord.getStoredName();
-        Resource fileResource = new FileSystemResource(filePath + File.separator + storedName);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.valueOf(fileRecord.getType()));
-        return new ResponseEntity<>(fileResource, headers, HttpStatus.OK);
+    @PostMapping("/uploadAvatar/{id}")
+    public Resp uploadAvatar(@PathVariable Long id, @RequestParam MultipartFile file) {
+        User user = userService.saveAvatarToStorage(id, file);
+        return Resp.success(user);
     }
 
 

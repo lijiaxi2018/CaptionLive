@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -84,14 +85,13 @@ public class UserServiceImpl implements UserService {
     }
 
 
-
     @Override
     public User saveAvatarToStorage(Long id, MultipartFile file) {
         System.out.println(file);
         User user = getUserById(id);
         if (!file.isEmpty()) {
             try {
-                FileRecord fileRecord = fileRecordService.saveFile(file, id.toString());
+                FileRecord fileRecord = fileRecordService.saveFile(file, "avatar" + File.separator + "user" + File.separator + id.toString());
                 user.setAvatar(fileRecord.getFileRecordId());
             } catch (IOException e) {
                 e.printStackTrace();
