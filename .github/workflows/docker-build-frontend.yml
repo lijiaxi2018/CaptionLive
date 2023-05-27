@@ -1,0 +1,15 @@
+name: Build Frontend Image
+
+on:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build_images:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build Frontend Image
+        working-directory: ./frontend
+        run: |
+          docker build --no-cache -t cl_frontend -f DockerFile .
