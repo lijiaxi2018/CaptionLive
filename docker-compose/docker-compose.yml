@@ -33,3 +33,9 @@ services:
     container_name: captionlive_api
     ports:
       - "8080:8080"
+  
+  frontend:
+    image: lijiaxi2018/cl_frontend
+    container_name: captionlive_frontend
+    ports:
+      - "3000:3000"

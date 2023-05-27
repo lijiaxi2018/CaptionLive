@@ -2,12 +2,21 @@
 Web server for CaptionLive!.
 
 ## Swagger
-Graphical User Interface to test APIs provided by the server.
+Graphical UI to test APIs provided by the server.
 
-### To manipulate the DB with Swagger UI
+### To test the APIs with Swagger UI
 Enter the following URL into the browser
 ```
 http://localhost:8080/swagger-ui/index.html#/
+```
+
+## PgAdmin
+Graphical UI to investigate the database.
+
+### To manipulate the DB with PgAdmin
+Enter the following URL into the browser
+```
+http://localhost:80/
 ```
 
 ## Spring Backend
