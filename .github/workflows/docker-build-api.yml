@@ -1,4 +1,4 @@
-name: Build Docker Images
+name: Build API Image
 
 on:
   pull_request:
