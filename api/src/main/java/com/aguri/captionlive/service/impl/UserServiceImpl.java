@@ -1,16 +1,15 @@
 package com.aguri.captionlive.service.impl;
 
 import com.aguri.captionlive.common.exception.EntityNotFoundException;
-import com.aguri.captionlive.model.Access;
-import com.aguri.captionlive.model.FileRecord;
-import com.aguri.captionlive.model.Membership;
-import com.aguri.captionlive.model.User;
+import com.aguri.captionlive.model.*;
 import com.aguri.captionlive.repository.AccessRepository;
 import com.aguri.captionlive.repository.MembershipRepository;
+import com.aguri.captionlive.repository.ProjectRepository;
 import com.aguri.captionlive.repository.UserRepository;
 import com.aguri.captionlive.service.FileRecordService;
 import com.aguri.captionlive.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,6 +31,10 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private FileRecordService fileRecordService;
+
+    @Autowired
+    private ProjectRepository projectRepository;
+
 
     @Override
     public List<User> getAllUsers() {
@@ -86,8 +89,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public User saveAvatarToStorage(Long id, MultipartFile file) {
-        System.out.println(file);
+    public User uploadAvatar(Long id, MultipartFile file) {
         User user = getUserById(id);
         if (!file.isEmpty()) {
             try {
@@ -98,5 +100,19 @@ public class UserServiceImpl implements UserService {
             }
         }
         return updateUser(id, user);
+    }
+
+    @Override
+    public List<Project> getAllAccessibleProjects(Long userId) {
+        List<Access> accesses = accessRepository.findAllByUserId(userId);
+        List<Long> userIds = accesses.stream().map(Access::getUserId).toList();
+        return projectRepository.findAllById(userIds);
+    }
+
+    @Override
+    public List<Project> getAllCommittedProjects(Long id) {
+        List<Access> accesses = accessRepository.findAllByUserIdAndCommitment(id, Access.Commitment.COMMITTED);
+        List<Long> userIds = accesses.stream().map(Access::getUserId).toList();
+        return projectRepository.findAllById(userIds);
     }
 }

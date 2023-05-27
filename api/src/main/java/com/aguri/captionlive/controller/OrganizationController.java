@@ -3,12 +3,15 @@ package com.aguri.captionlive.controller;
 
 import com.aguri.captionlive.common.resp.Resp;
 import com.aguri.captionlive.model.Organization;
+import com.aguri.captionlive.model.Project;
+import com.aguri.captionlive.model.User;
 import com.aguri.captionlive.service.OrganizationService;
 import com.aguri.captionlive.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -23,21 +26,21 @@ public class OrganizationController {
     private UserService userService;
 
     @GetMapping
-    public ResponseEntity<List<Organization>> getAllOrganizations() {
+    public ResponseEntity<Resp> getAllOrganizations() {
         List<Organization> organizations = organizationService.getAllOrganizations();
-        return ResponseEntity.ok(organizations);
+        return ResponseEntity.ok(Resp.ok(organizations));
     }
 
     @PostMapping
-    public ResponseEntity<Organization> createOrganization(@RequestBody Organization organization) {
+    public ResponseEntity<Resp> createOrganization(@RequestBody Organization organization) {
         Organization createdOrganization = organizationService.createOrganization(organization);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdOrganization);
+        return ResponseEntity.status(HttpStatus.CREATED).body(Resp.ok(createdOrganization));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Organization> getOrganizationById(@PathVariable Long id) {
+    public ResponseEntity<Resp> getOrganizationById(@PathVariable Long id) {
         Organization organization = organizationService.getOrganizationById(id);
-        return ResponseEntity.ok(organization);
+        return ResponseEntity.ok(Resp.ok(organization));
     }
 
     @DeleteMapping("/{id}")
@@ -47,17 +50,28 @@ public class OrganizationController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Organization> updateOrganization(@PathVariable Long id, @RequestBody Organization organization) {
+    public ResponseEntity<Resp> updateOrganization(@PathVariable Long id, @RequestBody Organization organization) {
         Organization updatedOrganization = organizationService.updateOrganization(id, organization);
-        return ResponseEntity.ok(updatedOrganization);
+        return ResponseEntity.ok(Resp.ok(updatedOrganization));
     }
 
     @GetMapping("/getAllUsers/{organizationId}")
-    public Resp getAllUsersByOrganizationId(@PathVariable Long organizationId) {
+    public ResponseEntity<Resp> getAllUsersByOrganizationId(@PathVariable Long organizationId) {
         organizationService.getOrganizationById(organizationId);
-        return Resp.success(userService.getUsersByOrganizationId(organizationId));
+        List<User> users = userService.getUsersByOrganizationId(organizationId);
+        return ResponseEntity.ok(Resp.ok(users));
     }
 
+    @PostMapping("/uploadAvatar/{id}")
+    public ResponseEntity<Resp> uploadAvatar(@PathVariable Long id, @RequestParam MultipartFile file) {
+        Organization organization = organizationService.saveAvatarToStorage(id, file);
+        return ResponseEntity.ok(Resp.ok(organization));
+    }
 
+    @GetMapping("/getAllProjects/{organizationId}")
+    public ResponseEntity<Resp> getAllProjects(@PathVariable Long organizationId) {
+        List<Project> projects = organizationService.getAllProjects(organizationId);
+        return ResponseEntity.ok(Resp.ok(projects));
+    }
 
 }

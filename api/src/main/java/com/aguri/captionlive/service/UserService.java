@@ -1,5 +1,6 @@
 package com.aguri.captionlive.service;
 
+import com.aguri.captionlive.model.Project;
 import com.aguri.captionlive.model.User;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,5 +24,9 @@ public interface UserService {
 
     List<User>  getUsersByProjectId(Long projectId);
 
-    User saveAvatarToStorage(Long id, MultipartFile file);
+    User uploadAvatar(Long id, MultipartFile file);
+
+    List<Project> getAllAccessibleProjects(Long userId);
+
+    List<Project> getAllCommittedProjects(Long id);
 }

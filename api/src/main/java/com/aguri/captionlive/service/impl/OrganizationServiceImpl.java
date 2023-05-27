@@ -3,7 +3,11 @@ package com.aguri.captionlive.service.impl;
 import com.aguri.captionlive.common.exception.EntityNotFoundException;
 import com.aguri.captionlive.model.FileRecord;
 import com.aguri.captionlive.model.Organization;
+import com.aguri.captionlive.model.Ownership;
+import com.aguri.captionlive.model.Project;
 import com.aguri.captionlive.repository.OrganizationRepository;
+import com.aguri.captionlive.repository.OwnershipRepository;
+import com.aguri.captionlive.repository.ProjectRepository;
 import com.aguri.captionlive.service.FileRecordService;
 import com.aguri.captionlive.service.OrganizationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +23,12 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Autowired
     private OrganizationRepository organizationRepository;
+
+    @Autowired
+    private OwnershipRepository ownershipRepository;
+
+    @Autowired
+    private ProjectRepository projectRepository;
 
     @Override
     public Organization getOrganizationById(Long id) {
@@ -56,7 +66,6 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Override
     public Organization saveAvatarToStorage(Long id, MultipartFile file) {
-        System.out.println(file);
         Organization organization = getOrganizationById(id);
         if (!file.isEmpty()) {
             try {
@@ -67,5 +76,12 @@ public class OrganizationServiceImpl implements OrganizationService {
             }
         }
         return updateOrganization(id, organization);
+    }
+
+    @Override
+    public List<Project> getAllProjects(Long organizationId) {
+        List<Ownership> organizations = ownershipRepository.findAllByOrganizationId(organizationId);
+        List<Long> projectIds = organizations.stream().map(Ownership::getProjectId).toList();
+        return projectRepository.findAllById(projectIds);
     }
 }

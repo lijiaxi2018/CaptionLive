@@ -6,6 +6,12 @@ import com.aguri.captionlive.repository.FileRecordRepository;
 import com.aguri.captionlive.service.FileRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -76,6 +82,15 @@ public class FileRecordServiceImpl implements FileRecordService {
         fileRecord.setPath(filePath);
 
         return fileRecordRepository.save(fileRecord);
+    }
+    @Override
+    public ResponseEntity<Resource> download(FileRecord fileRecord) {
+        String filePath = fileRecord.getPath();
+        String storedName = fileRecord.getStoredName();
+        Resource fileResource = new FileSystemResource(filePath + File.separator + storedName);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.valueOf(fileRecord.getType()));
+        return new ResponseEntity<>(fileResource, headers, HttpStatus.OK);
     }
 
 }

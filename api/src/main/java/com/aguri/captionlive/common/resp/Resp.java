@@ -53,14 +53,14 @@ public class Resp {
         }
     }
 
-    public static Resp success(Object data) {
+    public static Resp ok(Object data) {
         return new Builder()
                 .message("success")
                 .data(data)
                 .build();
     }
 
-    public static Resp success() {
+    public static Resp ok() {
         return new Builder()
                 .message("success")
                 .build();

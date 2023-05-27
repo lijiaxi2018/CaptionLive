@@ -1,5 +1,7 @@
 package com.aguri.captionlive.service;
 import com.aguri.captionlive.model.FileRecord;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -16,5 +18,7 @@ public interface FileRecordService {
     void deleteFileRecord(Long id);
 
     FileRecord saveFile(MultipartFile file,String logicalDirectory) throws IOException;
+
+    ResponseEntity<Resource> download(FileRecord fileRecord);
 
 }

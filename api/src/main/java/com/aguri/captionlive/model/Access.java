@@ -20,9 +20,10 @@ public class Access {
 
     private Long projectId;
 
-    private Integer permission;
+    private Permission permission;
 
-    private Integer commitment;
+    @Enumerated(EnumType.ORDINAL)
+    private Commitment commitment;
 
     @JsonIgnore
     @UpdateTimestamp
@@ -31,5 +32,38 @@ public class Access {
     @JsonIgnore
     @CreationTimestamp
     private LocalDateTime createdTime;
+
+
+    public enum Commitment {
+        NONE(0),
+        COMMITTED(1);
+
+        private final int value;
+
+        Commitment(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+
+    }
+
+    public enum Permission {
+        Creator(0),
+        Editable(1);
+
+        private final int value;
+
+        Permission(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+    }
+
 
 }
