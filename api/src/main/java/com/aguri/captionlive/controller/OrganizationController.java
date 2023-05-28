@@ -83,5 +83,4 @@ public class OrganizationController {
         return ResponseEntity.ok(Resp.ok(projectsInfo));
     }
 
-
 }

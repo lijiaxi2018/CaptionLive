@@ -29,8 +29,11 @@ public class ProjectInfo {
 
         @Data
         public static class TaskInfo {
+
             private String workerName;
+
             private Boolean hasUploadedFile;
+
             private Task.Status status;
         }
 
