@@ -3,17 +3,21 @@ import './App.css';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import Sidebar from './components/Layout/Sidebar/Sidebar';
 
-import MyHome from './pages/MyHome/MyHome';
-
-import MyProjects from './pages/MyProjects/MyProjects';
+import MyHome from './pages/MyHome/MyHome'
 
 import Projects from './pages/MyOrganizations/Projects';
 import Glossaries from './pages/MyOrganizations/Glossaries';
 import AboutOrganization from './pages/MyOrganizations/AboutOrganization';
 
+import CommittedProjects from './pages/MyProjects/CommittedProjects';
+import AccessibleProjects from './pages/MyProjects/AccessibleProjects';
+import AllProjects from './pages/MyProjects/AllProjects';
+
 import AllOrganizations from './pages/AllOrganizations/AllOrganizations';
 
-import Mail from './pages/Mail/Mail';
+import AllMails from './pages/Mail/AllMails';
+import UnreadMails from './pages/Mail/UnreadMails';
+import SentMails from './pages/Mail/SentMails';
 
 function App() {
   return (
@@ -30,11 +34,17 @@ function App() {
           <Route path="/myorganizations/glossaries" element={<Glossaries/>}/>
           <Route path="/myorganizations/aboutorganization" element={<AboutOrganization/>}/>
 
-          <Route path="/myprojects" element={<MyProjects/>}/>
+          <Route path="/myprojects" element={<CommittedProjects/>}/>
+          <Route path="/myprojects/committedprojects" element={<CommittedProjects/>}/>
+          <Route path="/myprojects/accessibleprojects" element={<AccessibleProjects/>}/>
+          <Route path="/myprojects/allprojects" element={<AllProjects/>}/>
 
           <Route path="/allorganizations" element={<AllOrganizations/>}/>
 
-          <Route path="/mail" element={<Mail/>}/>
+          <Route path="/mail" element={<AllMails/>}/>
+          <Route path="/mail/allmails" element={<AllMails/>}/>
+          <Route path="/mail/unreadmails" element={<UnreadMails/>}/>
+          <Route path="/mail/sentmails" element={<SentMails/>}/>
         </Routes>
       </Router>
     </>

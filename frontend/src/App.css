@@ -8,13 +8,17 @@
 }
 
 .myhome,
-.myorganizations, 
-.myprojects,
 .allorganizations,
-.mail,
 .projects,
 .glossaries,
-.aboutorganization {
+.aboutorganization,
+.committedprojects,
+.accessibleprojects,
+.allprojects,
+.allmail,
+.unreadmails,
+.sentmails,
+.request {
   display: flex;
   height: 90vh;
   align-items: center;
