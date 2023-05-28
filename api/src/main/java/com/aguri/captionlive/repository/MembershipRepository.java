@@ -9,5 +9,4 @@ import java.util.List;
 
 @Repository
 public interface MembershipRepository extends JpaRepository<Membership,Long> {
-    List<Membership> findAllByOrganizationId(Long organizationId);
 }

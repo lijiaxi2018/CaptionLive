@@ -7,6 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Entity
@@ -15,6 +16,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private Long userId;
 
     private Integer permission;
@@ -25,7 +27,17 @@ public class User {
 
     private String qq;
 
-    private Long avatar;
+    @OneToOne
+    @JoinColumn(name = "avatar_file_record_id")
+    private FileRecord avatar;
+
+    @ManyToMany
+    @JoinTable(
+            name = "memberships",
+            joinColumns = @JoinColumn(name = "organization_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private List<Organization> organizations;
 
     private String email;
 

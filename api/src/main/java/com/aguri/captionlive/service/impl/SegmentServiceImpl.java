@@ -2,7 +2,6 @@ package com.aguri.captionlive.service.impl;
 
 import com.aguri.captionlive.common.exception.EntityNotFoundException;
 import com.aguri.captionlive.model.Segment;
-import com.aguri.captionlive.model.User;
 import com.aguri.captionlive.repository.SegmentRepository;
 import com.aguri.captionlive.service.SegmentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +31,6 @@ public class SegmentServiceImpl implements SegmentService {
                 .orElseThrow(() -> new EntityNotFoundException("Segment not found with id: " + id));
 
         // Update the segment properties
-        existingSegment.setProjectId(segment.getProjectId());
         existingSegment.setIsGlobal(segment.getIsGlobal());
         existingSegment.setSummary(segment.getSummary());
         existingSegment.setBeginTime(segment.getBeginTime());
@@ -62,6 +60,6 @@ public class SegmentServiceImpl implements SegmentService {
     }
     @Override
     public List<Segment> getAllSegments(Long projectId) {
-        return segmentRepository.findAllByProjectId(projectId);
+        return segmentRepository.findAllByProjectProjectId(projectId);
     }
 }

@@ -18,8 +18,6 @@ public class Segment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long segmentId;
 
-    private Long projectId;
-
     private Boolean isGlobal;
 
     private String summary;
@@ -38,5 +36,9 @@ public class Segment {
 
     @OneToMany(mappedBy = "segment")
     private List<Task> tasks;
+
+    @ManyToOne
+    @JoinColumn(name = "project_id")
+    private Project project;
 
 }

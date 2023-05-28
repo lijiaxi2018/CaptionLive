@@ -20,5 +20,5 @@ public interface OrganizationService {
 
     Organization saveAvatarToStorage(Long id, MultipartFile file);
 
-    List<Project> getAllProjects(Long organizationId);
+    List<Project> getAllProjectsBySearchTxt(Long organizationId, String searchTxt);
 }

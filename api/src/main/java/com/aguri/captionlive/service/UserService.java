@@ -1,5 +1,7 @@
 package com.aguri.captionlive.service;
 
+import com.aguri.captionlive.DTO.UserInfoResponse;
+import com.aguri.captionlive.model.Organization;
 import com.aguri.captionlive.model.Project;
 import com.aguri.captionlive.model.User;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,4 +31,6 @@ public interface UserService {
     List<Project> getAllAccessibleProjects(Long userId);
 
     List<Project> getAllCommittedProjects(Long id);
+
+    UserInfoResponse getUserInfoById(Long userId);
 }
