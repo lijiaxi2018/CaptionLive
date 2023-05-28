@@ -13,22 +13,31 @@ function Sidebar() {
   // const [sidebar, setSidebar] = useState(true); //whether sidebar is visibe
   // // const [expand, setExpand] = useState(true); //whether sidebar is expanded
   // const showSidebar = () => setSidebar(!sidebar); //open or close sidebar
-  const [expanded, setExpanded] = React.useState(true);
+  const [expanded, setExpanded] = React.useState(false);
+  const [activeKey, setActiveKey] = React.useState('1');
   return (
     <div className='sidebar'>
       <IconContext.Provider value={{ color: '#4c4747' }}>
         <Sidenav expanded={expanded}>
-          <Sidenav.Toggle expanded={expanded} onToggle={expanded => setExpanded(expanded)} />
+          <Sidenav.Toggle onToggle={expanded => setExpanded(expanded)} />
           <Sidenav.Body>
-            <Nav activeKey="1">
+            <Nav activeKey={activeKey} onSelect={setActiveKey}>
               <Nav.Item href='/myhome' eventKey="1" icon={<Icon as={AiOutlineHome} size="1em"/>}>
                 我的主页
               </Nav.Item>
               <Nav.Menu eventKey="2" title="我的字幕组" icon={<Icon as={VscOrganization} size="1em"/>}>
-                <Nav.Item href='/myorganizations' eventKey="2-1">烤兔摊字幕组</Nav.Item>
-                <Nav.Item href='/myorganizations' eventKey="2-2">烤鸭摊字幕组</Nav.Item>
-                <Nav.Item href='/myorganizations' eventKey="2-3">烤鱼摊字幕组</Nav.Item>
-                <Nav.Item href='/myorganizations' eventKey="2-4">烤鸡摊字幕组</Nav.Item>
+                <Nav.Item href='/myorganizations' eventKey="2-1">
+                  <a href='/myorganizations'>烤兔摊字幕组</a>
+                </Nav.Item>
+                <Nav.Item href='/myorganizations' eventKey="2-1">
+                  <a href='/myorganizations'>烤鸭摊字幕组</a>
+                </Nav.Item>
+                <Nav.Item href='/myorganizations' eventKey="2-1">
+                  <a href='/myorganizations'>烤鱼摊字幕组</a>
+                </Nav.Item>
+                <Nav.Item href='/myorganizations' eventKey="2-1">
+                  <a href='/myorganizations'>烤鸡摊字幕组</a>
+                </Nav.Item>
               </Nav.Menu>
               <Nav.Item href='/myprojects' eventKey="3" icon={<Icon as={AiOutlineProject} size="1em"/>}>
                 我的项目

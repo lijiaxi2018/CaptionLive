@@ -8,3 +8,13 @@
         position: absolute;
         z-index: 20;
 }
+
+a {
+        text-decoration: none;
+        color:#575757;
+}
+
+a:hover {
+        text-decoration: none;
+        color:#575757;
+}

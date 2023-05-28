@@ -19,16 +19,16 @@ function Sidebarlvl2() {
                             <Nav.Item href='/myorganizations' eventKey="1">
                                 工作表
                             </Nav.Item>
-                            <Nav.Item href='/myorganizations' eventKey="1">
+                            <Nav.Item href='/myorganizations' eventKey="2">
                                 笔记
                             </Nav.Item>
-                            <Nav.Item href='/myorganizations' eventKey="1">
+                            <Nav.Item href='/myorganizations' eventKey="3">
                                 论坛
                             </Nav.Item>
-                            <Nav.Item href='/myorganizations' eventKey="1">
+                            <Nav.Item href='/myorganizations' eventKey="4">
                                 词汇表
                             </Nav.Item>
-                            <Nav.Item href='/myorganizations' eventKey="1">
+                            <Nav.Item href='/myorganizations' eventKey="5">
                                 关于
                             </Nav.Item>
                         </Nav>
