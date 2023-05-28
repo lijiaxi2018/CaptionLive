@@ -1,6 +1,7 @@
 package com.aguri.captionlive.controller;
 
 
+import com.aguri.captionlive.DTO.ProjectInfo;
 import com.aguri.captionlive.common.resp.Resp;
 import com.aguri.captionlive.model.Organization;
 import com.aguri.captionlive.model.Project;
@@ -8,6 +9,7 @@ import com.aguri.captionlive.model.User;
 import com.aguri.captionlive.service.OrganizationService;
 import com.aguri.captionlive.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -69,9 +71,16 @@ public class OrganizationController {
     }
 
     @GetMapping("/{organizationId}/projects")
-    public ResponseEntity<Resp> getAllProjectsBySearchTxt(@PathVariable Long organizationId, @RequestParam("searchTxt") String searchTxt) {
-        List<Project> projects = organizationService.getAllProjectsBySearchTxt(organizationId, searchTxt);
-        return ResponseEntity.ok(Resp.ok(projects));
+    public ResponseEntity<Resp> getPagedProjects(
+            @PathVariable Long organizationId,
+            @RequestParam(value = "searchTxt", defaultValue = "") String searchTxt,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "created_time") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortOrder) {
+
+        List<ProjectInfo> projectsInfo = organizationService.getPagedProjects(organizationId, searchTxt, page, size, sortBy, sortOrder);
+        return ResponseEntity.ok(Resp.ok(projectsInfo));
     }
 
 }

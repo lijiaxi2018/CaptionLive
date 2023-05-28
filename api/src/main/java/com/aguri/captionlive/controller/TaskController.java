@@ -51,30 +51,30 @@ public class TaskController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/commit/{taskId}/{userId}")
+    @PutMapping("/{taskId}/commit/{userId}")
     public ResponseEntity<Resp> commit(@PathVariable Long taskId, @PathVariable Long userId) {
         Task updatedTask = taskService.commitTask(taskId);
         return ResponseEntity.ok(Resp.ok(updatedTask));
     }
 
-    @PutMapping("/withdrawal/{taskId}/{userId}")
+    @PutMapping("/{taskId}/withdrawal/{userId}")
     public ResponseEntity<Resp> withdrawal(@PathVariable Long taskId, @PathVariable Long userId) {
         Task updatedTask = taskService.withdrawalTask(taskId);
         return ResponseEntity.ok(Resp.ok(updatedTask));
     }
 
-    @PutMapping("/assign/{taskId}/{userId}")
+    @PutMapping("/{taskId}/assign/{userId}")
     public ResponseEntity<Resp> assign(@PathVariable Long taskId, @PathVariable Long userId) {
         Task updatedTask = taskService.assign(taskId, userId);
         return ResponseEntity.ok(Resp.ok(updatedTask));
     }
 
-    @PostMapping("/uploadFile/{taskId}")
+    @PostMapping("/{taskId}/file")
     public ResponseEntity<Resp> uploadFile(@PathVariable Long taskId, @RequestParam MultipartFile file) {
         Task task = taskService.saveFile(taskId,file);
         return ResponseEntity.ok(Resp.ok(task));
     }
-    @GetMapping("/downloadFile/{taskId}")
+    @GetMapping("/{taskId}/file")
     public ResponseEntity<Resource> downloadFile(@PathVariable Long taskId) {
         Task task = taskService.getTaskById(taskId);
         FileRecord fileRecord = task.getFile();

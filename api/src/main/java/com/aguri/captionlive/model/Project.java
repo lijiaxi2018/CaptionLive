@@ -19,11 +19,11 @@ public class Project {
 
     private String name;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "cover_file_record_id")
     private FileRecord coverFileRecord;
 
-    private Integer type;
+    private Type type;
 
     private Boolean isPublic;
 
@@ -35,7 +35,7 @@ public class Project {
     )
     private List<Organization> organizations;
 
-    @OneToMany(mappedBy = "project")
+    @OneToMany(mappedBy = "project", fetch = FetchType.EAGER)
     private List<Segment> segments;
 
     @ManyToMany
@@ -53,5 +53,19 @@ public class Project {
     @JsonIgnore
     @CreationTimestamp
     private LocalDateTime createdTime;
+
+    public enum Type {
+        AUDIO_AND_VIDEO(0),
+        TXT(1);
+        private final int value;
+
+        Type(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+    }
 
 }
