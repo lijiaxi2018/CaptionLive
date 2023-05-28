@@ -1,6 +1,7 @@
 package com.aguri.captionlive.controller;
 
 
+import com.aguri.captionlive.DTO.ProjectInfo;
 import com.aguri.captionlive.common.resp.Resp;
 import com.aguri.captionlive.model.Organization;
 import com.aguri.captionlive.model.Project;
@@ -78,9 +79,8 @@ public class OrganizationController {
             @RequestParam(defaultValue = "created_time") String sortBy,
             @RequestParam(defaultValue = "asc") String sortOrder) {
 
-        Page<Project> projectsPage = organizationService.getPagedProjects(organizationId, searchTxt, page, size, sortBy, sortOrder);
-        List<Project> projects = projectsPage.getContent();
-        return ResponseEntity.ok(Resp.ok(projects));
+        List<ProjectInfo> projectsInfo = organizationService.getPagedProjects(organizationId, searchTxt, page, size, sortBy, sortOrder);
+        return ResponseEntity.ok(Resp.ok(projectsInfo));
     }
 
 

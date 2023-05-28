@@ -1,5 +1,6 @@
 package com.aguri.captionlive.service;
 
+import com.aguri.captionlive.DTO.ProjectInfo;
 import com.aguri.captionlive.model.Organization;
 import com.aguri.captionlive.model.Project;
 import org.springframework.data.domain.Page;
@@ -21,5 +22,5 @@ public interface OrganizationService {
 
     Organization saveAvatarToStorage(Long id, MultipartFile file);
 
-     Page<Project> getPagedProjects(Long organizationId, String searchTxt, int page, int size, String sortBy, String sortOrder);
+     List<ProjectInfo> getPagedProjects(Long organizationId, String searchTxt, int page, int size, String sortBy, String sortOrder);
 }

@@ -25,13 +25,13 @@ public class Task {
 
     private Status status;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "worker_user_id")
     private User worker;
 
     private LocalDate acceptedTime;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "file_record_id")
     private FileRecord file;
 

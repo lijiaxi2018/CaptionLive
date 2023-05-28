@@ -23,7 +23,7 @@ public class Project {
     @JoinColumn(name = "cover_file_record_id")
     private FileRecord coverFileRecord;
 
-    private Integer type;
+    private Type type;
 
     private Boolean isPublic;
 
@@ -53,5 +53,19 @@ public class Project {
     @JsonIgnore
     @CreationTimestamp
     private LocalDateTime createdTime;
+
+    public enum Type {
+        AUDIO_AND_VIDEO(0),
+        TXT(1);
+        private final int value;
+
+        Type(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+    }
 
 }
