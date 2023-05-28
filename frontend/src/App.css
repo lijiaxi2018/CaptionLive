@@ -8,13 +8,26 @@
 }
 
 .myhome,
-.myorganizations, 
-.myprojects,
 .allorganizations,
-.mail {
+.projects,
+.glossaries,
+.aboutorganization,
+.committedprojects,
+.accessibleprojects,
+.allprojects,
+.allmail,
+.unreadmails,
+.sentmails,
+.request {
   display: flex;
   height: 90vh;
   align-items: center;
   justify-content: center;
   font-size: 3rem;
+}
+
+:root {
+  --navbar-bg-color: #bdbdbdd3;
+  --navbar-text-color: #484848;
+  --navbar-text-icon: #4c4747;
 }

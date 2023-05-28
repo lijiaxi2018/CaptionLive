@@ -1,5 +1,10 @@
 # Run CaptionLive! locally via Docker
-Run the following command
+Pull down the latest Docker images
+```
+docker compose pull
+```
+
+Initialize the system
 ```
 docker compose up
 ```
