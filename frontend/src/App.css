@@ -18,3 +18,9 @@
   justify-content: center;
   font-size: 3rem;
 }
+
+:root {
+  --navbar-bg-color: #bdbdbdd3;
+  --navbar-text-color: #484848;
+  --navbar-text-icon: #4c4747;
+}

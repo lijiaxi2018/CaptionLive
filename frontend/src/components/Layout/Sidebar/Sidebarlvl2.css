@@ -1,0 +1,14 @@
+@import "rsuite/dist/rsuite.css";
+
+.sidebar-lvl-2 {
+        width: 125px;
+        position: absolute;
+        left: 50px;
+        top: 0;
+        z-index: 10;
+}
+
+/* .rs-sidenav-default .rs-sidenav-item, .rs-sidenav-default .rs-dropdown-toggle, .rs-sidenav-default .rs-sidenav-toggle-button {
+        padding-left: 20px;
+        padding-right: 20px;
+} */

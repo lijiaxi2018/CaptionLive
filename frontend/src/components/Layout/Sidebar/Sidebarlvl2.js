@@ -1,23 +1,18 @@
 import React, { useState } from 'react';
-import * as FaIcons from 'react-icons/fa';
-import * as ImIcons from 'react-icons/im';
-import * as AiIcons from 'react-icons/ai';
-import * as VscIcons from 'react-icons/vsc';
+// import * as FaIcons from 'react-icons/fa';
+// import * as ImIcons from 'react-icons/im';
+// import * as AiIcons from 'react-icons/ai';
+// import * as VscIcons from 'react-icons/vsc';
 import { Link } from 'react-router-dom'
 import { SidebarData } from './SidebarData';
-import './Sidebar.css';
+import './Sidebarlvl2.css';
 import { IconContext } from 'react-icons';
 import { Sidenav, Nav } from 'rsuite';
 
-function Sidebarlvl2() {
-    const [sidebar, setSidebar] = useState(false); //whether sidebar is visibe
-  
-    const showSidebar = () => setSidebar(!sidebar); //open or close sidebar
-  
+function Sidebarlvl2() {  
     return (
-      <>
+      <div className='sidebar-lvl-2' >
         <IconContext.Provider value={{ color: '#fff' }}>
-            <div style={{ width: 240 }}>
                 <Sidenav>
                     <Sidenav.Body>
                         <Nav>
@@ -39,10 +34,8 @@ function Sidebarlvl2() {
                         </Nav>
                     </Sidenav.Body>
                 </Sidenav>
-            </div>
-            
         </IconContext.Provider>
-      </>
+      </div>
     );
   }
   
