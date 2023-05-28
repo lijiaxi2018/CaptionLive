@@ -7,6 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Entity
@@ -18,11 +19,24 @@ public class Project {
 
     private String name;
 
-    private String coverFile;
+    @OneToOne
+    @JoinColumn(name = "cover_file_record_id")
+    private FileRecord coverFileRecord;
 
     private Integer type;
 
     private Boolean isPublic;
+
+    @ManyToMany
+    @JoinTable(
+            name = "ownerships",
+            joinColumns = @JoinColumn(name = "organization_id"),
+            inverseJoinColumns = @JoinColumn(name = "project_id")
+    )
+    private List<Organization> organizations;
+
+    @OneToMany(mappedBy = "project")
+    private List<Segment> segments;
 
     @JsonIgnore
     @UpdateTimestamp

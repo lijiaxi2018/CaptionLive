@@ -55,22 +55,22 @@ public class OrganizationController {
         return ResponseEntity.ok(Resp.ok(updatedOrganization));
     }
 
-    @GetMapping("/getAllUsers/{organizationId}")
+    @GetMapping("{organizationId}/users")
     public ResponseEntity<Resp> getAllUsersByOrganizationId(@PathVariable Long organizationId) {
         organizationService.getOrganizationById(organizationId);
         List<User> users = userService.getUsersByOrganizationId(organizationId);
         return ResponseEntity.ok(Resp.ok(users));
     }
 
-    @PostMapping("/uploadAvatar/{id}")
-    public ResponseEntity<Resp> uploadAvatar(@PathVariable Long id, @RequestParam MultipartFile file) {
-        Organization organization = organizationService.saveAvatarToStorage(id, file);
+    @PostMapping("/{organizationId}/avatar")
+    public ResponseEntity<Resp> uploadAvatar(@PathVariable Long organizationId, @RequestParam MultipartFile file) {
+        Organization organization = organizationService.saveAvatarToStorage(organizationId, file);
         return ResponseEntity.ok(Resp.ok(organization));
     }
 
-    @GetMapping("/getAllProjects/{organizationId}")
-    public ResponseEntity<Resp> getAllProjects(@PathVariable Long organizationId) {
-        List<Project> projects = organizationService.getAllProjects(organizationId);
+    @GetMapping("/{organizationId}/projects")
+    public ResponseEntity<Resp> getAllProjectsBySearchTxt(@PathVariable Long organizationId, @RequestParam("searchTxt") String searchTxt) {
+        List<Project> projects = organizationService.getAllProjectsBySearchTxt(organizationId, searchTxt);
         return ResponseEntity.ok(Resp.ok(projects));
     }
 

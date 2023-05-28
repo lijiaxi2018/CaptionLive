@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface ProjectRepository extends JpaRepository<Project,Long> {
     List<Project> findAllByIsPublic(boolean isPublic);
+    List<Project> findAllByOrganizationsOrganizationIdAndNameContains(Long organizations_organizationId, String name);
+
 }

@@ -17,9 +17,13 @@ public class Ownership {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long ownershipId;
 
-    private Long projectId;
+    @ManyToOne
+    @JoinColumn(name = "project_id")
+    private Project project;
 
-    private Long organizationId;
+    @ManyToOne
+    @JoinColumn(name = "organization_id")
+    private Organization organizationId;
 
     @UpdateTimestamp
     private LocalDateTime lastUpdatedTime;

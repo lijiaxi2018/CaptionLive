@@ -17,7 +17,7 @@ public interface FileRecordService {
 
     void deleteFileRecord(Long id);
 
-    FileRecord saveFile(MultipartFile file,String logicalDirectory) throws IOException;
+    FileRecord saveSmallSizeFile(MultipartFile file, String logicalDirectory) throws IOException;
 
     ResponseEntity<Resource> download(FileRecord fileRecord);
 
