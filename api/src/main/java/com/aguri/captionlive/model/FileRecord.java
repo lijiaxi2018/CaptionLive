@@ -1,6 +1,5 @@
 package com.aguri.captionlive.model;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -8,25 +7,23 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @Entity
-@Table(name = "segments")
-public class Segment {
+@Table(name = "file_records")
+public class FileRecord {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long segmentId;
+    private Long FileRecordId;
 
-    private Long projectId;
+    private String originalName;
 
-    private Boolean isGlobal;
+    private String storedName;
 
-    private String summary;
+    private String path;
 
-    private Integer beginTime;
-
-    private Integer endTime;
+    private String type;
 
     @JsonIgnore
     @UpdateTimestamp
@@ -35,8 +32,5 @@ public class Segment {
     @JsonIgnore
     @CreationTimestamp
     private LocalDateTime createdTime;
-
-    @OneToMany(mappedBy = "segment")
-    private List<Task> tasks;
 
 }
