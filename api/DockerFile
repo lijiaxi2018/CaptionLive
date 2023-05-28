@@ -4,6 +4,9 @@ RUN apk add --no-cache curl tar bash procps
 
 ARG MAVEN_VERSION=3.9.1
 
+RUN mkdir -p /app/files
+WORKDIR /app
+
 ARG USER_HOME_DIR="/root"
 
 ARG BASE_URL=https://apache.osuosl.org/maven/maven-3/${MAVEN_VERSION}/binaries
@@ -25,8 +28,10 @@ ENV MAVEN_CONFIG "$USER_HOME_DIR/.m2"
 COPY ./src ./src
 COPY ./pom.xml ./pom.xml
 
-RUN mvn install 
+RUN mvn install
 RUN mvn package spring-boot:repackage
+
+VOLUME /app/files
 
 RUN cp ./target/captionlive-0.0.1-SNAPSHOT.jar ./backend.jar
 ENTRYPOINT ["java", "-jar", "backend.jar"]

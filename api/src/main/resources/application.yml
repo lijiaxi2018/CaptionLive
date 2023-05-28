@@ -8,6 +8,13 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+  servlet:
+    multipart:
+      enabled: true
+      file-size-threshold: 2KB
+      max-file-size: 200MB
+      max-request-size: 215MB
+      location: /app/files
 
 # Swagger UI Description
 apiTitle: "CaptionLive! API"
