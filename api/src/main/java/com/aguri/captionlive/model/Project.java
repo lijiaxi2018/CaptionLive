@@ -19,7 +19,7 @@ public class Project {
 
     private String name;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "cover_file_record_id")
     private FileRecord coverFileRecord;
 
@@ -35,7 +35,7 @@ public class Project {
     )
     private List<Organization> organizations;
 
-    @OneToMany(mappedBy = "project")
+    @OneToMany(mappedBy = "project", fetch = FetchType.EAGER)
     private List<Segment> segments;
 
     @ManyToMany

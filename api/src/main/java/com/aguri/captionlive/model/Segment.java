@@ -34,7 +34,7 @@ public class Segment {
     @CreationTimestamp
     private LocalDateTime createdTime;
 
-    @OneToMany(mappedBy = "segment")
+    @OneToMany(mappedBy = "segment", fetch = FetchType.EAGER)
     private List<Task> tasks;
 
     @ManyToOne
