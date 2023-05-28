@@ -52,7 +52,7 @@ public class GlossaryServiceImpl implements GlossaryService {
     @Override
     public List<Glossary> getAllGlossarysByOrganization(Long organizationId) {
         // Implement fetching glossary terms by organizationId
-        return glossaryRepository.findByOrganizationId(organizationId);
+        return glossaryRepository.findByOrganizationOrganizationId(organizationId);
     }
 }
 
