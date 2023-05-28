@@ -11,7 +11,10 @@
 .myorganizations, 
 .myprojects,
 .allorganizations,
-.mail {
+.mail,
+.projects,
+.glossaries,
+.aboutorganization {
   display: flex;
   height: 90vh;
   align-items: center;

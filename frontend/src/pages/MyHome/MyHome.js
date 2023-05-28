@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux'
-import { updateUserId, updateAccessToken } from '../redux/userSlice'
+import { updateUserId, updateAccessToken } from '../../redux/userSlice'
 
 function MyHome() {
   const myUserId = useSelector((state) => state.userAuth.userId)

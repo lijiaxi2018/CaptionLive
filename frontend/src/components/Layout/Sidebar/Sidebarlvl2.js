@@ -1,8 +1,4 @@
 import React, { useState } from 'react';
-// import * as FaIcons from 'react-icons/fa';
-// import * as ImIcons from 'react-icons/im';
-// import * as AiIcons from 'react-icons/ai';
-// import * as VscIcons from 'react-icons/vsc';
 import { Link } from 'react-router-dom'
 import { SidebarData } from './SidebarData';
 import './Sidebarlvl2.css';
@@ -16,19 +12,13 @@ function Sidebarlvl2() {
                 <Sidenav>
                     <Sidenav.Body>
                         <Nav>
-                            <Nav.Item href='/myorganizations' eventKey="1">
+                            <Nav.Item href='/myorganizations/projects' eventKey="1">
                                 工作表
                             </Nav.Item>
-                            <Nav.Item href='/myorganizations' eventKey="2">
-                                笔记
-                            </Nav.Item>
-                            <Nav.Item href='/myorganizations' eventKey="3">
-                                论坛
-                            </Nav.Item>
-                            <Nav.Item href='/myorganizations' eventKey="4">
+                            <Nav.Item href='/myorganizations/glossaries' eventKey="2">
                                 词汇表
                             </Nav.Item>
-                            <Nav.Item href='/myorganizations' eventKey="5">
+                            <Nav.Item href='/myorganizations/aboutorganization' eventKey="3">
                                 关于
                             </Nav.Item>
                         </Nav>
