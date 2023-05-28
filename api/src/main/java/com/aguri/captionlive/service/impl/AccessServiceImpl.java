@@ -35,8 +35,6 @@ public class AccessServiceImpl implements AccessService {
     public Access updateAccess(Long id, Access access) {
         Access existingAccess = accessRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Access not found with id: " + id));
-        existingAccess.setUserId(access.getUserId());
-        existingAccess.setProjectId(access.getProjectId());
         existingAccess.setPermission(access.getPermission());
         existingAccess.setCommitment(access.getCommitment());
         return accessRepository.save(existingAccess);

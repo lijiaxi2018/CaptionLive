@@ -38,6 +38,14 @@ public class Project {
     @OneToMany(mappedBy = "project")
     private List<Segment> segments;
 
+    @ManyToMany
+    @JoinTable(
+            name = "accesses",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "project_id")
+    )
+    private List<User> accessibleUsers;
+
     @JsonIgnore
     @UpdateTimestamp
     private LocalDateTime lastUpdatedTime;
