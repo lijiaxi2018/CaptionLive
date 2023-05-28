@@ -81,15 +81,6 @@ public class UserServiceImpl implements UserService {
         return organizationService.getOrganizationById(organizationId).getUsers();
     }
 
-
-    @Override
-    public List<User> getUsersByProjectId(Long projectId) {
-        List<Access> accesses = accessRepository.findAllByProjectId(projectId);
-        List<Long> userIds = accesses.stream().map(Access::getUserId).toList();
-        return userRepository.findAllById(userIds);
-    }
-
-
     @Override
     public User uploadAvatar(Long id, MultipartFile file) {
         User user = getUserById(id);
@@ -106,16 +97,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<Project> getAllAccessibleProjects(Long userId) {
-        List<Access> accesses = accessRepository.findAllByUserId(userId);
-        List<Long> userIds = accesses.stream().map(Access::getUserId).toList();
-        return projectRepository.findAllById(userIds);
+        return getUserById(userId).getAccessibleProjects();
     }
 
     @Override
     public List<Project> getAllCommittedProjects(Long id) {
-        List<Access> accesses = accessRepository.findAllByUserIdAndCommitment(id, Access.Commitment.COMMITTED);
-        List<Long> userIds = accesses.stream().map(Access::getUserId).toList();
-        return projectRepository.findAllById(userIds);
+        return accessRepository.findAllByUserUserIdAndCommitment(id, Access.Commitment.COMMITTED).stream().map(Access::getProject).toList();
     }
 
     @Override
