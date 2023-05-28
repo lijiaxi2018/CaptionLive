@@ -15,7 +15,9 @@ public class Glossary {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long glossaryId;
 
-    private Long organizationId;
+    @ManyToOne
+    @JoinColumn(name = "organization_id")
+    private Organization organization;
 
     private String source;
 

@@ -16,9 +16,13 @@ public class Access {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long accessId;
 
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    private Long projectId;
+    @ManyToOne
+    @JoinColumn(name = "project_id")
+    private Project project;
 
     private Permission permission;
 
