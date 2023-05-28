@@ -31,7 +31,7 @@ public class ProjectController {
         return ResponseEntity.ok(Resp.ok(projects));
     }
 
-    @GetMapping("/publicProjects")
+    @GetMapping("/public")
     public ResponseEntity<Resp> getAllPublicProjects() {
         List<Project> projects = projectService.getAllPublicProjects();
         return ResponseEntity.ok(Resp.ok(projects));
@@ -73,7 +73,7 @@ public class ProjectController {
         return ResponseEntity.ok(Resp.ok(organizations));
     }
 
-    @GetMapping("/{projectId}/segments/")
+    @GetMapping("/{projectId}/segments")
     public ResponseEntity<Resp> getAllSegments(@PathVariable Long projectId) {
         List<Segment> segments = segmentService.getAllSegments(projectId);
         return ResponseEntity.ok(Resp.ok(segments));
