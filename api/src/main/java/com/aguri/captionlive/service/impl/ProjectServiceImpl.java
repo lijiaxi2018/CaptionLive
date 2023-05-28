@@ -61,11 +61,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public List<User> getAllAccessibleUsers(Long projectId) {
-        List<Long> userIds = accessRepository.findAllByProjectId(projectId)
-                .stream()
-                .map(Access::getUserId)
-                .toList();
-        return userRepository.findAllById(userIds);
+        return getProjectById(projectId).getAccessibleUsers();
     }
 
     @Override
@@ -80,6 +76,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Autowired
     FileRecordService fileRecordService;
+
     @Override
     public Project uploadAvatar(Long projectId, MultipartFile file) {
         Project project = getProjectById(projectId);

@@ -44,6 +44,14 @@ public class User {
     @Column(columnDefinition = "TEXT")
     private String description;
 
+    @ManyToMany
+    @JoinTable(
+            name = "accesses",
+            joinColumns = @JoinColumn(name = "project_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private List<Project> accessibleProjects;
+
     @JsonIgnore
     @UpdateTimestamp
     private LocalDateTime lastUpdatedTime;

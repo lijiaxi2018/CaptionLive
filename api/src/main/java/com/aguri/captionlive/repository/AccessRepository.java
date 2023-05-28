@@ -8,10 +8,7 @@ import java.util.List;
 
 @Repository
 public interface AccessRepository extends JpaRepository<Access, Long> {
-    List<Access> findAllByProjectId(Long projectId);
 
-    List<Access> findAllByUserId(Long userId);
-
-    List<Access> findAllByUserIdAndCommitment(Long userId, Access.Commitment commitment);
+    List<Access> findAllByUserUserIdAndCommitment(Long userId, Access.Commitment commitment);
 
 }
