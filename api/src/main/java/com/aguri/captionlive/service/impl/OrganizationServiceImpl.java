@@ -3,10 +3,8 @@ package com.aguri.captionlive.service.impl;
 import com.aguri.captionlive.common.exception.EntityNotFoundException;
 import com.aguri.captionlive.model.FileRecord;
 import com.aguri.captionlive.model.Organization;
-import com.aguri.captionlive.model.Ownership;
 import com.aguri.captionlive.model.Project;
 import com.aguri.captionlive.repository.OrganizationRepository;
-import com.aguri.captionlive.repository.OwnershipRepository;
 import com.aguri.captionlive.repository.ProjectRepository;
 import com.aguri.captionlive.service.FileRecordService;
 import com.aguri.captionlive.service.OrganizationService;
@@ -24,8 +22,6 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Autowired
     private OrganizationRepository organizationRepository;
 
-    @Autowired
-    private OwnershipRepository ownershipRepository;
 
     @Autowired
     private ProjectRepository projectRepository;
@@ -69,7 +65,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         Organization organization = getOrganizationById(id);
         if (!file.isEmpty()) {
             try {
-                FileRecord fileRecord = fileRecordService.saveFile(file, "avatar" + File.separator + "organization" + File.separator + id.toString());
+                FileRecord fileRecord = fileRecordService.saveSmallSizeFile(file, "avatar" + File.separator + "organization" + File.separator + id.toString());
                 organization.setAvatar(fileRecord.getFileRecordId());
             } catch (IOException e) {
                 e.printStackTrace();
@@ -79,9 +75,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Override
-    public List<Project> getAllProjects(Long organizationId) {
-        List<Ownership> organizations = ownershipRepository.findAllByOrganizationId(organizationId);
-        List<Long> projectIds = organizations.stream().map(Ownership::getProjectId).toList();
-        return projectRepository.findAllById(projectIds);
+    public List<Project> getAllProjectsBySearchTxt(Long organizationId, String searchTxt) {
+        return projectRepository.findAllByOrganizationsOrganizationIdAndNameContains(organizationId,searchTxt);
     }
 }

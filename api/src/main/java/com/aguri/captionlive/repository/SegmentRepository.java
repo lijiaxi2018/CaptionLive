@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface SegmentRepository extends JpaRepository<Segment, Long> {
-    List<Segment> findAllByProjectId(Long projectId);
+    List<Segment> findAllByProjectProjectId(Long projectId);
 }

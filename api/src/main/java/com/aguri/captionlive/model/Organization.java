@@ -8,6 +8,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Entity
@@ -23,6 +24,23 @@ public class Organization {
     private String description;
 
     private Long avatar;
+
+    @ManyToMany
+    @JoinTable(
+            name = "memberships",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "organization_id")
+    )
+    private List<User> users;
+
+    @ManyToMany
+    @JoinTable(
+            name = "ownerships",
+            joinColumns = @JoinColumn(name = "project_id"),
+            inverseJoinColumns = @JoinColumn(name = "organization_id")
+    )
+    private List<Project> projects;
+
 
     @JsonIgnore
     @UpdateTimestamp

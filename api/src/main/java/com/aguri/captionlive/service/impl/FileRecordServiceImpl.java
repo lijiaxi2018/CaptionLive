@@ -59,7 +59,7 @@ public class FileRecordServiceImpl implements FileRecordService {
 
 
     @Override
-    public FileRecord saveFile(MultipartFile file, String logicalDirectory) throws IOException {
+    public FileRecord saveSmallSizeFile(MultipartFile file, String logicalDirectory) throws IOException {
         String originalName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
         String storedName = UUID.randomUUID().toString().replaceAll("-", "");
         String filePath = fileStorageDirectory + File.separator + logicalDirectory;
@@ -68,7 +68,7 @@ public class FileRecordServiceImpl implements FileRecordService {
         String path = filePath + File.separator + storedName;
         File directory = new File(path);
         if (!directory.exists()) {
-            directory.mkdirs();
+            boolean mkdirs = directory.mkdirs();
         }
 
         Path storagePath = Path.of(path);

@@ -1,15 +1,14 @@
 package com.aguri.captionlive.service.impl;
 
+import com.aguri.captionlive.DTO.UserInfoResponse;
 import com.aguri.captionlive.common.exception.EntityNotFoundException;
 import com.aguri.captionlive.model.*;
-import com.aguri.captionlive.repository.AccessRepository;
-import com.aguri.captionlive.repository.MembershipRepository;
-import com.aguri.captionlive.repository.ProjectRepository;
-import com.aguri.captionlive.repository.UserRepository;
+import com.aguri.captionlive.repository.*;
 import com.aguri.captionlive.service.FileRecordService;
+import com.aguri.captionlive.service.OrganizationService;
 import com.aguri.captionlive.service.UserService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,6 +23,9 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Autowired
+    private OrganizationRepository organizationRepository;
+
+    @Autowired
     private MembershipRepository membershipRepository;
 
     @Autowired
@@ -35,6 +37,8 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private ProjectRepository projectRepository;
 
+    @Autowired
+    private OrganizationService organizationService;
 
     @Override
     public List<User> getAllUsers() {
@@ -74,9 +78,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getUsersByOrganizationId(Long organizationId) {
-        List<Membership> memberships = membershipRepository.findAllByOrganizationId(organizationId);
-        List<Long> userIds = memberships.stream().map(Membership::getUserId).toList();
-        return userRepository.findAllById(userIds);
+        return organizationService.getOrganizationById(organizationId).getUsers();
     }
 
 
@@ -93,8 +95,8 @@ public class UserServiceImpl implements UserService {
         User user = getUserById(id);
         if (!file.isEmpty()) {
             try {
-                FileRecord fileRecord = fileRecordService.saveFile(file, "avatar" + File.separator + "user" + File.separator + id.toString());
-                user.setAvatar(fileRecord.getFileRecordId());
+                FileRecord fileRecord = fileRecordService.saveSmallSizeFile(file, "avatar" + File.separator + "user" + File.separator + id.toString());
+                user.setAvatar(fileRecord);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -114,5 +116,13 @@ public class UserServiceImpl implements UserService {
         List<Access> accesses = accessRepository.findAllByUserIdAndCommitment(id, Access.Commitment.COMMITTED);
         List<Long> userIds = accesses.stream().map(Access::getUserId).toList();
         return projectRepository.findAllById(userIds);
+    }
+
+    @Override
+    public UserInfoResponse getUserInfoById(Long userId) {
+        User user = getUserById(userId);
+        UserInfoResponse userInfoResponse = new UserInfoResponse();
+        BeanUtils.copyProperties(user, userInfoResponse);
+        return userInfoResponse;
     }
 }

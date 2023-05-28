@@ -15,9 +15,13 @@ public class Membership {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long membershipId;
 
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    private Long organizationId;
+    @ManyToOne
+    @JoinColumn(name = "organization_id")
+    private Organization organization;
 
     private Integer permission;
 

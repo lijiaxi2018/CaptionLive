@@ -1,15 +1,15 @@
 package com.aguri.captionlive.controller;
 
 import com.aguri.captionlive.common.resp.Resp;
-import com.aguri.captionlive.model.Organization;
-import com.aguri.captionlive.model.Project;
-import com.aguri.captionlive.model.Segment;
-import com.aguri.captionlive.model.User;
+import com.aguri.captionlive.model.*;
+import com.aguri.captionlive.service.FileRecordService;
 import com.aguri.captionlive.service.ProjectService;
 import com.aguri.captionlive.service.SegmentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -19,13 +19,19 @@ public class ProjectController {
     @Autowired
     private ProjectService projectService;
 
+    @Autowired
+    private SegmentService segmentService;
+
+    @Autowired
+    private FileRecordService fileRecordService;
+
     @GetMapping
     public ResponseEntity<Resp> getAllProjects() {
         List<Project> projects = projectService.getAllProjects();
         return ResponseEntity.ok(Resp.ok(projects));
     }
 
-    @GetMapping("/getAllPublicProjects")
+    @GetMapping("/publicProjects")
     public ResponseEntity<Resp> getAllPublicProjects() {
         List<Project> projects = projectService.getAllPublicProjects();
         return ResponseEntity.ok(Resp.ok(projects));
@@ -55,25 +61,33 @@ public class ProjectController {
         return ResponseEntity.ok(Resp.ok(updatedProject));
     }
 
-    @GetMapping("/getAllUsers/{projectIid}")
+    @GetMapping("/{projectIid}/users")
     public ResponseEntity<Resp> getAllUsers(@PathVariable Long projectIid) {
         List<User> users = projectService.getAllAccessibleUsers(projectIid);
         return ResponseEntity.ok(Resp.ok(users));
     }
 
-    @GetMapping("/getAllOrganizations/{projectIid}")
+    @GetMapping("/{projectIid}/organizations")
     public ResponseEntity<Resp> getAllOrganizations(@PathVariable Long projectIid) {
         List<Organization> organizations = projectService.getAllAccessibleOrganizations(projectIid);
         return ResponseEntity.ok(Resp.ok(organizations));
     }
 
-    @Autowired
-    private SegmentService segmentService;
-
-    @GetMapping("/getAllSegments/{projectId}")
+    @GetMapping("/{projectId}/segments/")
     public ResponseEntity<Resp> getAllSegments(@PathVariable Long projectId) {
         List<Segment> segments = segmentService.getAllSegments(projectId);
         return ResponseEntity.ok(Resp.ok(segments));
+    }
+
+    @GetMapping("/{projectId}/avatar")
+    public ResponseEntity<Resource> downloadAvatar(@PathVariable Long projectId) {
+        return fileRecordService.download(projectService.getProjectById(projectId).getCoverFileRecord());
+    }
+
+    @PostMapping("/{projectId}/avatar")
+    public ResponseEntity<Resp> uploadAvatar(@PathVariable Long projectId, @RequestParam MultipartFile file) {
+        Project project = projectService.uploadAvatar(projectId, file);
+        return ResponseEntity.ok(Resp.ok(project));
     }
 
 }
