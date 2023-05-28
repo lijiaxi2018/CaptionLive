@@ -10,9 +10,9 @@ public interface MessageService {
 
     Message getMessageById(Long id);
 
-    boolean deleteMessageById(Long id);
+    void deleteMessageById(Long id);
 
-    Message updateMessage(Message existingMessage, Message newMessage);
+    Message updateMessage(Long id, Message newMessage);
 
     List<Message> getMessagesByRequestId(Long requestId);
 }

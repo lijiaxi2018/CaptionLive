@@ -1,13 +1,10 @@
 package com.aguri.captionlive.service.impl;
 import com.aguri.captionlive.model.Message;
-
-import com.aguri.captionlive.common.exception.UserNotFoundException;
+import com.aguri.captionlive.common.exception.EntityNotFoundException;
 import com.aguri.captionlive.repository.MessageRepository;
 import com.aguri.captionlive.service.MessageService;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,39 +22,32 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public Message createMessage(Message newMessage) {
-        Message message = new Message();
-        // Set message properties based on the newMessage object
-        // For example: message.setText(newMessage.getText());
-        return messageRepository.save(message);
+        return messageRepository.save(newMessage);
     }
 
     @Override
     public Message getMessageById(Long id) {
-        Optional<Message> optionalMessage = messageRepository.findById(id);
-        return optionalMessage.orElse(null);
+
+        return messageRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Message not found with id: " + id));
     }
 
     @Override
-    public boolean deleteMessageById(Long id) {
-        if (messageRepository.existsById(id)) {
+    public void deleteMessageById(Long id) {
             messageRepository.deleteById(id);
-            return true;
-        }
-        return false;
     }
 
     @Override
-    public Message updateMessage(Message existingMessage, Message newMessage) {
-        // Update the existingMessage properties based on the newMessage object
-        // For example: existingMessage.setText(newMessage.getText());
+    public Message updateMessage(Long id, Message newMessage) {
+        Message existingMessage = getMessageById(id);
+        //Need to confirm what attributes should be update
+        existingMessage.setContent(newMessage.getContent());
         return messageRepository.save(existingMessage);
     }
 
     @Override
     public List<Message> getMessagesByRequestId(Long requestId) {
-        // Implement the logic to retrieve messages by requestId
-        // For example: return messageRepository.findByRequestId(requestId);
-        return Collections.emptyList();
+        return messageRepository.findByRequestId(requestId);
     }
 }
 

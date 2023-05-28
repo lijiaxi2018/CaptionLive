@@ -16,7 +16,7 @@ public class Message {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long messageId;
 
-    private Integer requestId;
+    private Long requestId;
 
     private Boolean isReply;
 
