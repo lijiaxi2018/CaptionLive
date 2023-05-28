@@ -9,6 +9,10 @@ import com.aguri.captionlive.repository.ProjectRepository;
 import com.aguri.captionlive.service.FileRecordService;
 import com.aguri.captionlive.service.OrganizationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -75,7 +79,11 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Override
-    public List<Project> getAllProjectsBySearchTxt(Long organizationId, String searchTxt) {
-        return projectRepository.findAllByOrganizationsOrganizationIdAndNameContains(organizationId,searchTxt);
+    public Page<Project> getPagedProjects(Long organizationId, String searchTxt, int page, int size, String sortBy, String sortOrder) {
+        // 创建分页请求对象
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(sortOrder), sortBy));
+
+        // 调用 ProjectRepository 的查询方法来获取分页的项目列表
+        return projectRepository.findAllByOrganizationsOrganizationIdAndNameContaining(organizationId, searchTxt, pageable);
     }
 }
