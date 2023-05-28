@@ -79,13 +79,13 @@ public class ProjectController {
         return ResponseEntity.ok(Resp.ok(segments));
     }
 
-    @GetMapping("/{projectId}/avatar")
-    public ResponseEntity<Resource> downloadAvatar(@PathVariable Long projectId) {
+    @GetMapping("/{projectId}/cover")
+    public ResponseEntity<Resource> downloadCover(@PathVariable Long projectId) {
         return fileRecordService.download(projectService.getProjectById(projectId).getCoverFileRecord());
     }
 
-    @PostMapping("/{projectId}/avatar")
-    public ResponseEntity<Resp> uploadAvatar(@PathVariable Long projectId, @RequestParam MultipartFile file) {
+    @PostMapping("/{projectId}/cover")
+    public ResponseEntity<Resp> uploadCover(@PathVariable Long projectId, @RequestParam MultipartFile file) {
         Project project = projectService.uploadAvatar(projectId, file);
         return ResponseEntity.ok(Resp.ok(project));
     }
