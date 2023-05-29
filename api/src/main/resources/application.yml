@@ -1,4 +1,6 @@
 spring:
+  sql.init.mode: always # Loading Initialization Data
+  
   datasource:
     url: jdbc:postgresql://db:5432/postgres
     username: postgres
@@ -6,8 +8,10 @@ spring:
   
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     show-sql: true
+    defer-datasource-initialization: true # Loading Initialization Data
+    
   servlet:
     multipart:
       enabled: true
