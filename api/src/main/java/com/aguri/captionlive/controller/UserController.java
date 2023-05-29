@@ -56,20 +56,6 @@ public class UserController {
         return ResponseEntity.ok(Resp.ok(userService.updateUser(id, user)));
     }
 
-    @PostMapping("/signIn")
-    public ResponseEntity<Resp> signIn(@RequestBody SignInRequest signInRequest) {
-        String password = signInRequest.getPassword();
-        String username = signInRequest.getUsername();
-        User user = userService.getUserByUsername(username);
-        if (!Objects.equals(user.getPassword(), password)) {
-            return ResponseEntity.ok(Resp.failed("invalid password"));
-        }
-        SignInResponse data = new SignInResponse();
-        // TODO
-        data.setToken("this is a token");
-        return ResponseEntity.ok(Resp.ok(data));
-    }
-
     @PostMapping("/{userId}/avatar")
     public ResponseEntity<Resp> uploadAvatar(@PathVariable Long userId, @RequestParam MultipartFile file) {
         User user = userService.uploadAvatar(userId, file);

@@ -20,3 +20,7 @@ spring:
 apiTitle: "CaptionLive! API"
 apiDescription: "A Project Management System for Fansub Groups, developed by Aguri's GRavity Lab. Please see the GitHub page for more information at https://github.com/lijiaxi2018/CaptionLive"
 apiVersion: "0.1"
+
+# application.properties
+jwt.secret: your-secret-key
+jwt.expiration: 86400
