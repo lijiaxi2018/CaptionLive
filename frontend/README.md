@@ -2,9 +2,18 @@
 Frontend UI for CaptionLive! based on React and Redux.
 
 ## Run the frontend locally
-Inside the frontend directory, run the following
+Inside the frontend directory, install the dependency by
 ```
 npm install
+```
+
+Or install the dependency without changing the lockfile by
+```
+npm install --read-only-lockfile
+```
+
+Then initialize the frontend service by
+```
 npm start
 ```
 
