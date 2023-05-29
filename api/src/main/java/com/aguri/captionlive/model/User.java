@@ -27,10 +27,14 @@ public class User {
 
     private String qq;
 
+    private String email;
+
+    @JsonIgnore
     @OneToOne
     @JoinColumn(name = "avatar_file_record_id")
     private FileRecord avatar;
 
+    @JsonIgnore
     @ManyToMany
     @JoinTable(
             name = "memberships",
@@ -39,11 +43,8 @@ public class User {
     )
     private List<Organization> organizations;
 
-    private String email;
 
-    @Column(columnDefinition = "TEXT")
-    private String description;
-
+    @JsonIgnore
     @ManyToMany
     @JoinTable(
             name = "accesses",

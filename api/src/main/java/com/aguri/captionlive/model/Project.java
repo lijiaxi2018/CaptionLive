@@ -19,6 +19,7 @@ public class Project {
 
     private String name;
 
+    @JsonIgnore
     @OneToOne
     @JoinColumn(name = "cover_file_record_id")
     private FileRecord coverFileRecord;
@@ -27,6 +28,7 @@ public class Project {
 
     private Boolean isPublic;
 
+    @JsonIgnore
     @ManyToMany
     @JoinTable(
             name = "ownerships",
@@ -35,9 +37,11 @@ public class Project {
     )
     private List<Organization> organizations;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "project")
     private List<Segment> segments;
 
+    @JsonIgnore
     @ManyToMany
     @JoinTable(
             name = "accesses",

@@ -25,6 +25,7 @@ public class Organization {
 
     private Long avatar;
 
+    @JsonIgnore
     @ManyToMany
     @JoinTable(
             name = "memberships",
@@ -33,6 +34,7 @@ public class Organization {
     )
     private List<User> users;
 
+    @JsonIgnore
     @ManyToMany
     @JoinTable(
             name = "ownerships",
