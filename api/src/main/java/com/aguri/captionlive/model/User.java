@@ -21,6 +21,7 @@ public class User {
 
     private Integer permission;
 
+    @Column(unique = true)
     private String username;
 
     private String password;
