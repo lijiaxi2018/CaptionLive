@@ -1,6 +1,5 @@
 package com.aguri.captionlive.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -17,8 +16,6 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long taskId;
 
-
-    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "segment_id")
     private Segment segment;
@@ -28,15 +25,13 @@ public class Task {
 
     private Status status;
 
-    @JsonIgnore
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "worker_user_id")
     private User worker;
 
     private LocalDate acceptedTime;
 
-    @JsonIgnore
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "file_record_id")
     private FileRecord file;
 

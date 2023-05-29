@@ -34,11 +34,9 @@ public class Segment {
     @CreationTimestamp
     private LocalDateTime createdTime;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "segment")
+    @OneToMany(mappedBy = "segment", fetch = FetchType.EAGER)
     private List<Task> tasks;
 
-    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "project_id")
     private Project project;

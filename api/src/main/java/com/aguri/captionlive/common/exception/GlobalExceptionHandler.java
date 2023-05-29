@@ -22,7 +22,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Resp> handleException(Exception ex) {
         Resp response = new Resp("Unknown Error", ex);
-        System.out.println(ex.fillInStackTrace());
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
