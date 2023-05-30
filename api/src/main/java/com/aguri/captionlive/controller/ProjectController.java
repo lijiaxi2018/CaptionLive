@@ -1,5 +1,6 @@
 package com.aguri.captionlive.controller;
 
+import com.aguri.captionlive.DTO.ProjectCreateRequest;
 import com.aguri.captionlive.common.resp.Resp;
 import com.aguri.captionlive.model.*;
 import com.aguri.captionlive.service.FileRecordService;
@@ -38,9 +39,9 @@ public class ProjectController {
     }
 
     @PostMapping
-    public ResponseEntity<Resp> createProject(@RequestBody Project project) {
-        Project createdProject = projectService.createProject(project);
-        return ResponseEntity.ok(Resp.ok(createdProject));
+    public ResponseEntity<Void> createProject(@RequestBody ProjectCreateRequest projectCreateRequest) {
+        Project createdProject = projectService.createProject(projectCreateRequest);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}")

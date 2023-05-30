@@ -71,12 +71,8 @@ public class OrganizationServiceImpl implements OrganizationService {
     public Organization saveAvatarToStorage(Long id, MultipartFile file) {
         Organization organization = getOrganizationById(id);
         if (!file.isEmpty()) {
-            try {
-                FileRecord fileRecord = fileRecordService.saveSmallSizeFile(file, "avatar" + File.separator + "organization" + File.separator + id.toString());
-                organization.setAvatar(fileRecord.getFileRecordId());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            FileRecord fileRecord = fileRecordService.saveSmallSizeFile(file, "avatar" + File.separator + "organization" + File.separator + id.toString());
+            organization.setAvatar(fileRecord.getFileRecordId());
         }
         return updateOrganization(id, organization);
     }
