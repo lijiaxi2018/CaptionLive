@@ -78,10 +78,4 @@ public class ProjectController {
         List<Segment> segments = segmentService.getAllSegments(projectId);
         return ResponseEntity.ok(Resp.ok(segments));
     }
-
-    @GetMapping("/{projectId}/cover")
-    public ResponseEntity<Resource> downloadCover(@PathVariable Long projectId) {
-        return fileRecordService.download(projectService.getProjectById(projectId).getCoverFileRecord());
-    }
-
 }

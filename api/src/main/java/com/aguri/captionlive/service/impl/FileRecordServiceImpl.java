@@ -70,51 +70,15 @@ public class FileRecordServiceImpl implements FileRecordService {
         }
     }
 
-
     @Override
-    public FileRecord saveSmallSizeFile(MultipartFile file, String logicalDirectory) {
-        String originalName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
-        String storedName = UUID.randomUUID().toString().replaceAll("-", "");
-        String filePath = fileStorageDirectory + File.separator + logicalDirectory;
-
-        // Save the file to the storage directory
-        String path = filePath + File.separator + storedName;
-        File directory = new File(path);
-        if (!directory.exists()) {
-            boolean mkdirs = directory.mkdirs();
-        }
-
-        Path storagePath = Path.of(path);
-        try {
-            Files.copy(file.getInputStream(), storagePath, StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        String contentType = file.getContentType();
-
-        FileRecord fileRecord = new FileRecord();
-        fileRecord.setOriginalName(originalName);
-        fileRecord.setStoredName(storedName);
-        fileRecord.setType(contentType);
-        fileRecord.setPath(filePath);
-
-        return fileRecordRepository.save(fileRecord);
-    }
-
-    @Override
-    public ResponseEntity<Resource> download(FileRecord fileRecord) {
+    public ResponseEntity<Resource> download(Long fileRecordId) {
+        FileRecord fileRecord = getFileRecordById(fileRecordId);
         String filePath = fileRecord.getPath();
         String storedName = fileRecord.getStoredName();
         Resource fileResource = new FileSystemResource(filePath + File.separator + storedName);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.valueOf(fileRecord.getType()));
         return new ResponseEntity<>(fileResource, headers, HttpStatus.OK);
-    }
-
-    @Override
-    public ResponseEntity<Resource> download(Long fileRecordId) {
-        FileRecord fileRecord = getFileRecordById(fileRecordId);
-        return download(fileRecord);
     }
 
     @Override

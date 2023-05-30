@@ -18,9 +18,6 @@ public interface FileRecordService {
 
     void updateFileRecord(Long id,FileRecord fileRecord);
 
-    FileRecord saveSmallSizeFile(MultipartFile file, String logicalDirectory);
-
-    ResponseEntity<Resource> download(FileRecord fileRecord);
     ResponseEntity<Resource> download(Long fileRecordId);
 
     Long uploadSmallSizeFile(MultipartFile file);
