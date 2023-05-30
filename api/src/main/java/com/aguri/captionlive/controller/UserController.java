@@ -1,6 +1,6 @@
 package com.aguri.captionlive.controller;
 
-import com.aguri.captionlive.DTO.UserInfoResponse;
+import com.aguri.captionlive.DTO.UserCreateRequest;
 import com.aguri.captionlive.common.resp.Resp;
 import com.aguri.captionlive.model.Organization;
 import com.aguri.captionlive.model.Project;
@@ -25,8 +25,8 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<Resp> createUser(@RequestBody User user) {
-        return ResponseEntity.ok(Resp.ok(userService.createUser(user)));
+    public ResponseEntity<Resp> createUser(@RequestBody UserCreateRequest userCreateRequest) {
+        return ResponseEntity.ok(Resp.ok(userService.createUser(userCreateRequest)));
     }
 
     @GetMapping("/{id}")
@@ -56,12 +56,6 @@ public class UserController {
     public ResponseEntity<Resp> getAllCommittedProjects(@PathVariable Long userId) {
         List<Project> allAccessibleProjects = userService.getAllCommittedProjects(userId);
         return ResponseEntity.ok(Resp.ok(allAccessibleProjects));
-    }
-
-    @GetMapping("/{userId}/info")
-    public ResponseEntity<Resp> info(@PathVariable Long userId) {
-        UserInfoResponse userInfoResponse = userService.getUserInfoById(userId);
-        return ResponseEntity.ok(Resp.ok(userInfoResponse));
     }
 
     @GetMapping("/{userId}/organizations")

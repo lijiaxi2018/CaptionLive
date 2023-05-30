@@ -1,9 +1,10 @@
 package com.aguri.captionlive.service.impl;
 
-import com.aguri.captionlive.DTO.UserInfoResponse;
+import com.aguri.captionlive.DTO.UserCreateRequest;
 import com.aguri.captionlive.common.exception.EntityNotFoundException;
 import com.aguri.captionlive.model.*;
 import com.aguri.captionlive.repository.*;
+import com.aguri.captionlive.service.FileRecordService;
 import com.aguri.captionlive.service.OrganizationService;
 import com.aguri.captionlive.service.UserService;
 import org.springframework.beans.BeanUtils;
@@ -35,8 +36,18 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
     }
 
+    @Autowired
+    private FileRecordService fileRecordService;
+
     @Override
-    public User createUser(User user) {
+    public User createUser(UserCreateRequest userCreateRequest) {
+        User user = new User();
+        BeanUtils.copyProperties(userCreateRequest, user);
+        Long avatarId = userCreateRequest.getAvatarId();
+        if (avatarId != null) {
+            FileRecord avatar = fileRecordService.getFileRecordById(avatarId);
+            user.setAvatar(avatar);
+        }
         return userRepository.save(user);
     }
 
@@ -73,13 +84,5 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<Project> getAllCommittedProjects(Long id) {
         return accessRepository.findAllByUserUserIdAndCommitment(id, Access.Commitment.COMMITTED).stream().map(Access::getProject).toList();
-    }
-
-    @Override
-    public UserInfoResponse getUserInfoById(Long userId) {
-        User user = getUserById(userId);
-        UserInfoResponse userInfoResponse = new UserInfoResponse();
-        BeanUtils.copyProperties(user, userInfoResponse);
-        return userInfoResponse;
     }
 }

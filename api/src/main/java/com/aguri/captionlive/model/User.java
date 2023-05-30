@@ -24,11 +24,19 @@ public class User {
     @Column(unique = true)
     private String username;
 
+    @JsonIgnore
     private String password;
 
     private String qq;
 
     private String email;
+
+    @Transient
+    private Long avatarId;
+
+    public Long getAvatarId() {
+        return avatar.getFileRecordId();
+    }
 
     @JsonIgnore
     @OneToOne
