@@ -2,20 +2,14 @@ package com.aguri.captionlive.service.impl;
 
 import com.aguri.captionlive.common.exception.EntityNotFoundException;
 import com.aguri.captionlive.common.exception.OperationNotAllowException;
-import com.aguri.captionlive.model.FileRecord;
 import com.aguri.captionlive.model.Task;
 import com.aguri.captionlive.model.User;
 import com.aguri.captionlive.repository.TaskRepository;
 import com.aguri.captionlive.repository.UserRepository;
-import com.aguri.captionlive.service.FileRecordService;
 import com.aguri.captionlive.service.TaskService;
-import com.aguri.captionlive.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,7 +20,7 @@ public class TaskServiceImpl implements TaskService {
     private TaskRepository taskRepository;
 
     @Autowired
-    private UserService userService;
+    UserRepository userRepository;
 
     @Override
     public Task saveTask(Task task) {
@@ -81,9 +75,6 @@ public class TaskServiceImpl implements TaskService {
         return taskRepository.save(existingTask);
     }
 
-    @Autowired
-    UserRepository userRepository;
-
     @Override
     public Task assign(Long taskId, Long userId) {
         if (!userRepository.existsById(userId)) {
@@ -98,19 +89,5 @@ public class TaskServiceImpl implements TaskService {
         existingTask.setWorker(user);
         existingTask.setStatus(Task.Status.IN_PROGRESS);
         return taskRepository.save(existingTask);
-    }
-
-
-    @Autowired
-    private FileRecordService fileRecordService;
-
-    @Override
-    public Task saveFile(Long taskId, MultipartFile file) {
-        Task task = getTaskById(taskId);
-        if (!file.isEmpty()) {
-                FileRecord fileRecord = fileRecordService.saveSmallSizeFile(file, "file" + File.separator + "task" + File.separator + taskId.toString());
-                task.setFile(fileRecord);
-        }
-        return updateTask(taskId, task);
     }
 }
