@@ -1,5 +1,6 @@
 package com.aguri.captionlive.service;
 
+import com.aguri.captionlive.DTO.ProjectCreateRequest;
 import com.aguri.captionlive.model.Organization;
 import com.aguri.captionlive.model.Project;
 import com.aguri.captionlive.model.User;
@@ -10,7 +11,7 @@ import java.util.List;
 public interface ProjectService {
     List<Project> getAllProjects();
 
-    Project createProject(Project project);
+    Project createProject(ProjectCreateRequest projectCreateRequest);
 
     Project getProjectById(Long id);
 

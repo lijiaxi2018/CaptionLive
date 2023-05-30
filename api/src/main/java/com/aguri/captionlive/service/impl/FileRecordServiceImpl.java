@@ -55,11 +55,21 @@ public class FileRecordServiceImpl implements FileRecordService {
         fileRecordRepository.deleteById(id);
     }
 
-    // 其他自定义的服务方法的实现...
+    @Override
+    public void updateFileRecord(Long id, FileRecord fileRecord) {
+        FileRecord existingFileRecord = getFileRecordById(id);
+        if (existingFileRecord != null) {
+            existingFileRecord.setOriginalName(fileRecord.getOriginalName());
+            existingFileRecord.setStoredName(fileRecord.getStoredName());
+            existingFileRecord.setPath(fileRecord.getPath());
+            existingFileRecord.setType(fileRecord.getType());
+            fileRecordRepository.save(existingFileRecord);
+        }
+    }
 
 
     @Override
-    public FileRecord saveSmallSizeFile(MultipartFile file, String logicalDirectory) throws IOException {
+    public FileRecord saveSmallSizeFile(MultipartFile file, String logicalDirectory) {
         String originalName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
         String storedName = UUID.randomUUID().toString().replaceAll("-", "");
         String filePath = fileStorageDirectory + File.separator + logicalDirectory;
@@ -72,7 +82,11 @@ public class FileRecordServiceImpl implements FileRecordService {
         }
 
         Path storagePath = Path.of(path);
-        Files.copy(file.getInputStream(), storagePath, StandardCopyOption.REPLACE_EXISTING);
+        try {
+            Files.copy(file.getInputStream(), storagePath, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         String contentType = file.getContentType();
 
         FileRecord fileRecord = new FileRecord();
@@ -83,6 +97,7 @@ public class FileRecordServiceImpl implements FileRecordService {
 
         return fileRecordRepository.save(fileRecord);
     }
+
     @Override
     public ResponseEntity<Resource> download(FileRecord fileRecord) {
         String filePath = fileRecord.getPath();

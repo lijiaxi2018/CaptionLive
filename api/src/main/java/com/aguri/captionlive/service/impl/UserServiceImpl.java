@@ -85,12 +85,8 @@ public class UserServiceImpl implements UserService {
     public User uploadAvatar(Long id, MultipartFile file) {
         User user = getUserById(id);
         if (!file.isEmpty()) {
-            try {
                 FileRecord fileRecord = fileRecordService.saveSmallSizeFile(file, "avatar" + File.separator + "user" + File.separator + id.toString());
                 user.setAvatar(fileRecord);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
         return updateUser(id, user);
     }

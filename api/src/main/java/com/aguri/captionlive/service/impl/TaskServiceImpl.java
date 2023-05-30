@@ -108,12 +108,8 @@ public class TaskServiceImpl implements TaskService {
     public Task saveFile(Long taskId, MultipartFile file) {
         Task task = getTaskById(taskId);
         if (!file.isEmpty()) {
-            try {
                 FileRecord fileRecord = fileRecordService.saveSmallSizeFile(file, "file" + File.separator + "task" + File.separator + taskId.toString());
                 task.setFile(fileRecord);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
         return updateTask(taskId, task);
     }

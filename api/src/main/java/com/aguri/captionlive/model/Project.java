@@ -1,5 +1,6 @@
 package com.aguri.captionlive.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -19,6 +20,7 @@ public class Project {
 
     private String name;
 
+    @JsonIgnore
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "cover_file_record_id")
     private FileRecord coverFileRecord;
@@ -35,7 +37,7 @@ public class Project {
     )
     private List<Organization> organizations;
 
-    @OneToMany(mappedBy = "project", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "project", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Segment> segments;
 
     @ManyToMany
