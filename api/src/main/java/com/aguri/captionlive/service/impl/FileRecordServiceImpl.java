@@ -21,6 +21,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -106,6 +109,44 @@ public class FileRecordServiceImpl implements FileRecordService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.valueOf(fileRecord.getType()));
         return new ResponseEntity<>(fileResource, headers, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<Resource> download(Long fileRecordId) {
+        FileRecord fileRecord = getFileRecordById(fileRecordId);
+        return download(fileRecord);
+    }
+
+    @Override
+    public Long uploadSmallSizeFile(MultipartFile file) {
+        String originalName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
+        String storedName = UUID.randomUUID().toString().replaceAll("-", "");
+        OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
+        String logicalDirectory = DateTimeFormatter.ofPattern("yyyy-MM-dd").format(now);
+        String filePath = fileStorageDirectory + File.separator + logicalDirectory;
+
+        // Save the file to the storage directory
+        String path = filePath + File.separator + storedName;
+        File directory = new File(path);
+        if (!directory.exists()) {
+            boolean mkdirs = directory.mkdirs();
+        }
+
+        Path storagePath = Path.of(path);
+        try {
+            Files.copy(file.getInputStream(), storagePath, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        String contentType = file.getContentType();
+
+        FileRecord fileRecord = new FileRecord();
+        fileRecord.setOriginalName(originalName);
+        fileRecord.setStoredName(storedName);
+        fileRecord.setType(contentType);
+        fileRecord.setPath(filePath);
+
+        return fileRecordRepository.save(fileRecord).getFileRecordId();
     }
 
 }
