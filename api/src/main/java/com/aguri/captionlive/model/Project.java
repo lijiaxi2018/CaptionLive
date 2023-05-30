@@ -29,7 +29,6 @@ public class Project {
 
     private Boolean isPublic;
 
-    @JsonIgnore
     @ManyToMany
     @JoinTable(
             name = "ownerships",
@@ -38,11 +37,9 @@ public class Project {
     )
     private List<Organization> organizations;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "project", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Segment> segments;
 
-    @JsonIgnore
     @ManyToMany
     @JoinTable(
             name = "accesses",
@@ -59,7 +56,6 @@ public class Project {
     @CreationTimestamp
     private LocalDateTime createdTime;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
     public enum Type {
         AUDIO_AND_VIDEO(0),
         TXT(1);
