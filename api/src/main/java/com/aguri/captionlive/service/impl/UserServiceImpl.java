@@ -23,19 +23,7 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Autowired
-    private OrganizationRepository organizationRepository;
-
-    @Autowired
-    private MembershipRepository membershipRepository;
-
-    @Autowired
     private AccessRepository accessRepository;
-
-    @Autowired
-    private FileRecordService fileRecordService;
-
-    @Autowired
-    private ProjectRepository projectRepository;
 
     @Autowired
     private OrganizationService organizationService;
@@ -79,16 +67,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> getUsersByOrganizationId(Long organizationId) {
         return organizationService.getOrganizationById(organizationId).getUsers();
-    }
-
-    @Override
-    public User uploadAvatar(Long id, MultipartFile file) {
-        User user = getUserById(id);
-        if (!file.isEmpty()) {
-                FileRecord fileRecord = fileRecordService.saveSmallSizeFile(file, "avatar" + File.separator + "user" + File.separator + id.toString());
-                user.setAvatar(fileRecord);
-        }
-        return updateUser(id, user);
     }
 
     @Override

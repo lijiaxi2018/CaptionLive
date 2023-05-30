@@ -24,9 +24,6 @@ public interface UserService {
 
     List<User> getUsersByOrganizationId(Long organizationId);
 
-
-    User uploadAvatar(Long id, MultipartFile file);
-
     List<Project> getAllAccessibleProjects(Long userId);
 
     List<Project> getAllCommittedProjects(Long id);
