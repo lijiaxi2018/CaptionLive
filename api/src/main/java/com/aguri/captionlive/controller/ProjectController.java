@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -83,12 +82,6 @@ public class ProjectController {
     @GetMapping("/{projectId}/cover")
     public ResponseEntity<Resource> downloadCover(@PathVariable Long projectId) {
         return fileRecordService.download(projectService.getProjectById(projectId).getCoverFileRecord());
-    }
-
-    @PostMapping("/{projectId}/cover")
-    public ResponseEntity<Resp> uploadCover(@PathVariable Long projectId, @RequestParam MultipartFile file) {
-        Project project = projectService.uploadAvatar(projectId, file);
-        return ResponseEntity.ok(Resp.ok(project));
     }
 
 }

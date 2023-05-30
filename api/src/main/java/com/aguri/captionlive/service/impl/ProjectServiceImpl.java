@@ -8,9 +8,7 @@ import com.aguri.captionlive.service.FileRecordService;
 import com.aguri.captionlive.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -20,15 +18,6 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Autowired
     private ProjectRepository projectRepository;
-
-    @Autowired
-    private AccessRepository accessRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private OwnershipRepository ownershipRepository;
 
     @Autowired
     private OrganizationRepository organizationRepository;
@@ -123,13 +112,4 @@ public class ProjectServiceImpl implements ProjectService {
         return projectRepository.findAllByIsPublic(true);
     }
 
-    @Override
-    public Project uploadAvatar(Long projectId, MultipartFile file) {
-        Project project = getProjectById(projectId);
-        if (!file.isEmpty()) {
-            FileRecord fileRecord = fileRecordService.saveSmallSizeFile(file, "cover" + File.separator + "project" + File.separator + projectId.toString());
-            project.setCoverFileRecord(fileRecord);
-        }
-        return updateProject(projectId, project);
-    }
 }

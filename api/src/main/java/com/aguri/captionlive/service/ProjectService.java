@@ -4,7 +4,6 @@ import com.aguri.captionlive.DTO.ProjectCreateRequest;
 import com.aguri.captionlive.model.Organization;
 import com.aguri.captionlive.model.Project;
 import com.aguri.captionlive.model.User;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -25,5 +24,4 @@ public interface ProjectService {
 
     List<Project> getAllPublicProjects();
 
-    Project uploadAvatar(Long projectId, MultipartFile file);
 }
