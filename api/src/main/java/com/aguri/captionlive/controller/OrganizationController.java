@@ -4,16 +4,13 @@ package com.aguri.captionlive.controller;
 import com.aguri.captionlive.DTO.ProjectInfo;
 import com.aguri.captionlive.common.resp.Resp;
 import com.aguri.captionlive.model.Organization;
-import com.aguri.captionlive.model.Project;
 import com.aguri.captionlive.model.User;
 import com.aguri.captionlive.service.OrganizationService;
 import com.aguri.captionlive.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -62,12 +59,6 @@ public class OrganizationController {
         organizationService.getOrganizationById(organizationId);
         List<User> users = userService.getUsersByOrganizationId(organizationId);
         return ResponseEntity.ok(Resp.ok(users));
-    }
-
-    @PostMapping("/{organizationId}/avatar")
-    public ResponseEntity<Resp> uploadAvatar(@PathVariable Long organizationId, @RequestParam MultipartFile file) {
-        Organization organization = organizationService.saveAvatarToStorage(organizationId, file);
-        return ResponseEntity.ok(Resp.ok(organization));
     }
 
     @GetMapping("/{organizationId}/projects")

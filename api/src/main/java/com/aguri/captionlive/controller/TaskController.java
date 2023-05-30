@@ -69,17 +69,4 @@ public class TaskController {
         return ResponseEntity.ok(Resp.ok(updatedTask));
     }
 
-    @PostMapping("/{taskId}/file")
-    public ResponseEntity<Resp> uploadFile(@PathVariable Long taskId, @RequestParam MultipartFile file) {
-        Task task = taskService.saveFile(taskId,file);
-        return ResponseEntity.ok(Resp.ok(task));
-    }
-    @GetMapping("/{taskId}/file")
-    public ResponseEntity<Resource> downloadFile(@PathVariable Long taskId) {
-        Task task = taskService.getTaskById(taskId);
-        FileRecord fileRecord = task.getFile();
-        return fileRecordService.download(fileRecord);
-    }
-
-
 }

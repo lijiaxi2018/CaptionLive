@@ -1,6 +1,6 @@
 package com.aguri.captionlive.service.impl;
 
-import com.aguri.captionlive.DTO.UserInfoResponse;
+import com.aguri.captionlive.DTO.UserCreateRequest;
 import com.aguri.captionlive.common.exception.EntityNotFoundException;
 import com.aguri.captionlive.model.*;
 import com.aguri.captionlive.repository.*;
@@ -10,10 +10,7 @@ import com.aguri.captionlive.service.UserService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -23,19 +20,7 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Autowired
-    private OrganizationRepository organizationRepository;
-
-    @Autowired
-    private MembershipRepository membershipRepository;
-
-    @Autowired
     private AccessRepository accessRepository;
-
-    @Autowired
-    private FileRecordService fileRecordService;
-
-    @Autowired
-    private ProjectRepository projectRepository;
 
     @Autowired
     private OrganizationService organizationService;
@@ -51,8 +36,18 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
     }
 
+    @Autowired
+    private FileRecordService fileRecordService;
+
     @Override
-    public User createUser(User user) {
+    public User createUser(UserCreateRequest userCreateRequest) {
+        User user = new User();
+        BeanUtils.copyProperties(userCreateRequest, user);
+        Long avatarId = userCreateRequest.getAvatarId();
+        if (avatarId != null) {
+            FileRecord avatar = fileRecordService.getFileRecordById(avatarId);
+            user.setAvatar(avatar);
+        }
         return userRepository.save(user);
     }
 
@@ -82,16 +77,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User uploadAvatar(Long id, MultipartFile file) {
-        User user = getUserById(id);
-        if (!file.isEmpty()) {
-                FileRecord fileRecord = fileRecordService.saveSmallSizeFile(file, "avatar" + File.separator + "user" + File.separator + id.toString());
-                user.setAvatar(fileRecord);
-        }
-        return updateUser(id, user);
-    }
-
-    @Override
     public List<Project> getAllAccessibleProjects(Long userId) {
         return getUserById(userId).getAccessibleProjects();
     }
@@ -99,13 +84,5 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<Project> getAllCommittedProjects(Long id) {
         return accessRepository.findAllByUserUserIdAndCommitment(id, Access.Commitment.COMMITTED).stream().map(Access::getProject).toList();
-    }
-
-    @Override
-    public UserInfoResponse getUserInfoById(Long userId) {
-        User user = getUserById(userId);
-        UserInfoResponse userInfoResponse = new UserInfoResponse();
-        BeanUtils.copyProperties(user, userInfoResponse);
-        return userInfoResponse;
     }
 }

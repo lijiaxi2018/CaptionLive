@@ -4,7 +4,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 
 public interface FileRecordService {
@@ -19,8 +18,7 @@ public interface FileRecordService {
 
     void updateFileRecord(Long id,FileRecord fileRecord);
 
-    FileRecord saveSmallSizeFile(MultipartFile file, String logicalDirectory);
+    ResponseEntity<Resource> download(Long fileRecordId);
 
-    ResponseEntity<Resource> download(FileRecord fileRecord);
-
+    Long uploadSmallSizeFile(MultipartFile file);
 }

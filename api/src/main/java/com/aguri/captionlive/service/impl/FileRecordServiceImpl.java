@@ -21,6 +21,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -67,11 +70,23 @@ public class FileRecordServiceImpl implements FileRecordService {
         }
     }
 
+    @Override
+    public ResponseEntity<Resource> download(Long fileRecordId) {
+        FileRecord fileRecord = getFileRecordById(fileRecordId);
+        String filePath = fileRecord.getPath();
+        String storedName = fileRecord.getStoredName();
+        Resource fileResource = new FileSystemResource(filePath + File.separator + storedName);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.valueOf(fileRecord.getType()));
+        return new ResponseEntity<>(fileResource, headers, HttpStatus.OK);
+    }
 
     @Override
-    public FileRecord saveSmallSizeFile(MultipartFile file, String logicalDirectory) {
+    public Long uploadSmallSizeFile(MultipartFile file) {
         String originalName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
         String storedName = UUID.randomUUID().toString().replaceAll("-", "");
+        OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
+        String logicalDirectory = DateTimeFormatter.ofPattern("yyyy-MM-dd").format(now);
         String filePath = fileStorageDirectory + File.separator + logicalDirectory;
 
         // Save the file to the storage directory
@@ -95,17 +110,7 @@ public class FileRecordServiceImpl implements FileRecordService {
         fileRecord.setType(contentType);
         fileRecord.setPath(filePath);
 
-        return fileRecordRepository.save(fileRecord);
-    }
-
-    @Override
-    public ResponseEntity<Resource> download(FileRecord fileRecord) {
-        String filePath = fileRecord.getPath();
-        String storedName = fileRecord.getStoredName();
-        Resource fileResource = new FileSystemResource(filePath + File.separator + storedName);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.valueOf(fileRecord.getType()));
-        return new ResponseEntity<>(fileResource, headers, HttpStatus.OK);
+        return fileRecordRepository.save(fileRecord).getFileRecordId();
     }
 
 }
