@@ -3,9 +3,11 @@ import Sidebarlvl2 from '../../components/Layout/Sidebar/Sidebarlvl2';
 
 function Projects() {
   return (
-    <div className='projects'>
+    <div>
       <Sidebarlvl2 />
-      <h1>Projects</h1>
+      <div className='projects'>
+        <h1>Projects</h1>
+      </div>
     </div>
   );
 }
