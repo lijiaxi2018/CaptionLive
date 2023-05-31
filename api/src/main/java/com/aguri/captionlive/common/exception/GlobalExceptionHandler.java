@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<String> handleUserNotFoundException(EntityNotFoundException ex) {
-        return ResponseEntity.badRequest().body(ex.getMessage());
+    public ResponseEntity<Resp> handleUserNotFoundException(EntityNotFoundException ex) {
+        return ResponseEntity.ok().body(Resp.failed(ex.getMessage()));
     }
 
     @ExceptionHandler(OperationNotAllowException.class)
-    public ResponseEntity<String> handleOperationNotAllowException(OperationNotAllowException ex) {
-        return ResponseEntity.badRequest().body(ex.getMessage());
+    public ResponseEntity<Resp> handleOperationNotAllowException(OperationNotAllowException ex) {
+        return ResponseEntity.ok().body(Resp.failed(ex.getMessage()));
     }
 
     @ExceptionHandler(Exception.class)
