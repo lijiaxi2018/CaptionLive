@@ -20,7 +20,7 @@
 .sentmails,
 .request {
   position: absolute;
-  left: 80px;
+  left: 200px;
   top: 0;
   z-index: 10;
 }
@@ -29,4 +29,67 @@
   --navbar-bg-color: #bdbdbdd3;
   --navbar-text-color: #484848;
   --navbar-text-icon: #4c4747;
+}
+
+.sign-in {
+  height: 300px;
+  width: 600px;
+  border-radius: 8px;
+  border: 0px solid #b0acad;
+  padding: 20px;
+  box-shadow: 0px 0px 30px;
+}
+
+
+.sign-in-title {
+  font-size: 25px;
+  font-weight: bold;
+  letter-spacing: 10px;
+  margin-bottom: 30px;
+}
+
+.sign-in-cancel-button {
+  font-size: 25px;
+  font-weight: bold;
+  letter-spacing: 10px;
+}
+
+.sign-in-input {
+  background-color : #e8e5e6; 
+  border-radius: 4px;
+  border: 0px;
+  height: 40px;
+  width: 250px;
+  padding: 10px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.sign-in-button {
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  margin-left: 5px;
+  margin-right: 5px;
+  font-size: 20px;
+  font-weight: bold;
+  letter-spacing: 5px;
+  border-radius: 15px;
+  color: whitesmoke;
+}
+
+.sign-in-button-list {
+  text-align: right;
+  margin-top: 40px;
+}
+
+.star-mark {
+  color: #ff6765;
+  font-size: 25px;
+  font-weight: bold;
+  margin-left: 5px;
+  position: relative;
+  left:-2px;
+  top:-5px;
 }

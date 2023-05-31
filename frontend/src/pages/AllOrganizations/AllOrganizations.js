@@ -1,9 +1,10 @@
 import React from 'react';
+import SignIn from '../../components/User/SignIn';
 
 function AllOrganizations() {
   return (
     <div className='allorganizations'>
-      <h1>All Organizations</h1>
+      <SignIn/>
     </div>
   );
 }
