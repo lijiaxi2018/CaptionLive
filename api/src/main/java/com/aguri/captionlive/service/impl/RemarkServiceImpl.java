@@ -39,7 +39,7 @@ public class RemarkServiceImpl implements RemarkService {
     @Override
     public Remark updateRemark(Long id, Remark remark) {
         Remark exitingRemark = getRemarkById(id);
-        BeanUtils.copyProperties(remark, exitingRemark);
+        exitingRemark.setContent(remark.getContent());
         return remarkRepository.save(exitingRemark);
     }
 }
