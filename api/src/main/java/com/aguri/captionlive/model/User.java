@@ -35,6 +35,7 @@ public class User {
     private Long avatarId;
 
     public Long getAvatarId() {
+        if(avatar == null) return 0L;
         return avatar.getFileRecordId();
     }
 
