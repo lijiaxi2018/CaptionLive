@@ -26,6 +26,14 @@ public class Segment {
 
     private Integer endTime;
 
+    @OneToMany(mappedBy = "segment", fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    private List<Task> tasks;
+
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "project_id")
+    private Project project;
+
     @JsonIgnore
     @UpdateTimestamp
     private LocalDateTime lastUpdatedTime;
@@ -33,12 +41,4 @@ public class Segment {
     @JsonIgnore
     @CreationTimestamp
     private LocalDateTime createdTime;
-
-    @OneToMany(mappedBy = "segment", fetch = FetchType.EAGER,cascade = CascadeType.ALL)
-    private List<Task> tasks;
-
-    @ManyToOne
-    @JoinColumn(name = "project_id")
-    private Project project;
-
 }

@@ -29,6 +29,7 @@ public class Project {
 
     private Boolean isPublic;
 
+    @JsonIgnore
     @ManyToMany
     @JoinTable(
             name = "ownerships",
@@ -40,6 +41,7 @@ public class Project {
     @OneToMany(mappedBy = "project", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Segment> segments;
 
+    @JsonIgnore
     @ManyToMany
     @JoinTable(
             name = "accesses",
