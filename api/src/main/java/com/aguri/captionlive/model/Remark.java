@@ -15,8 +15,7 @@ public class Remark {
 
     private String content;
 
-    @JsonIgnore
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -24,6 +23,5 @@ public class Remark {
     @ManyToOne
     @JoinColumn(name = "segment_id")
     private Segment segment;
-
 
 }

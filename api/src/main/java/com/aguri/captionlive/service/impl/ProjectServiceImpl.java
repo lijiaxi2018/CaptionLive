@@ -34,22 +34,25 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
 
-    @Autowired
-    private FileRecordService fileRecordService;
-
     @Override
     public Project createProject(ProjectCreateRequest projectCreateRequest) {
         Project project = new Project();
         project.setName(projectCreateRequest.getName());
         project.setIsPublic(projectCreateRequest.getIsPublic());
         project.setType(projectCreateRequest.getType());
-        List<Segment> subSegments = new java.util.ArrayList<>(projectCreateRequest.getSegmentCreateRequests().stream().map(
+        List<Segment> subSegments = new ArrayList<>(projectCreateRequest.getSegmentCreateRequests().stream().map(
                 segmentCreateRequest -> {
                     Segment segment = new Segment();
                     segment.setProject(project);
                     segment.setSummary(segmentCreateRequest.getSummary());
                     segment.setBeginTime(segmentCreateRequest.getBeginTime());
                     segment.setEndTime(segmentCreateRequest.getEndTime());
+                    ProjectCreateRequest.RemarkCreateRequest remarkCreateRequest = segmentCreateRequest.getRemarkCreateRequest();
+                    User user = new User();
+                    user.setUserId(remarkCreateRequest.getUserId());
+                    Remark remark = new Remark();
+                    remark.setUser(user);
+                    segment.setRemarks(new ArrayList<>(List.of(remark)));
                     segment.setIsGlobal(false);
                     segment.setTasks(segmentCreateRequest.getWorkflows().stream().map(workflow -> {
                         Task task = new Task();
@@ -63,6 +66,12 @@ public class ProjectServiceImpl implements ProjectService {
         ).toList());
         Segment globalSegment = new Segment();
         globalSegment.setIsGlobal(true);
+        ProjectCreateRequest.RemarkCreateRequest remarkCreateRequest = projectCreateRequest.getRemarkCreateRequest();
+        User user = new User();
+        user.setUserId(remarkCreateRequest.getUserId());
+        Remark remark = new Remark();
+        remark.setUser(user);
+        globalSegment.setRemarks(new ArrayList<>(List.of(remark)));
         globalSegment.setTasks(generateTasksForGlobalSegmentByProjectType(globalSegment, projectCreateRequest.getType()));
         ArrayList<Segment> segments = new ArrayList<>(subSegments);
         segments.add(globalSegment);

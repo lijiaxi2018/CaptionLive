@@ -1,6 +1,8 @@
 package com.aguri.captionlive.DTO;
 
+import com.aguri.captionlive.model.Remark;
 import com.aguri.captionlive.model.Task;
+import com.aguri.captionlive.model.User;
 import lombok.Data;
 
 import java.util.List;
@@ -27,10 +29,12 @@ public class ProjectInfo {
 
         private List<TaskInfo> taskInfos;
 
+        private List<Remark> remarks;
+
         @Data
         public static class TaskInfo {
 
-            private String workerName;
+            private User workerUser;
 
             private Boolean hasUploadedFile;
 

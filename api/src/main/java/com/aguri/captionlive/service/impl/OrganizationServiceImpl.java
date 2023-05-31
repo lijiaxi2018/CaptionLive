@@ -30,8 +30,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Override
     public Organization getOrganizationById(Long id) {
-        return organizationRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Organization not found with id: " + id));
+        return organizationRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Organization not found with id: " + id));
     }
 
     @Override
@@ -75,9 +74,10 @@ public class OrganizationServiceImpl implements OrganizationService {
                 segmentInfo.setSummary(segment.getSummary());
                 segmentInfo.setBeginTime(segment.getBeginTime());
                 segmentInfo.setEndTime(segment.getEndTime());
+                segmentInfo.setRemarks(segment.getRemarks());
                 List<ProjectInfo.SegmentInfo.TaskInfo> taskInfos = segment.getTasks().stream().map(task -> {
                     ProjectInfo.SegmentInfo.TaskInfo taskInfo = new ProjectInfo.SegmentInfo.TaskInfo();
-                    taskInfo.setWorkerName(task.getWorker().getUsername());
+                    taskInfo.setWorkerUser(task.getWorker());
                     taskInfo.setStatus(task.getStatus());
                     taskInfo.setHasUploadedFile(task.getFile() != null);
                     return taskInfo;
