@@ -1,4 +1,4 @@
-package com.aguri.captionlive.model;
+package com.aguri.captionlive.common;
 
 import io.jsonwebtoken.*;
 
