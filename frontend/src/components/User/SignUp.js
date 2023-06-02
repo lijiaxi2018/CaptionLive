@@ -1,7 +1,6 @@
 import React, { useState, useReducer, useEffect } from 'react';
 import { useDispatch } from 'react-redux'
-import { useLoginUserMutation } from '../../services/auth';
-import { updateUserId, updateAccessToken } from '../../redux/userSlice';
+import { usePostUserMutation } from '../../services/user';
 import { toggleSignInOnWindow, toggleSignInOnPage } from '../../redux/layoutSlice'
 
 const formReducer = (state, event) => {
@@ -9,6 +8,9 @@ const formReducer = (state, event) => {
     return {
       username: "",
       password: "",
+      confirm: "",
+      qq: "",
+      email: "",
     }
   } else {
     return {
@@ -18,32 +20,44 @@ const formReducer = (state, event) => {
   }
 }
 
-function SignIn() {
+function SignUp() {
   const dispatch = useDispatch() // Redux
-  const [loginUser] = useLoginUserMutation() // RTK QUery
+  const [postUser] = usePostUserMutation() // RTK QUery
 
   const [submitting, setSubmitting] = useState(false); // If is currently submitting the from
   
   const [formData, setFormData] = useReducer(formReducer, {
     username: "",
     password: "",
+    confirm: "",
+    qq: "",
+    email: "",
   });
 
   const [filled, setFilled] = useState(false); // If all required fields are fulfilled
   useEffect(() => {
-    setFilled(formData.username.length > 0 && formData.password.length > 0)
-  }, [formData.username, formData.password]);
+    setFilled(formData.username.length > 0 && formData.password.length > 0 && formData.confirm.length > 0)
+  }, [formData.username, formData.password, formData.confirm]);
+
+  const [matching, setMatching] = useState(true); // If password matches with confirm
+  useEffect(() => {
+    setMatching(formData.password === formData.confirm)
+  }, [formData.password, formData.confirm]);
 
   const [prompt, setPrompt] = useState(""); // Prompt message
   useEffect(() => {
     if (!submitting) {
-      if (filled) {
-        setPrompt('')
-      } else {
+      if (!filled && !matching) {
+        setPrompt('请填写所有必填信息; 请输入相同密码')
+      } else if (!filled) {
         setPrompt('请填写所有必填信息')
+      } else if (!matching) {
+        setPrompt('请输入相同密码')
+      } else {
+        setPrompt('')
       }
     }
-  }, [filled, submitting]);
+  }, [filled, matching, submitting]);
 
   const handleChange = event => {
     setFormData({
@@ -52,32 +66,32 @@ function SignIn() {
     });
   }
 
-  const userLogin = () => {
-    loginUser({
+  const userSignUp = () => {
+    postUser({ 
+      permission: 0,
       username: formData.username,
       password: formData.password,
+      qq: formData.qq,
+      email: formData.email,
     })
     .then((response) => {
       let message = response.data.message;
       if (message === "success") {
-        setPrompt("登录成功");
-        dispatch(updateUserId(response.data.token.id));
-        dispatch(updateAccessToken(response.data.token.token));
-        dispatch(toggleSignInOnWindow());
-      } else if (message.startsWith("invalid")) {
-        setPrompt("密码错误");
-      } else if (message.startsWith("User")) {
-        setPrompt("用户不存在");
+        setPrompt("注册成功，请登录");
+      // } else if (message.startsWith("invalid")) {
+      //   setPrompt("密码错误");
+      // } else if (message.startsWith("User")) {
+      //   setPrompt("用户不存在");
       }
     })
   }
   
-  const handleLogIn = event => {
+  const handleSignUp = event => {
     event.preventDefault();
-    if (filled) {
+    if (filled && matching) {
       setSubmitting(true);
 
-      userLogin()
+      userSignUp();
       
       setTimeout(() => {
         setSubmitting(false);
@@ -89,7 +103,7 @@ function SignIn() {
     }
   }
 
-  const handleSignUp = () => {
+  const handleLoginIn = () => {
     dispatch(toggleSignInOnPage());
   }
 
@@ -98,8 +112,8 @@ function SignIn() {
   }
 
   return (
-    <div className="sign-in">
-      <p className="sign-in-title">登陆</p>
+    <div className="sign-up">
+      <p className="sign-in-title">注册账号</p>
 
       <label style={{ color: '#ff6765' }}>{prompt}</label><br/>
       <input name="username" className="sign-in-input" placeholder="请输入用户名" onChange={handleChange} value={formData.username}/>
@@ -108,15 +122,21 @@ function SignIn() {
 
       <input name="password" className="sign-in-input" placeholder="请输入密码" onChange={handleChange} value={formData.password}/>
       <label className="star-mark">*</label>
+      <input name="confirm" className="sign-in-input" placeholder="请确认密码" onChange={handleChange} value={formData.confirm}/>
+      <label className="star-mark">*</label>
+      <br/>
+
+      <input name="qq" className="sign-in-input-non-required" placeholder="请输入QQ" onChange={handleChange} value={formData.qq}/>
+      <input name="email" className="sign-in-input-non-required" placeholder="请输入邮箱" onChange={handleChange} value={formData.email}/>
       <br/>
 
       <div className="sign-in-button-list">
         <button style={{ 'backgroundColor': '#ff6765' }} className="sign-in-button" onClick={handleCancel}>取消</button>
-        <button style={{ 'backgroundColor': '#7f7f7f' }} className="sign-in-button" onClick={handleSignUp}>注册</button>
-        <button style={{ 'backgroundColor': '#5bc96d' }} className="sign-in-button" onClick={handleLogIn}>登陆</button>
+        <button style={{ 'backgroundColor': '#7f7f7f' }} className="sign-in-button" onClick={handleLoginIn}>登陆</button>
+        <button style={{ 'backgroundColor': '#5bc96d' }} className="sign-in-button" onClick={handleSignUp}>注册</button>
       </div>
     </div>
   )
 }
 
-export default SignIn;
+export default SignUp;

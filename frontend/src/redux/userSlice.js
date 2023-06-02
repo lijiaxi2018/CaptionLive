@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-const localUserId = localStorage.getItem("userId") !== null ? JSON.parse(localStorage.getItem("userId")) : -1;
-const localAccessToken = localStorage.getItem("accessToken") !== null ? JSON.parse(localStorage.getItem("accessToken")) : "";
+const localUserId = localStorage.getItem("clUserId") !== null ? JSON.parse(localStorage.getItem("clUserId")) : -1;
+const localAccessToken = localStorage.getItem("clAccessToken") !== null ? JSON.parse(localStorage.getItem("clAccessToken")) : "";
 
 const initialState = {
   userId: localUserId,
@@ -15,12 +15,12 @@ export const userSlice = createSlice({
 
     updateUserId: (state, action) => {
       state.userId = action.payload;
-      localStorage.setItem("userId", JSON.stringify(state.userId));
+      localStorage.setItem("clUserId", JSON.stringify(state.userId));
     },
 
     updateAccessToken: (state, action) => {
       state.accessToken = action.payload;
-      localStorage.setItem("accessToken", JSON.stringify(state.accessToken));
+      localStorage.setItem("clAccessToken", JSON.stringify(state.accessToken));
     },
   },
 })
