@@ -32,7 +32,7 @@ function MyHome() {
     isSuccess2,
     isError2,
     error2
-  } = useGetUserQuery(2)
+  } = useGetUserQuery(1)
   let user2Content = JSON.stringify(user)
 
   // RTK Post, Put, and Delete
