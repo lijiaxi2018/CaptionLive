@@ -31,6 +31,9 @@ public class User {
 
     private String email;
 
+    @Column(columnDefinition = "TEXT")
+    private String description;
+
     @Transient
     private Long avatarId;
 
