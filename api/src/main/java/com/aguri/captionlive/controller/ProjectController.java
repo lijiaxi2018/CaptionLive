@@ -1,13 +1,11 @@
 package com.aguri.captionlive.controller;
 
-import com.aguri.captionlive.DTO.ProjectCreateRequest;
+import com.aguri.captionlive.DTO.ProjectRequest;
 import com.aguri.captionlive.common.resp.Resp;
 import com.aguri.captionlive.model.*;
-import com.aguri.captionlive.service.FileRecordService;
 import com.aguri.captionlive.service.ProjectService;
 import com.aguri.captionlive.service.SegmentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,9 +20,6 @@ public class ProjectController {
     @Autowired
     private SegmentService segmentService;
 
-    @Autowired
-    private FileRecordService fileRecordService;
-
     @GetMapping
     public ResponseEntity<Resp> getAllProjects() {
         List<Project> projects = projectService.getAllProjects();
@@ -38,9 +33,9 @@ public class ProjectController {
     }
 
     @PostMapping
-    public ResponseEntity<Resp> createProject(@RequestBody ProjectCreateRequest projectCreateRequest) {
+    public ResponseEntity<Resp> createProject(@RequestBody ProjectRequest projectCreateRequest) {
         Project createdProject = projectService.createProject(projectCreateRequest);
-        return ResponseEntity.ok(Resp.ok());
+        return ResponseEntity.ok(Resp.ok(createdProject));
     }
 
     @GetMapping("/{id}")
@@ -55,9 +50,9 @@ public class ProjectController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Resp> updateProject(@PathVariable Long id, @RequestBody Project project) {
-        Project updatedProject = projectService.updateProject(id, project);
+    @PutMapping("")
+    public ResponseEntity<Resp> updateProject(@RequestBody ProjectRequest projectRequest) {
+        Project updatedProject = projectService.updateProject(projectRequest);
         return ResponseEntity.ok(Resp.ok(updatedProject));
     }
 
