@@ -112,28 +112,28 @@ function SignUp() {
   }
 
   return (
-    <div className="sign-up">
-      <p className="sign-in-title">注册账号</p>
+    <div className="sign-up-window">
+      <p className="sign-in-up-title">注册账号</p>
 
       <label style={{ color: '#ff6765' }}>{prompt}</label><br/>
-      <input name="username" className="sign-in-input" placeholder="请输入用户名" onChange={handleChange} value={formData.username}/>
+      <input name="username" className="sign-in-up-input" placeholder="请输入用户名" onChange={handleChange} value={formData.username}/>
       <label className="star-mark">*</label>
       <br/>
 
-      <input name="password" className="sign-in-input" placeholder="请输入密码" onChange={handleChange} value={formData.password}/>
+      <input name="password" className="sign-in-up-input" placeholder="请输入密码" onChange={handleChange} value={formData.password}/>
       <label className="star-mark">*</label>
-      <input name="confirm" className="sign-in-input" placeholder="请确认密码" onChange={handleChange} value={formData.confirm}/>
+      <input name="confirm" className="sign-in-up-input" placeholder="请确认密码" onChange={handleChange} value={formData.confirm}/>
       <label className="star-mark">*</label>
       <br/>
 
-      <input name="qq" className="sign-in-input-non-required" placeholder="请输入QQ" onChange={handleChange} value={formData.qq}/>
-      <input name="email" className="sign-in-input-non-required" placeholder="请输入邮箱" onChange={handleChange} value={formData.email}/>
+      <input name="qq" className="sign-in-up-input-non-required" placeholder="请输入QQ" onChange={handleChange} value={formData.qq}/>
+      <input name="email" className="sign-in-up-input-non-required" placeholder="请输入邮箱" onChange={handleChange} value={formData.email}/>
       <br/>
 
-      <div className="sign-in-button-list">
-        <button style={{ 'backgroundColor': '#ff6765' }} className="sign-in-button" onClick={handleCancel}>取消</button>
-        <button style={{ 'backgroundColor': '#7f7f7f' }} className="sign-in-button" onClick={handleLoginIn}>登陆</button>
-        <button style={{ 'backgroundColor': '#5bc96d' }} className="sign-in-button" onClick={handleSignUp}>注册</button>
+      <div className="sign-in-up-button-list">
+        <button style={{ 'backgroundColor': '#ff6765' }} className="sign-in-up-button" onClick={handleCancel}>取消</button>
+        <button style={{ 'backgroundColor': '#7f7f7f' }} className="sign-in-up-button" onClick={handleLoginIn}>登陆</button>
+        <button style={{ 'backgroundColor': '#5bc96d' }} className="sign-in-up-button" onClick={handleSignUp}>注册</button>
       </div>
     </div>
   )
