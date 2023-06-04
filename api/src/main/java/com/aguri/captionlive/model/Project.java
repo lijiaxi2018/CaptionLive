@@ -55,7 +55,7 @@ public class Project {
     @JsonIgnore
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "file_record_id")
-    private FileRecord file;
+    private FileRecord sourceFileRecord;
 
     @UpdateTimestamp
     private LocalDateTime lastUpdatedTime;
