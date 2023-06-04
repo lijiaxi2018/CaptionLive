@@ -39,18 +39,18 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
     }
 
-    @Autowired
-    private FileRecordService fileRecordService;
+//    @Autowired
+//    private FileRecordService fileRecordService;
 
     @Override
     public User createUser(UserRequest userRequest) {
         User user = new User();
         BeanUtils.copyProperties(userRequest, user);
-        Long avatarId = userRequest.getAvatarId();
-        if (avatarId != null) {
-            FileRecord avatar = fileRecordService.getFileRecordById(avatarId);
-            user.setAvatar(avatar);
-        }
+//        Long avatarId = userRequest.getAvatarId();
+//        if (avatarId != null) {
+//            FileRecord avatar = fileRecordService.getFileRecordById(avatarId);
+//            user.setAvatar(avatar);
+//        }
         return userRepository.save(user);
     }
 
