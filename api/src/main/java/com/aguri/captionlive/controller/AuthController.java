@@ -74,7 +74,7 @@ public class AuthController {
 
         Optional<User> existingUser = userRepository.findByUsername(username);
         if (existingUser.isPresent()) {
-            return ResponseEntity.ok(Resp.failed("Duplicate username"));
+            return ResponseEntity.ok(Resp.failed("User already exists"));
         }
 
         String email = body.get("email");
