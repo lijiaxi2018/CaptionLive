@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit'
 const initialState = {
   openSignInOnWindow: false,
   inSignIn: false,
+  inEditUser: false,
 }
 
 export const layoutSlice = createSlice({
@@ -16,9 +17,13 @@ export const layoutSlice = createSlice({
     toggleSignInOnPage: (state) => {
       state.inSignIn = !state.inSignIn;
     },
+
+    toggleInEditUser: (state) => {
+      state.inEditUser = !state.inEditUser;
+    },
   },
 })
 
-export const { toggleSignInOnWindow, toggleSignInOnPage } = layoutSlice.actions
+export const { toggleSignInOnWindow, toggleSignInOnPage, toggleInEditUser } = layoutSlice.actions
 
 export default layoutSlice.reducer

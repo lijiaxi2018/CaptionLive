@@ -131,9 +131,9 @@ function SignUp() {
       <br/>
 
       <div className="sign-in-up-button-list">
-        <button style={{ 'backgroundColor': '#ff6765' }} className="sign-in-up-button" onClick={handleCancel}>取消</button>
-        <button style={{ 'backgroundColor': '#7f7f7f' }} className="sign-in-up-button" onClick={handleLoginIn}>登陆</button>
-        <button style={{ 'backgroundColor': '#5bc96d' }} className="sign-in-up-button" onClick={handleSignUp}>注册</button>
+        <button className="general-button-grey" onClick={handleLoginIn}>前往登陆</button>
+        <button className="general-button-red" onClick={handleCancel}>取消</button>
+        <button className="general-button-green" onClick={handleSignUp}>注册</button>
       </div>
     </div>
   )
