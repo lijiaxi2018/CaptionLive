@@ -31,6 +31,13 @@ public class FileRecord {
     @CreationTimestamp
     private LocalDateTime createdTime;
 
+    public FileRecord(Long fileRecordId) {
+        FileRecordId = fileRecordId;
+    }
+
+    public FileRecord() {
+    }
+
     public String getSuffix() {
         return getOriginalName().split("\\.")[1];
     }

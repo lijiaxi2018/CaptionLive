@@ -1,9 +1,12 @@
 package com.aguri.captionlive.service;
 
+import com.aguri.captionlive.DTO.OrganizationRequest;
 import com.aguri.captionlive.DTO.ProjectInfo;
 import com.aguri.captionlive.model.Organization;
 
 import java.util.List;
+
+
 
 public interface OrganizationService {
 
@@ -11,9 +14,9 @@ public interface OrganizationService {
 
     List<Organization> getAllOrganizations();
 
-    Organization createOrganization(Organization organization);
+    Organization createOrganization(OrganizationRequest organizationRequest);
 
-    Organization updateOrganization(Long id, Organization organization);
+    Organization updateOrganization(Long id, OrganizationRequest organizationRequest);
 
     void deleteOrganization(Long id);
 

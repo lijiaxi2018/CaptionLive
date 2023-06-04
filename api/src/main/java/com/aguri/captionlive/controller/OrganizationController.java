@@ -1,6 +1,7 @@
 package com.aguri.captionlive.controller;
 
 
+import com.aguri.captionlive.DTO.OrganizationRequest;
 import com.aguri.captionlive.DTO.ProjectInfo;
 import com.aguri.captionlive.common.resp.Resp;
 import com.aguri.captionlive.model.Organization;
@@ -31,7 +32,7 @@ public class OrganizationController {
     }
 
     @PostMapping
-    public ResponseEntity<Resp> createOrganization(@RequestBody Organization organization) {
+    public ResponseEntity<Resp> createOrganization(@RequestBody OrganizationRequest organization) {
         Organization createdOrganization = organizationService.createOrganization(organization);
         return ResponseEntity.status(HttpStatus.CREATED).body(Resp.ok(createdOrganization));
     }
@@ -49,7 +50,7 @@ public class OrganizationController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Resp> updateOrganization(@PathVariable Long id, @RequestBody Organization organization) {
+    public ResponseEntity<Resp> updateOrganization(@PathVariable Long id, @RequestBody OrganizationRequest organization) {
         Organization updatedOrganization = organizationService.updateOrganization(id, organization);
         return ResponseEntity.ok(Resp.ok(updatedOrganization));
     }

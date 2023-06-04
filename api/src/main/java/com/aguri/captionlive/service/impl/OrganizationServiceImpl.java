@@ -1,13 +1,17 @@
 package com.aguri.captionlive.service.impl;
 
+import com.aguri.captionlive.DTO.OrganizationRequest;
 import com.aguri.captionlive.DTO.ProjectInfo;
 import com.aguri.captionlive.common.exception.EntityNotFoundException;
+import com.aguri.captionlive.model.FileRecord;
 import com.aguri.captionlive.model.Organization;
 import com.aguri.captionlive.model.Project;
 import com.aguri.captionlive.model.Segment;
+import com.aguri.captionlive.repository.FileRecordRepository;
 import com.aguri.captionlive.repository.OrganizationRepository;
 import com.aguri.captionlive.repository.ProjectRepository;
 import com.aguri.captionlive.service.OrganizationService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,7 +28,6 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Autowired
     private OrganizationRepository organizationRepository;
 
-
     @Autowired
     private ProjectRepository projectRepository;
 
@@ -39,16 +42,19 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Override
-    public Organization createOrganization(Organization organization) {
+    public Organization createOrganization(OrganizationRequest organizationRequest) {
+        Organization organization = new Organization();
+        BeanUtils.copyProperties(organizationRequest, organization);
+        organization.setAvatar(new FileRecord(organizationRequest.getAvatarId()));
         return organizationRepository.save(organization);
     }
 
     @Override
-    public Organization updateOrganization(Long id, Organization organization) {
+    public Organization updateOrganization(Long id, OrganizationRequest organizationRequest) {
         Organization existingOrganization = getOrganizationById(id);
-        existingOrganization.setName(organization.getName());
-        existingOrganization.setDescription(organization.getDescription());
-        existingOrganization.setAvatar(organization.getAvatar());
+        existingOrganization.setName(organizationRequest.getName());
+        existingOrganization.setDescription(organizationRequest.getDescription());
+        existingOrganization.setAvatar(new FileRecord(organizationRequest.getAvatarId()));
         return organizationRepository.save(existingOrganization);
     }
 
