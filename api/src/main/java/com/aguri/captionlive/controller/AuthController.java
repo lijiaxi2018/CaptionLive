@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Objects;
 import java.util.Optional;
 
+import com.aguri.captionlive.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +19,6 @@ import com.aguri.captionlive.service.UserService;
 import com.google.gson.JsonObject;
 
 
-
 @RestController
 public class AuthController {
 
@@ -31,6 +31,9 @@ public class AuthController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @PostMapping("api/login")
     public ResponseEntity<?> authenticateUser(@RequestBody HashMap<String, String> body) {
 
@@ -42,7 +45,7 @@ public class AuthController {
             return ResponseEntity.ok(Resp.failed("invalid password"));
         }
 
-        try{
+        try {
 
             JsonObject loginResponse = new JsonObject();
             JsonObject data = new JsonObject();
@@ -53,11 +56,11 @@ public class AuthController {
             data.addProperty("token", token);
 
             loginResponse.addProperty("message", "success");
-            loginResponse.add("token",data);
-            
+            loginResponse.add("token", data);
+
             return ResponseEntity.ok(loginResponse.toString());
 
-        }catch(Exception e){
+        } catch (Exception e) {
             return ResponseEntity.ok(Resp.ok(e));
         }
     }
@@ -68,6 +71,12 @@ public class AuthController {
 
         String password = body.get("password");
         String username = body.get("username");
+
+        Optional<User> existingUser = userRepository.findByUsername(username);
+        if (existingUser.isPresent()) {
+            return ResponseEntity.ok(Resp.failed("User already exists"));
+        }
+
         String email = body.get("email");
         String qq = body.get("qq");
         UserCreateRequest userCreateRequest = new UserCreateRequest();
@@ -79,8 +88,8 @@ public class AuthController {
 
         User user = userService.getUserByUsername(username);
 
-        
-        try{
+
+        try {
             JsonObject loginResponse = new JsonObject();
             JsonObject data = new JsonObject();
 
@@ -90,11 +99,11 @@ public class AuthController {
             data.addProperty("token", token);
 
             loginResponse.addProperty("message", "success");
-            loginResponse.add("token",data);
-            
+            loginResponse.add("token", data);
+
             return ResponseEntity.ok(loginResponse.toString());
 
-        }catch(Exception e){
+        } catch (Exception e) {
             return ResponseEntity.ok(Resp.ok(e));
         }
     }

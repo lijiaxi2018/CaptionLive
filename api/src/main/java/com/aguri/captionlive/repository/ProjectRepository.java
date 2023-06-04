@@ -1,6 +1,7 @@
 package com.aguri.captionlive.repository;
 
 import com.aguri.captionlive.model.Project;
+import com.aguri.captionlive.model.Segment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
