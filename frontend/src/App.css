@@ -265,3 +265,15 @@
   color: #7f7f7f;
   box-shadow: 2px 2px 1px;
 } */
+
+.file-drop-zone {
+  width: 200px;
+  height: 100px;
+  background-color: #ff6765;
+}
+
+.file-input {
+  width: 200px;
+  height: 100px;
+  background-color: #9d65ff;
+}
