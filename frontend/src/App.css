@@ -222,15 +222,6 @@
   box-shadow: 2px 2px 1px;
 }
 
-.sign-up {
-  height: 350px;
-  width: 600px;
-  border-radius: 8px;
-  border: 0px solid #b0acad;
-  padding: 20px;
-  box-shadow: 0px 0px 30px;
-}
-
 .file-drop-zone {
   width: 200px;
   height: 100px;
