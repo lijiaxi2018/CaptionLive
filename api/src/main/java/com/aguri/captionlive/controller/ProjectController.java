@@ -3,6 +3,7 @@ package com.aguri.captionlive.controller;
 import com.aguri.captionlive.DTO.ProjectRequest;
 import com.aguri.captionlive.common.resp.Resp;
 import com.aguri.captionlive.model.*;
+import com.aguri.captionlive.service.OwnershipService;
 import com.aguri.captionlive.service.ProjectService;
 import com.aguri.captionlive.service.SegmentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,6 +68,16 @@ public class ProjectController {
         List<Organization> organizations = projectService.getAllAccessibleOrganizations(projectId);
         return ResponseEntity.ok(Resp.ok(organizations));
     }
+
+    @Autowired
+    OwnershipService ownershipService;
+
+    @PutMapping("/{projectId}/organizations/{organizationId}")
+    public ResponseEntity<Resp> shareProject2Organization(@PathVariable Long organizationId, @PathVariable Long projectId) {
+        ownershipService.shareProject2Organization(projectId, organizationId);
+        return ResponseEntity.ok(Resp.ok());
+    }
+
 
     @GetMapping("/{projectId}/segments")
     public ResponseEntity<Resp> getAllSegments(@PathVariable Long projectId) {
