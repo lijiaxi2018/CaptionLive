@@ -31,10 +31,6 @@ public class Project {
     @JoinColumn(name = "cover_file_record_id")
     private FileRecord coverFileRecord;
 
-    private Type type;
-
-    private Boolean isPublic;
-
     @JsonIgnore
     @ManyToMany
     @JoinTable(
