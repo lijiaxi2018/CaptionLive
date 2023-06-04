@@ -1,7 +1,6 @@
 package com.aguri.captionlive.common.exception;
 
 import com.aguri.captionlive.common.resp.Resp;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -18,11 +17,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Resp> handleOperationNotAllowException(OperationNotAllowException ex) {
         return ResponseEntity.ok().body(Resp.failed(ex.getMessage()));
     }
-//
-//    @ExceptionHandler(Exception.class)
-//    public ResponseEntity<Resp> handleException(Exception ex) {
-//        Resp response = new Resp("Unknown Error", ex);
-//        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-//    }
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Resp> handleException(Exception ex) {
+        return ResponseEntity.ok().body(Resp.failed(ex.getMessage()));
+    }
 }
 

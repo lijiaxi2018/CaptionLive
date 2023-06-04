@@ -1,7 +1,8 @@
 package com.aguri.captionlive.service.impl;
 
-import com.aguri.captionlive.DTO.UserCreateRequest;
+import com.aguri.captionlive.DTO.UserRequest;
 import com.aguri.captionlive.common.exception.EntityNotFoundException;
+import com.aguri.captionlive.common.resp.Resp;
 import com.aguri.captionlive.model.*;
 import com.aguri.captionlive.repository.*;
 import com.aguri.captionlive.service.FileRecordService;
@@ -9,9 +10,11 @@ import com.aguri.captionlive.service.OrganizationService;
 import com.aguri.captionlive.service.UserService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -40,10 +43,10 @@ public class UserServiceImpl implements UserService {
     private FileRecordService fileRecordService;
 
     @Override
-    public User createUser(UserCreateRequest userCreateRequest) {
+    public User createUser(UserRequest userRequest) {
         User user = new User();
-        BeanUtils.copyProperties(userCreateRequest, user);
-        Long avatarId = userCreateRequest.getAvatarId();
+        BeanUtils.copyProperties(userRequest, user);
+        Long avatarId = userRequest.getAvatarId();
         if (avatarId != null) {
             FileRecord avatar = fileRecordService.getFileRecordById(avatarId);
             user.setAvatar(avatar);
@@ -52,12 +55,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateUser(Long id, User user) {
-        User existingUser = getUserById(id);
-        existingUser.setUsername(user.getUsername());
-        existingUser.setEmail(user.getEmail());
-        existingUser.setPassword(user.getPassword());
-        return userRepository.save(existingUser);
+    public User updateUser(Long id, UserRequest userRequest) {
+        User user = getUserById(id);
+        Optional<User> existingUser = userRepository.findByUsername(userRequest.getUsername());
+        if (existingUser.isPresent()) {
+            throw new RuntimeException("User already exists");
+        }
+        BeanUtils.copyProperties(userRequest, user);
+        return userRepository.save(user);
     }
 
     @Override

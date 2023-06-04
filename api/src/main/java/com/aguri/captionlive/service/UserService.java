@@ -1,6 +1,6 @@
 package com.aguri.captionlive.service;
 
-import com.aguri.captionlive.DTO.UserCreateRequest;
+import com.aguri.captionlive.DTO.UserRequest;
 import com.aguri.captionlive.model.Project;
 import com.aguri.captionlive.model.User;
 
@@ -12,9 +12,9 @@ public interface UserService {
 
     User getUserById(Long id);
 
-    User createUser(UserCreateRequest userCreateRequest);
+    User createUser(UserRequest userRequest);
 
-    User updateUser(Long id, User user);
+    User updateUser(Long id, UserRequest user);
 
     void deleteUser(Long id);
 

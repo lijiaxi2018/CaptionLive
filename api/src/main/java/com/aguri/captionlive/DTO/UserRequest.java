@@ -3,7 +3,7 @@ package com.aguri.captionlive.DTO;
 import lombok.Data;
 
 @Data
-public class UserCreateRequest {
+public class UserRequest {
 
     private Integer permission;
 
@@ -16,4 +16,7 @@ public class UserCreateRequest {
     private String email;
 
     private Long avatarId;
+
+    private String description;
+
 }
