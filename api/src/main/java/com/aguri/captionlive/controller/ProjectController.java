@@ -50,21 +50,21 @@ public class ProjectController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("")
+    @PutMapping
     public ResponseEntity<Resp> updateProject(@RequestBody ProjectRequest projectRequest) {
         Project updatedProject = projectService.updateProject(projectRequest);
         return ResponseEntity.ok(Resp.ok(updatedProject));
     }
 
     @GetMapping("/{projectIid}/users")
-    public ResponseEntity<Resp> getAllUsers(@PathVariable Long projectIid) {
+    public ResponseEntity<Resp> getAllAccessibleUsers(@PathVariable Long projectIid) {
         List<User> users = projectService.getAllAccessibleUsers(projectIid);
         return ResponseEntity.ok(Resp.ok(users));
     }
 
-    @GetMapping("/{projectIid}/organizations")
-    public ResponseEntity<Resp> getAllOrganizations(@PathVariable Long projectIid) {
-        List<Organization> organizations = projectService.getAllAccessibleOrganizations(projectIid);
+    @GetMapping("/{projectId}/organizations")
+    public ResponseEntity<Resp> getAllOrganizations(@PathVariable Long projectId) {
+        List<Organization> organizations = projectService.getAllAccessibleOrganizations(projectId);
         return ResponseEntity.ok(Resp.ok(organizations));
     }
 
