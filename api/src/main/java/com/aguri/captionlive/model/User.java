@@ -11,7 +11,11 @@ import java.util.List;
 
 @Data
 @Entity
-@Table(name = "users")
+@Table(name = "users",
+        indexes = {
+                @Index(name = "idx_username", columnList = "username")
+        }
+)
 public class User {
 
     @Id
@@ -33,14 +37,6 @@ public class User {
 
     @Column(columnDefinition = "TEXT")
     private String description;
-
-    @Transient
-    private Long avatarId;
-
-    public Long getAvatarId() {
-        if(avatar == null) return 0L;
-        return avatar.getFileRecordId();
-    }
 
     @JsonIgnore
     @OneToOne
@@ -71,5 +67,13 @@ public class User {
 
     @CreationTimestamp
     private LocalDateTime createdTime;
+
+    @Transient
+    private Long avatarId;
+
+    public Long getAvatarId() {
+        if (avatar == null) return 0L;
+        return avatar.getFileRecordId();
+    }
 
 }

@@ -9,9 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.aguri.captionlive.DTO.SignInRequest;
-import com.aguri.captionlive.DTO.SignInResponse;
-import com.aguri.captionlive.DTO.UserCreateRequest;
+import com.aguri.captionlive.DTO.UserRequest;
 import com.aguri.captionlive.common.resp.Resp;
 import com.aguri.captionlive.common.JwtTokenProvider;
 import com.aguri.captionlive.model.User;
@@ -79,12 +77,12 @@ public class AuthController {
 
         String email = body.get("email");
         String qq = body.get("qq");
-        UserCreateRequest userCreateRequest = new UserCreateRequest();
-        userCreateRequest.setUsername(username);
-        userCreateRequest.setPassword(password);
-        userCreateRequest.setEmail(email);
-        userCreateRequest.setQq(qq);
-        userService.createUser(userCreateRequest);
+        UserRequest userRequest = new UserRequest();
+        userRequest.setUsername(username);
+        userRequest.setPassword(password);
+        userRequest.setEmail(email);
+        userRequest.setQq(qq);
+        userService.createUser(userRequest);
 
         User user = userService.getUserByUsername(username);
 
