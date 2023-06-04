@@ -66,11 +66,9 @@ public class User {
     )
     private List<Project> accessibleProjects;
 
-    @JsonIgnore
     @UpdateTimestamp
     private LocalDateTime lastUpdatedTime;
 
-    @JsonIgnore
     @CreationTimestamp
     private LocalDateTime createdTime;
 

@@ -27,14 +27,14 @@ function Header({title, icon}) {
         
         { userId === -1 &&
           <div className="page-header-username">
-            <button style={{ 'backgroundColor': '#e7e6e6' }} className="general-page-sign-in-up-button" onClick={openloginInOut}>登陆/注册</button>
+            <button className="general-button-grey" onClick={openloginInOut}>登陆/注册</button>
           </div>
         }
         
         { userId !== -1 &&
           <div className="page-header-username">
             <label>{welcomePrompt}</label>
-            <button style={{ 'backgroundColor': '#e7e6e6' }} className="general-page-sign-in-up-button" onClick={loginOut}>登出</button>
+            <button className="general-button-grey" onClick={loginOut}>登出</button>
           </div>
         }
       </div>

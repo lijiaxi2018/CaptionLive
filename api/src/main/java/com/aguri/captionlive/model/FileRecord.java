@@ -25,11 +25,9 @@ public class FileRecord {
 
     private String type;
 
-    @JsonIgnore
     @UpdateTimestamp
     private LocalDateTime lastUpdatedTime;
 
-    @JsonIgnore
     @CreationTimestamp
     private LocalDateTime createdTime;
 

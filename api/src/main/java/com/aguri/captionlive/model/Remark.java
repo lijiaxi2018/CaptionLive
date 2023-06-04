@@ -4,6 +4,10 @@ package com.aguri.captionlive.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -23,5 +27,11 @@ public class Remark {
     @ManyToOne
     @JoinColumn(name = "segment_id")
     private Segment segment;
+
+    @UpdateTimestamp
+    private LocalDateTime lastUpdatedTime;
+
+    @CreationTimestamp
+    private LocalDateTime createdTime;
 
 }

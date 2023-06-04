@@ -44,11 +44,9 @@ public class Organization {
     private List<Project> projects;
 
 
-    @JsonIgnore
     @UpdateTimestamp
     private LocalDateTime lastUpdatedTime;
 
-    @JsonIgnore
     @CreationTimestamp
     private LocalDateTime createdTime;
 
