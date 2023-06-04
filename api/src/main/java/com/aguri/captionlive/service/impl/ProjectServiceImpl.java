@@ -99,7 +99,13 @@ public class ProjectServiceImpl implements ProjectService {
 
     private void updateProjectSourceFileAndDesiredFileName(Project existingProject, String desiredFileName, Long sourceFileRecordId) {
         updateProjectSourceFile(existingProject, sourceFileRecordId);
-        updateProjectDesiredFileName(existingProject, desiredFileName);
+        updateDesiredFileNameIfDesiredFileNotNull(existingProject.getSourceFileRecord(), desiredFileName);
+    }
+
+    private static void updateDesiredFileNameIfDesiredFileNotNull(FileRecord sourceFileRecord, String desiredFileName) {
+        if (desiredFileName != null) {
+            updateDesiredFileName(sourceFileRecord, desiredFileName);
+        }
     }
 
     private void updateProjectSegments(ProjectRequest projectRequest, Project existingProject) {
@@ -112,17 +118,15 @@ public class ProjectServiceImpl implements ProjectService {
         existingProject.setSegments(segments);
     }
 
-    private static void updateProjectDesiredFileName(Project existingProject, String desiredFileName) {
-        if (desiredFileName != null) {
-            String suffix = existingProject.getFile().getOriginalName().split("\\.")[1];
-            existingProject.getFile().setOriginalName(desiredFileName + "." + suffix);
-        }
+    private static void updateDesiredFileName(FileRecord fileRecord, String desiredFileName) {
+        String suffix = fileRecord.getSuffix();
+        fileRecord.setOriginalName(desiredFileName + "." + suffix);
     }
 
     private void updateProjectSourceFile(Project existingProject, Long newSourceFileRecordId) {
-        if (!Objects.equals(existingProject.getFile().getFileRecordId(), newSourceFileRecordId)) {
+        if (!Objects.equals(existingProject.getSourceFileRecord().getFileRecordId(), newSourceFileRecordId)) {
             FileRecord newFileRecord = fileRecordService.getFileRecordById(newSourceFileRecordId);
-            existingProject.setFile(newFileRecord);
+            existingProject.setSourceFileRecord(newFileRecord);
         }
     }
 
@@ -233,9 +237,12 @@ public class ProjectServiceImpl implements ProjectService {
 
         project.setType(projectRequest.getType());
 
+        project.setOrganizations(new ArrayList<>(List.of(organization)));
+
         List<Segment> subSegments = generateProjectSubSegments(project, projectRequest.getSegmentRequests(), projectRequest.getOperator());
 
         Segment globalSegment = generateGlobalSegment(project, projectRequest);
+
         ArrayList<Segment> segments = new ArrayList<>(subSegments);
         segments.add(globalSegment);
         project.setSegments(segments);
@@ -245,12 +252,11 @@ public class ProjectServiceImpl implements ProjectService {
 
     private Segment generateGlobalSegment(Project project, ProjectRequest projectRequest) {
         Segment globalSegment = new Segment();
+        ProjectRequest.RemarkRequest remarkRequest = projectRequest.getRemarkRequest();
 
         globalSegment.setProject(project);
 
         globalSegment.setIsGlobal(true);
-
-        ProjectRequest.RemarkRequest remarkRequest = projectRequest.getRemarkRequest();
 
         globalSegment.setRemarks(List.of(generateRemark(globalSegment, remarkRequest, projectRequest.getOperator())));
 
@@ -262,23 +268,35 @@ public class ProjectServiceImpl implements ProjectService {
 
     private Remark generateRemark(Segment segment, ProjectRequest.RemarkRequest remarkRequest, ProjectRequest.OperatorRequest createBy) {
         User user = new User();
-        user.setUserId(createBy.getUserId());
         Remark remark = new Remark();
+
+        user.setUserId(createBy.getUserId());
+
         remark.setSegment(segment);
+
         remark.setUser(user);
+
         remark.setContent(remarkRequest.getContent());
+
         return remark;
     }
 
     private List<Segment> generateProjectSubSegments(Project existingProject, List<ProjectRequest.SegmentRequest> segmentRequests, ProjectRequest.OperatorRequest createBy) {
         return segmentRequests.stream().map(segmentRequest -> {
             Segment segment = new Segment();
+
             segment.setProject(existingProject);
+
             segment.setSummary(segmentRequest.getSummary());
+
             segment.setBeginTime(segmentRequest.getBeginTime());
+
             segment.setEndTime(segmentRequest.getEndTime());
-            segment.setRemarks(List.of(generateRemark(segment, segmentRequest.getRemarkRequest(), createBy)));
+
+            segment.setRemarks(new ArrayList<>(List.of(generateRemark(segment, segmentRequest.getRemarkRequest(), createBy))));
+
             segment.setIsGlobal(false);
+
             segment.setTasks(segmentRequest.getWorkflows().stream().map(workflow -> generateTask(segment, workflow)).toList());
             return segment;
         }).toList();
