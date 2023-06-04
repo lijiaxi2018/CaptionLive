@@ -23,5 +23,4 @@ public interface ProjectService {
     List<Organization> getAllAccessibleOrganizations(Long projectId);
 
     List<Project> getAllPublicProjects();
-
 }

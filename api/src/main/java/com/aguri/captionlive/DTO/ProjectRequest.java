@@ -13,6 +13,8 @@ import java.util.List;
 public class ProjectRequest {
     private Long projectId;
 
+    private Long organizationId;
+
     private Long sourceFileRecordId;
 
     private String fileName;

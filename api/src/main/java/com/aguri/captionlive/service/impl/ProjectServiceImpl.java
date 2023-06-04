@@ -5,11 +5,11 @@ import com.aguri.captionlive.common.exception.EntityNotFoundException;
 import com.aguri.captionlive.model.*;
 import com.aguri.captionlive.repository.*;
 import com.aguri.captionlive.service.FileRecordService;
+import com.aguri.captionlive.service.OrganizationService;
 import com.aguri.captionlive.service.ProjectService;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -24,6 +24,9 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Autowired
     private ProjectRepository projectRepository;
+
+    @Autowired
+    private OrganizationService organizationService;
 
     @Autowired
     private OrganizationRepository organizationRepository;
@@ -216,14 +219,13 @@ public class ProjectServiceImpl implements ProjectService {
 
     private Project generateProject(ProjectRequest projectRequest) {
         Project project = new Project();
-
         Long sourceRecordFileId = projectRequest.getSourceFileRecordId();
         FileRecord fileRecord = fileRecordService.getFileRecordById(sourceRecordFileId);
-        if (projectRequest.getFileName() != null) {
-            String suffix = fileRecord.getSuffix();
-            fileRecord.setOriginalName(projectRequest.getFileName() + "." + suffix);
-        }
-        project.setFile(fileRecord);
+        Organization organization = organizationService.getOrganizationById(projectRequest.getOrganizationId());
+
+        updateDesiredFileNameIfDesiredFileNotNull(fileRecord, projectRequest.getFileName());
+
+        project.setSourceFileRecord(fileRecord);
 
         project.setName(projectRequest.getName());
 
