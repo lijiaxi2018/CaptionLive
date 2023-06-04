@@ -41,11 +41,9 @@ public class Segment {
     private List<Remark> remarks;
 
 
-    @JsonIgnore
     @UpdateTimestamp
     private LocalDateTime lastUpdatedTime;
 
-    @JsonIgnore
     @CreationTimestamp
     private LocalDateTime createdTime;
 }
