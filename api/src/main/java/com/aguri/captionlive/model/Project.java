@@ -22,6 +22,10 @@ public class Project {
 
     private String name;
 
+    private Type type;
+
+    private Boolean isPublic;
+
     @JsonIgnore
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "cover_file_record_id")
