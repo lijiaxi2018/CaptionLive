@@ -1,17 +1,23 @@
 package com.aguri.captionlive.service.impl;
 
-import com.aguri.captionlive.DTO.ProjectCreateRequest;
+import com.aguri.captionlive.DTO.ProjectRequest;
 import com.aguri.captionlive.common.exception.EntityNotFoundException;
 import com.aguri.captionlive.model.*;
 import com.aguri.captionlive.repository.*;
 import com.aguri.captionlive.service.FileRecordService;
 import com.aguri.captionlive.service.ProjectService;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import static com.aguri.captionlive.model.Task.AUDIO_AND_VIDEO_DEFAULT_WORKFLOWS;
+import static com.aguri.captionlive.model.Task.TXT_DEFAULT_WORKFLOWS;
 
 @Service
 public class ProjectServiceImpl implements ProjectService {
@@ -21,6 +27,9 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Autowired
     private OrganizationRepository organizationRepository;
+
+    @Autowired
+    private FileRecordService fileRecordService;
 
     @Override
     public Project getProjectById(Long projectId) {
@@ -35,65 +44,10 @@ public class ProjectServiceImpl implements ProjectService {
 
 
     @Override
-    public Project createProject(ProjectCreateRequest projectCreateRequest) {
-        Project project = new Project();
-        project.setName(projectCreateRequest.getName());
-        project.setIsPublic(projectCreateRequest.getIsPublic());
-        project.setType(projectCreateRequest.getType());
-        List<Segment> subSegments = new ArrayList<>(projectCreateRequest.getSegmentCreateRequests().stream().map(
-                segmentCreateRequest -> {
-                    Segment segment = new Segment();
-                    segment.setProject(project);
-                    segment.setSummary(segmentCreateRequest.getSummary());
-                    segment.setBeginTime(segmentCreateRequest.getBeginTime());
-                    segment.setEndTime(segmentCreateRequest.getEndTime());
-                    ProjectCreateRequest.RemarkCreateRequest remarkCreateRequest = segmentCreateRequest.getRemarkCreateRequest();
-                    User user = new User();
-                    user.setUserId(remarkCreateRequest.getUserId());
-                    Remark remark = new Remark();
-                    remark.setUser(user);
-                    segment.setRemarks(new ArrayList<>(List.of(remark)));
-                    segment.setIsGlobal(false);
-                    segment.setTasks(segmentCreateRequest.getWorkflows().stream().map(workflow -> {
-                        Task task = new Task();
-                        task.setStatus(Task.Status.NOT_ASSIGNED);
-                        task.setType(workflow);
-                        task.setSegment(segment);
-                        return task;
-                    }).toList());
-                    return segment;
-                }
-        ).toList());
-        Segment globalSegment = new Segment();
-        globalSegment.setIsGlobal(true);
-        ProjectCreateRequest.RemarkCreateRequest remarkCreateRequest = projectCreateRequest.getRemarkCreateRequest();
-        User user = new User();
-        user.setUserId(remarkCreateRequest.getUserId());
-        Remark remark = new Remark();
-        remark.setUser(user);
-        globalSegment.setRemarks(new ArrayList<>(List.of(remark)));
-        globalSegment.setTasks(generateTasksForGlobalSegmentByProjectType(globalSegment, projectCreateRequest.getType()));
-        ArrayList<Segment> segments = new ArrayList<>(subSegments);
-        segments.add(globalSegment);
-        project.setSegments(segments);
+    public Project createProject(ProjectRequest projectCreateRequest) {
+        Project project = generateProject(projectCreateRequest);
         return projectRepository.save(project);
     }
-
-
-    private List<Task> generateTasksForGlobalSegmentByProjectType(Segment globalSegment, Project.Type type) {
-        switch (type) {
-            case TXT -> {
-                return Arrays.stream(new Task.Workflow[]{Task.Workflow.SOURCE, Task.Workflow.F_CHECK}).map(t -> Task.createTaskBySegmentAndWorkFlow(globalSegment, t)).toList();
-            }
-            case AUDIO_AND_VIDEO -> {
-                return Arrays.stream(new Task.Workflow[]{Task.Workflow.SOURCE, Task.Workflow.F_CHECK, Task.Workflow.RENDERING}).map(t -> Task.createTaskBySegmentAndWorkFlow(globalSegment, t)).toList();
-            }
-            default -> {
-                return null;
-            }
-        }
-    }
-
 
     @Override
     public void deleteProject(Long id) {
@@ -101,9 +55,11 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Project updateProject(Long id, Project project) {
-        project.setProjectId(id);
-        return projectRepository.save(project);
+    @Transactional
+    public Project updateProject(ProjectRequest projectRequest) {
+        entityManager.flush();
+        Project existingProject = generateUpdatedProject(projectRequest);
+        return projectRepository.save(existingProject);
     }
 
     @Override
@@ -119,6 +75,211 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public List<Project> getAllPublicProjects() {
         return projectRepository.findAllByIsPublic(true);
+    }
+
+    private Project generateUpdatedProject(ProjectRequest projectRequest) {
+        Long projectId = projectRequest.getProjectId();
+        Project existingProject = getProjectById(projectId);
+
+        updateProjectSegments(projectRequest, existingProject);
+
+        updateProjectSourceFileAndDesiredFileName(existingProject, projectRequest.getFileName(), projectRequest.getSourceFileRecordId());
+
+        existingProject.setName(projectRequest.getName());
+
+        existingProject.setIsPublic(projectRequest.getIsPublic());
+
+        existingProject.setType(projectRequest.getType());
+
+        return existingProject;
+    }
+
+    private void updateProjectSourceFileAndDesiredFileName(Project existingProject, String desiredFileName, Long sourceFileRecordId) {
+        updateProjectSourceFile(existingProject, sourceFileRecordId);
+        updateProjectDesiredFileName(existingProject, desiredFileName);
+    }
+
+    private void updateProjectSegments(ProjectRequest projectRequest, Project existingProject) {
+        List<Segment> updatedSegments = generateUpdatedAndDeletedSegments(projectRequest, existingProject, existingProject.getSegments());
+        List<Segment> appendingSegments = generateProjectSubSegments(existingProject,
+                projectRequest.getSegmentRequests().stream().filter(segmentRequest -> segmentRequest.getSegmentId() == null).toList(),
+                projectRequest.getOperator());
+        ArrayList<Segment> segments = new ArrayList<>(appendingSegments);
+        segments.addAll(updatedSegments);
+        existingProject.setSegments(segments);
+    }
+
+    private static void updateProjectDesiredFileName(Project existingProject, String desiredFileName) {
+        if (desiredFileName != null) {
+            String suffix = existingProject.getFile().getOriginalName().split("\\.")[1];
+            existingProject.getFile().setOriginalName(desiredFileName + "." + suffix);
+        }
+    }
+
+    private void updateProjectSourceFile(Project existingProject, Long newSourceFileRecordId) {
+        if (!Objects.equals(existingProject.getFile().getFileRecordId(), newSourceFileRecordId)) {
+            FileRecord newFileRecord = fileRecordService.getFileRecordById(newSourceFileRecordId);
+            existingProject.setFile(newFileRecord);
+        }
+    }
+
+
+    @Autowired
+    SegmentRepository segmentRepository;
+
+    @Autowired
+    EntityManager entityManager;
+
+    private List<Segment> generateUpdatedAndDeletedSegments(ProjectRequest projectRequest, Project existingProject, List<Segment> existingSegments) {
+        //        update and delete
+        Map<Long, ProjectRequest.SegmentRequest> segmentUpdateRequestMap = projectRequest.getSegmentRequests().stream().filter(segmentRequest -> segmentRequest.getSegmentId() != null).collect(Collectors.toMap(ProjectRequest.SegmentRequest::getSegmentId, Function.identity()));
+        List<Segment> needDeletingSegments = existingSegments.stream().filter(existingSegment -> !segmentUpdateRequestMap.containsKey(existingSegment.getSegmentId()) && !existingSegment.getIsGlobal()).toList();
+        List<Segment> hasDeletedSegments = new ArrayList<>(existingSegments.stream().filter(existingSegment -> segmentUpdateRequestMap.containsKey(existingSegment.getSegmentId()) || existingSegment.getIsGlobal()).toList());
+        segmentRepository.deleteAllInBatch(needDeletingSegments);
+
+        return hasDeletedSegments.stream()
+                .peek(existingSegment -> {
+                    Long segmentId = existingSegment.getSegmentId();
+                    if (existingSegment.getIsGlobal()) {
+                        updateSegmentOriginalRemark(existingSegment, projectRequest.getRemarkRequest(), projectRequest.getOperator());
+                        updateGlobalSegmentTasksIfProjectTypeChange(projectRequest, existingProject, existingSegment);
+                    } else {
+//                        updating The sub-segment
+                        ProjectRequest.SegmentRequest segmentRequest = segmentUpdateRequestMap.get(segmentId);
+                        existingSegment.setSummary(segmentRequest.getSummary());
+                        existingSegment.setBeginTime(segmentRequest.getBeginTime());
+                        existingSegment.setEndTime(segmentRequest.getEndTime());
+
+                        updateSegmentOriginalRemark(existingSegment, segmentRequest.getRemarkRequest(), projectRequest.getOperator());
+                        updateSegmentTasks(existingSegment, segmentRequest.getWorkflows());
+                    }
+                }).toList();
+    }
+
+    private void updateGlobalSegmentTasksIfProjectTypeChange(ProjectRequest projectRequest, Project existingProject, Segment existingSegment) {
+        if (projectRequest.getType() != existingProject.getType()) {
+            updateSegmentTasks(existingSegment, List.of(generateWorkflowsByProjectType(projectRequest.getType())));
+        }
+    }
+
+    private static void updateSegmentOriginalRemark(Segment existingSegment, ProjectRequest.RemarkRequest remarkRequest, ProjectRequest.OperatorRequest operator) {
+        Remark existingRemark = existingSegment.getRemarks().get(0);
+        existingRemark.setContent(remarkRequest.getContent());
+        User user = new User();
+        user.setUserId(operator.getUserId());
+        existingRemark.setUser(user);
+    }
+
+    @Autowired
+    private TaskRepository taskRepository;
+
+    private void updateSegmentTasks(Segment existingSegment, List<Task.Workflow> updatingWorkflows) {
+        Set<Task.Workflow> updatingWorkflowSet = new HashSet<>(updatingWorkflows);
+        List<Task> existingTasks = existingSegment.getTasks();
+//        The existing tasks do not belong to this set, which means that these tasks need to be removed.
+//        delete tasks
+        List<Task> needDeletingTasks = existingTasks.stream().filter(task -> !updatingWorkflowSet.contains(task.getType())).toList();
+        taskRepository.deleteAllInBatch(needDeletingTasks);
+        List<Task> hasDeletedTasks = new ArrayList<>(existingTasks.stream().filter(task -> updatingWorkflowSet.contains(task.getType())).toList());
+
+        Set<Task.Workflow> existingWorkflowSet = existingTasks.stream().map(Task::getType).collect(Collectors.toSet());
+//        create tasks
+        List<Task> appendingTasks = updatingWorkflows.stream().filter(updatingWorkflow -> !existingWorkflowSet.contains(updatingWorkflow)).map(workflow -> generateTask(existingSegment, workflow)).toList();
+//        tasks could not be modified in this request;
+        hasDeletedTasks.addAll(appendingTasks);
+        existingSegment.setTasks(hasDeletedTasks);
+    }
+
+    private static Task generateTask(Segment existingSegment, Task.Workflow workflow) {
+        Task task = new Task();
+        task.setStatus(Task.Status.NOT_ASSIGNED);
+        task.setType(workflow);
+        task.setSegment(existingSegment);
+        return task;
+    }
+
+    private Task.Workflow[] generateWorkflowsByProjectType(Project.Type type) {
+        switch (type) {
+            case TXT -> {
+                return TXT_DEFAULT_WORKFLOWS;
+            }
+            case AUDIO_AND_VIDEO -> {
+                return AUDIO_AND_VIDEO_DEFAULT_WORKFLOWS;
+            }
+            default -> throw new RuntimeException("unknown project type: " + type);
+        }
+    }
+
+    private List<Task> generateTasksForGlobalSegmentByProjectType(Segment globalSegment, Project.Type type) {
+        return Arrays.stream(generateWorkflowsByProjectType(type)).map(t -> Task.createTaskBySegmentAndWorkFlow(globalSegment, t)).toList();
+    }
+
+    private Project generateProject(ProjectRequest projectRequest) {
+        Project project = new Project();
+
+        Long sourceRecordFileId = projectRequest.getSourceFileRecordId();
+        FileRecord fileRecord = fileRecordService.getFileRecordById(sourceRecordFileId);
+        if (projectRequest.getFileName() != null) {
+            String suffix = fileRecord.getSuffix();
+            fileRecord.setOriginalName(projectRequest.getFileName() + "." + suffix);
+        }
+        project.setFile(fileRecord);
+
+        project.setName(projectRequest.getName());
+
+        project.setIsPublic(projectRequest.getIsPublic());
+
+        project.setType(projectRequest.getType());
+
+        List<Segment> subSegments = generateProjectSubSegments(project, projectRequest.getSegmentRequests(), projectRequest.getOperator());
+
+        Segment globalSegment = generateGlobalSegment(project, projectRequest);
+        ArrayList<Segment> segments = new ArrayList<>(subSegments);
+        segments.add(globalSegment);
+        project.setSegments(segments);
+
+        return project;
+    }
+
+    private Segment generateGlobalSegment(Project project, ProjectRequest projectRequest) {
+        Segment globalSegment = new Segment();
+
+        globalSegment.setProject(project);
+
+        globalSegment.setIsGlobal(true);
+
+        ProjectRequest.RemarkRequest remarkRequest = projectRequest.getRemarkRequest();
+
+        globalSegment.setRemarks(List.of(generateRemark(globalSegment, remarkRequest, projectRequest.getOperator())));
+
+        globalSegment.setTasks(generateTasksForGlobalSegmentByProjectType(globalSegment, projectRequest.getType()));
+
+        return globalSegment;
+    }
+
+
+    private Remark generateRemark(Segment segment, ProjectRequest.RemarkRequest remarkRequest, ProjectRequest.OperatorRequest createBy) {
+        User user = new User();
+        user.setUserId(createBy.getUserId());
+        Remark remark = new Remark();
+        remark.setSegment(segment);
+        remark.setUser(user);
+        remark.setContent(remarkRequest.getContent());
+        return remark;
+    }
+
+    private List<Segment> generateProjectSubSegments(Project existingProject, List<ProjectRequest.SegmentRequest> segmentRequests, ProjectRequest.OperatorRequest createBy) {
+        return segmentRequests.stream().map(segmentRequest -> {
+            Segment segment = new Segment();
+            segment.setProject(existingProject);
+            segment.setSummary(segmentRequest.getSummary());
+            segment.setBeginTime(segmentRequest.getBeginTime());
+            segment.setEndTime(segmentRequest.getEndTime());
+            segment.setRemarks(List.of(generateRemark(segment, segmentRequest.getRemarkRequest(), createBy)));
+            segment.setIsGlobal(false);
+            segment.setTasks(segmentRequest.getWorkflows().stream().map(workflow -> generateTask(segment, workflow)).toList());
+            return segment;
+        }).toList();
     }
 
 }

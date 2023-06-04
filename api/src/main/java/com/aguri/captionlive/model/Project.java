@@ -1,16 +1,18 @@
 package com.aguri.captionlive.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "projects")
 public class Project {
@@ -49,6 +51,11 @@ public class Project {
             inverseJoinColumns = @JoinColumn(name = "project_id")
     )
     private List<User> accessibleUsers;
+
+    @JsonIgnore
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "file_record_id")
+    private FileRecord file;
 
     @JsonIgnore
     @UpdateTimestamp

@@ -33,4 +33,9 @@ public class FileRecord {
     @CreationTimestamp
     private LocalDateTime createdTime;
 
+    public String getSuffix() {
+        return getOriginalName().split("\\.")[1];
+    }
+
+
 }

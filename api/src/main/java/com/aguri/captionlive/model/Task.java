@@ -3,13 +3,16 @@ package com.aguri.captionlive.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "tasks")
 public class Task {
@@ -17,6 +20,7 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long taskId;
 
+    @Enumerated(EnumType.STRING)
     private Workflow type;
 
     private Status status;
@@ -45,6 +49,9 @@ public class Task {
     @JsonIgnore
     @CreationTimestamp
     private LocalDateTime createdTime;
+
+    public static final Workflow[] TXT_DEFAULT_WORKFLOWS = new Workflow[]{Workflow.SOURCE, Workflow.F_CHECK};
+    public static final Workflow[] AUDIO_AND_VIDEO_DEFAULT_WORKFLOWS = new Workflow[]{Workflow.SOURCE, Workflow.F_CHECK, Workflow.RENDERING};
 
     public enum Workflow {
         TIMELINE(0),
@@ -93,6 +100,4 @@ public class Task {
         task.setSegment(segment);
         return task;
     }
-
-
 }

@@ -7,17 +7,9 @@
   font-family: 'Lato', sans-serif;
 }
 
-.myhome,
-.allorganizations,
 .projects,
 .glossaries,
 .aboutorganization,
-.committedprojects,
-.accessibleprojects,
-.allprojects,
-.allmail,
-.unreadmails,
-.sentmails,
 .request {
   position: absolute;
   left: 200px;
@@ -31,71 +23,8 @@
   --navbar-text-icon: #4c4747;
 }
 
-.sign-in {
-  height: 300px;
-  width: 600px;
-  border-radius: 8px;
-  border: 0px solid #b0acad;
-  padding: 20px;
-  box-shadow: 0px 0px 30px;
-}
 
-.sign-in-title {
-  font-size: 25px;
-  font-weight: bold;
-  letter-spacing: 10px;
-  color: #7f7f7f;
-  margin-bottom: 30px;
-}
-
-.sign-in-cancel-button {
-  font-size: 25px;
-  font-weight: bold;
-  letter-spacing: 10px;
-}
-
-.sign-in-input {
-  background-color : #e8e5e6; 
-  border-radius: 4px;
-  border: 0px;
-  height: 40px;
-  width: 250px;
-  padding: 10px;
-  margin-top: 5px;
-  margin-bottom: 5px;
-}
-
-.sign-in-input-non-required {
-  background-color : #e8e5e6; 
-  border-radius: 4px;
-  border: 0px;
-  height: 40px;
-  width: 250px;
-  padding: 10px;
-  margin-top: 5px;
-  margin-bottom: 5px;
-  margin-right: 15px;
-}
-
-.sign-in-button {
-  padding-left: 15px;
-  padding-right: 15px;
-  padding-top: 3px;
-  padding-bottom: 3px;
-  margin-left: 5px;
-  margin-right: 5px;
-  font-size: 20px;
-  font-weight: bold;
-  letter-spacing: 5px;
-  border-radius: 15px;
-  color: whitesmoke;
-}
-
-.sign-in-button-list {
-  text-align: right;
-  margin-top: 40px;
-}
-
+/* General */
 .star-mark {
   color: #ff6765;
   font-size: 25px;
@@ -109,13 +38,6 @@
 .general-page-container {
   margin-left: 80px;
   padding: 20px;
-}
-
-.sign-in-up-window {
-  position: absolute;
-  top: 30%;
-  left: 30%;
-  z-index: 2;
 }
 
 .page-header {
@@ -139,7 +61,83 @@
   letter-spacing: 3px;
 }
 
-.general-page-sign-in-button {
+/* Sign In and Sign UP */
+.sign-in-window {
+  height: 300px;
+  width: 600px;
+  border-radius: 8px;
+  border: 0px solid #b0acad;
+  padding: 20px;
+  box-shadow: 0px 0px 30px;
+}
+
+.sign-up-window {
+  height: 350px;
+  width: 600px;
+  border-radius: 8px;
+  border: 0px solid #b0acad;
+  padding: 20px;
+  box-shadow: 0px 0px 30px;
+}
+
+.sign-in-up-title {
+  font-size: 25px;
+  font-weight: bold;
+  letter-spacing: 10px;
+  color: #7f7f7f;
+  margin-bottom: 30px;
+}
+
+.sign-in-up-input {
+  background-color : #e8e5e6; 
+  border-radius: 4px;
+  border: 0px;
+  height: 40px;
+  width: 250px;
+  padding: 10px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.sign-in-up-input-non-required {
+  background-color : #e8e5e6; 
+  border-radius: 4px;
+  border: 0px;
+  height: 40px;
+  width: 250px;
+  padding: 10px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  margin-right: 15px;
+}
+
+.sign-in-up-button {
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  margin-left: 5px;
+  margin-right: 5px;
+  font-size: 20px;
+  font-weight: bold;
+  letter-spacing: 5px;
+  border-radius: 15px;
+  color: whitesmoke;
+}
+
+.sign-in-up-button-list {
+  text-align: right;
+  margin-top: 40px;
+}
+
+.sign-in-up-container {
+  position: absolute;
+  top: 30%;
+  left: 30%;
+  z-index: 2;
+}
+
+.general-page-sign-in-up-button {
   padding-left: 15px;
   padding-right: 15px;
   padding-top: 3px;
@@ -154,14 +152,74 @@
   box-shadow: 2px 2px 1px;
 }
 
+/* EntityInfo */
+.entity-info-container-my-home {
+  position: absolute;
+  top: 15%;
+  left: 10%;
+  z-index: 1;
+}
 
-.sign-up {
+.entity-info-window {
+  display: flex;
+  align-items: center;
+  height: 400px;
+  width: 1000px;
+  padding: 25px;
+  border: 1px solid #b0acad;
+}
+
+.entity-info-avatar {
+  display: inline-block;
+  width: 200px;
+  height: 200px;
+  background-position: 50% 50%;
+  background-size: cover;
+  border-radius: 50%;
+  border: 1px solid #b0acad;
+}
+
+.entity-info-info {
+  margin-left: 50px;
   height: 350px;
-  width: 600px;
-  border-radius: 8px;
-  border: 0px solid #b0acad;
-  padding: 20px;
-  box-shadow: 0px 0px 30px;
+  width: 700px;
+  border: 1px solid #b0acad;
+}
+
+.entity-info-info-description {
+  margin-top: 50px;
+  height: 200px;
+  width: 700px;
+  border: 1px solid #b0acad;
+}
+
+.general-font-medium {
+  font-size: 30px;
+  font-weight: bold;
+  letter-spacing: 10px;
+}
+
+.general-font-small {
+  font-size: 20px;
+  letter-spacing: 2px;
+}
+
+.general-font-tiny {
+  font-size: 15px;
+  letter-spacing: 1px;
+}
+
+.general-button-shadow {
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  font-size: 20px;
+  font-weight: bold;
+  letter-spacing: 5px;
+  border-radius: 5px;
+  color: #7f7f7f;
+  box-shadow: 2px 2px 1px;
 }
 
 .file-drop-zone {
