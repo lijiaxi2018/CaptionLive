@@ -42,11 +42,9 @@ public class Task {
     @JoinColumn(name = "file_record_id")
     private FileRecord file;
 
-    @JsonIgnore
     @UpdateTimestamp
     private LocalDateTime lastUpdatedTime;
 
-    @JsonIgnore
     @CreationTimestamp
     private LocalDateTime createdTime;
 

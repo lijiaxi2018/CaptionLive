@@ -29,11 +29,9 @@ public class Access {
     @Enumerated(EnumType.ORDINAL)
     private Commitment commitment;
 
-    @JsonIgnore
     @UpdateTimestamp
     private LocalDateTime lastUpdatedTime;
 
-    @JsonIgnore
     @CreationTimestamp
     private LocalDateTime createdTime;
 
