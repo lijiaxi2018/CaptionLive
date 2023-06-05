@@ -2,18 +2,16 @@ package com.aguri.captionlive.service.impl;
 
 import com.aguri.captionlive.DTO.UserRequest;
 import com.aguri.captionlive.common.exception.EntityNotFoundException;
-import com.aguri.captionlive.common.resp.Resp;
 import com.aguri.captionlive.model.*;
 import com.aguri.captionlive.repository.*;
-import com.aguri.captionlive.service.FileRecordService;
 import com.aguri.captionlive.service.OrganizationService;
 import com.aguri.captionlive.service.UserService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -57,9 +55,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public User updateUser(Long id, UserRequest userRequest) {
         User user = getUserById(id);
-        Optional<User> existingUser = userRepository.findByUsername(userRequest.getUsername());
-        if (existingUser.isPresent()) {
-            throw new RuntimeException("User already exists");
+        if (!Objects.equals(userRequest.getUsername(), user.getUsername())) {
+            Optional<User> existingUser = userRepository.findByUsername(userRequest.getUsername());
+            if (existingUser.isPresent()) {
+                throw new RuntimeException("User already exists");
+            }
         }
         BeanUtils.copyProperties(userRequest, user);
         user.setAvatar(new FileRecord(userRequest.getAvatarId()));
