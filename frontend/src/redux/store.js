@@ -4,6 +4,7 @@ import layoutReducer from './layoutSlice'
 import { userApi } from '../services/user'
 import { authApi } from '../services/auth'
 import { fileApi } from '../services/file'
+import { organizationApi } from '../services/organization'
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     [userApi.reducerPath]: userApi.reducer,
     [authApi.reducerPath]: authApi.reducer,
     [fileApi.reducerPath]: fileApi.reducer,
+    [organizationApi.reducerPath]: organizationApi.reducer,
   },
 
   middleware: (getDefaultMiddleware) =>
@@ -19,5 +21,6 @@ export const store = configureStore({
       userApi.middleware,
       authApi.middleware,
       fileApi.middleware,
+      organizationApi.middleware,
     ]),
 })
