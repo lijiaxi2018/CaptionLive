@@ -21,9 +21,13 @@ public class Organization {
 
     private String name;
 
+    @Column(columnDefinition = "TEXT")
     private String description;
 
-    private Long avatar;
+    @JsonIgnore
+    @OneToOne
+    @JoinColumn(name = "avatar_file_record_id")
+    private FileRecord avatar;
 
     @JsonIgnore
     @ManyToMany
@@ -49,5 +53,13 @@ public class Organization {
 
     @CreationTimestamp
     private LocalDateTime createdTime;
+
+    @Transient
+    private Long avatarId;
+
+    public Long getAvatarId() {
+        if (avatar == null) return null;
+        return avatar.getFileRecordId();
+    }
 
 }
