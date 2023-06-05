@@ -39,7 +39,7 @@ public class Project {
     )
     private List<Organization> organizations;
 
-    @OneToMany(mappedBy = "project", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "project", fetch = FetchType.EAGER)
     private List<Segment> segments;
 
     @JsonIgnore
@@ -52,7 +52,7 @@ public class Project {
     private List<User> accessibleUsers;
 
     @JsonIgnore
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "file_record_id")
     private FileRecord sourceFileRecord;
 

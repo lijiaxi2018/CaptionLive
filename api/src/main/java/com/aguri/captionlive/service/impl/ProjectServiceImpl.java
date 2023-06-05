@@ -6,10 +6,12 @@ import com.aguri.captionlive.model.*;
 import com.aguri.captionlive.repository.*;
 import com.aguri.captionlive.service.FileRecordService;
 import com.aguri.captionlive.service.OrganizationService;
+import com.aguri.captionlive.service.OwnershipService;
 import com.aguri.captionlive.service.ProjectService;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -34,6 +36,18 @@ public class ProjectServiceImpl implements ProjectService {
     @Autowired
     private FileRecordService fileRecordService;
 
+    @Autowired
+    private FileRecordRepository fileRecordRepository;
+
+    @Autowired
+    OwnershipRepository ownershipRepository;
+
+    @Autowired
+    AccessRepository accessRepository;
+
+    @Autowired
+    RemarkRepository remarkRepository;
+
     @Override
     public Project getProjectById(Long projectId) {
         return projectRepository.findById(projectId)
@@ -47,9 +61,86 @@ public class ProjectServiceImpl implements ProjectService {
 
 
     @Override
-    public Project createProject(ProjectRequest projectCreateRequest) {
-        Project project = generateProject(projectCreateRequest);
-        return projectRepository.save(project);
+    public Project createProject(ProjectRequest projectRequest) {
+        Project project = new Project();
+        Long sourceRecordFileId = projectRequest.getSourceFileRecordId();
+        FileRecord fileRecord = fileRecordRepository.getReferenceById(sourceRecordFileId);
+        Organization organization = organizationRepository.getReferenceById(projectRequest.getOrganizationId());
+
+        updateDesiredFileNameIfDesiredFileNotNull(fileRecord, projectRequest.getFileName());
+
+        project.setSourceFileRecord(fileRecord);
+
+        project.setName(projectRequest.getName());
+
+        project.setIsPublic(projectRequest.getIsPublic());
+
+        project.setType(projectRequest.getType());
+
+        List<ProjectRequest.SegmentRequest> segmentRequests = projectRequest.getSegmentRequests();
+        List<Task> tasks = new ArrayList<>();
+        List<Remark> remarks = new ArrayList<>();
+        Long createBy = projectRequest.getOperator().getUserId();
+        List<Segment> subSegments = segmentRequests.stream().map(segmentRequest -> {
+            Segment segment = new Segment();
+
+            segment.setProject(project);
+
+            segment.setSummary(segmentRequest.getSummary());
+
+            segment.setBeginTime(segmentRequest.getBeginTime());
+
+            segment.setEndTime(segmentRequest.getEndTime());
+
+            segment.setIsGlobal(false);
+
+            var remark = generateRemark(segment, segmentRequest.getRemarkRequest(), projectRequest.getOperator());
+            remarks.add(remark);
+
+            List<Task> tasks1 = segmentRequest.getWorkflows().stream().map(workflow -> generateTask(segment, workflow)).toList();
+            tasks.addAll(tasks1);
+            return segment;
+        }).toList();
+
+
+        List<Segment> segments = new ArrayList<>(subSegments);
+        Segment globalSegment = new Segment();
+
+        ProjectRequest.RemarkRequest remarkRequest = projectRequest.getRemarkRequest();
+
+        globalSegment.setProject(project);
+
+        globalSegment.setIsGlobal(true);
+
+        Remark remark = generateRemark(globalSegment, remarkRequest, projectRequest.getOperator());
+        remarks.add(remark);
+
+        List<Task> tasks1 = generateTasksForGlobalSegmentByProjectType(globalSegment, projectRequest.getType());
+        tasks.addAll(tasks1);
+
+        segments.add(globalSegment);
+        project.setSegments(segments);
+        Project save = projectRepository.save(project);
+        segmentRepository.saveAll(segments);
+        taskRepository.saveAll(tasks);
+        remarkRepository.saveAll(remarks);
+
+
+        Ownership ownership = new Ownership();
+        ownership.setProject(project);
+        ownership.setOrganization(organization);
+        ownershipRepository.save(ownership);
+
+        Access access = new Access();
+        access.setProject(project);
+        User user = new User();
+        user.setUserId(createBy);
+        access.setUser(user);
+        access.setCommitment(Access.Commitment.NONE);
+        access.setPermission(Access.Permission.Creator);
+        accessRepository.save(access);
+
+        return save;
     }
 
     @Override

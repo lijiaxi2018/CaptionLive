@@ -38,7 +38,7 @@ public class Task {
     private User worker;
 
     @JsonIgnore
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne
     @JoinColumn(name = "file_record_id")
     private FileRecord file;
 
