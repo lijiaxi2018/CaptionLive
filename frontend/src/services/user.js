@@ -41,6 +41,11 @@ export const userApi = createApi({
       }),
       invalidatesTags: ['Users']
     }),
+
+    getOrganizationsByUser: builder.query({
+      query: (id) => `/users/${id}/organizations`,
+      providesTags: ['Users']
+    }),
   }),
 })
 
@@ -49,5 +54,6 @@ export const {
   useGetAllUsersQuery, 
   usePostUserMutation,
   usePutUserMutation,
-  useDeleteUserMutation 
+  useDeleteUserMutation,
+  useGetOrganizationsByUserQuery,
 } = userApi
