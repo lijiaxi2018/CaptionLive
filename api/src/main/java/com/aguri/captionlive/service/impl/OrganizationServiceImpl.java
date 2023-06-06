@@ -7,7 +7,6 @@ import com.aguri.captionlive.model.FileRecord;
 import com.aguri.captionlive.model.Organization;
 import com.aguri.captionlive.model.Project;
 import com.aguri.captionlive.model.Segment;
-import com.aguri.captionlive.repository.FileRecordRepository;
 import com.aguri.captionlive.repository.OrganizationRepository;
 import com.aguri.captionlive.repository.ProjectRepository;
 import com.aguri.captionlive.service.OrganizationService;
@@ -72,27 +71,33 @@ public class OrganizationServiceImpl implements OrganizationService {
         // fields copying...
         return projects.stream().map(project -> {
             ProjectInfo projectInfo = new ProjectInfo();
-            projectInfo.setTitle(project.getName());
+            projectInfo.setOrganizationId(project.getProjectId());
+            projectInfo.setName(project.getName());
             List<Segment> segments = project.getSegments();
+            projectInfo.setCreatedTime(project.getCreatedTime());
             projectInfo.setSegmentInfos(new ArrayList<>());
             segments.forEach(segment -> {
-                ProjectInfo.SegmentInfo segmentInfo = new ProjectInfo.SegmentInfo();
-                segmentInfo.setSummary(segment.getSummary());
-                segmentInfo.setBeginTime(segment.getBeginTime());
-                segmentInfo.setEndTime(segment.getEndTime());
-                segmentInfo.setRemarks(segment.getRemarks());
                 List<ProjectInfo.SegmentInfo.TaskInfo> taskInfos = segment.getTasks().stream().map(task -> {
                     ProjectInfo.SegmentInfo.TaskInfo taskInfo = new ProjectInfo.SegmentInfo.TaskInfo();
                     taskInfo.setWorkerUser(task.getWorker());
                     taskInfo.setStatus(task.getStatus());
-                    taskInfo.setHasUploadedFile(task.getFile() != null);
+                    FileRecord fileRecord = task.getFile();
+                    Long fileRecordId = 0L;
+                    if (fileRecord != null) {
+                        fileRecordId = fileRecord.getFileRecordId();
+                    }
+                    taskInfo.setFileId(fileRecordId);
                     return taskInfo;
                 }).toList();
-                segmentInfo.setTaskInfos(taskInfos);
                 if (segment.getIsGlobal()) {
-                    projectInfo.setIsCompleted(segment.getEndTime() != null);
-                    projectInfo.setOverview(segmentInfo);
+                    projectInfo.setTaskInfos(taskInfos);
                 } else {
+                    ProjectInfo.SegmentInfo segmentInfo = new ProjectInfo.SegmentInfo();
+                    segmentInfo.setSummary(segment.getSummary());
+                    segmentInfo.setBeginTime(segment.getBeginTime());
+                    segmentInfo.setEndTime(segment.getEndTime());
+                    segmentInfo.setRemarks(segment.getRemarks());
+                    segmentInfo.setTaskInfos(taskInfos);
                     projectInfo.getSegmentInfos().add(segmentInfo);
                 }
             });
