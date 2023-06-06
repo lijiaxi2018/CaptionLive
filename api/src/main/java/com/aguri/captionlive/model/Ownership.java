@@ -26,7 +26,7 @@ public class Ownership {
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "organization_id")
-    private Organization organizationId;
+    private Organization organization;
 
     @UpdateTimestamp
     private LocalDateTime lastUpdatedTime;

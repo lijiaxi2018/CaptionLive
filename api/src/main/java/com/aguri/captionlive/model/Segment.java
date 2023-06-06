@@ -29,7 +29,7 @@ public class Segment {
 
     private Integer endTime;
 
-    @OneToMany(mappedBy = "segment", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "segment", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private List<Task> tasks;
 
     @JsonIgnore
@@ -37,7 +37,7 @@ public class Segment {
     @JoinColumn(name = "project_id")
     private Project project;
 
-    @OneToMany(mappedBy = "segment", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "segment", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private List<Remark> remarks;
 
 

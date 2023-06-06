@@ -2,7 +2,6 @@ package com.aguri.captionlive.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -22,14 +21,14 @@ public class Project {
 
     private String name;
 
-    @JsonIgnore
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "cover_file_record_id")
-    private FileRecord coverFileRecord;
-
     private Type type;
 
     private Boolean isPublic;
+
+    @JsonIgnore
+    @OneToOne
+    @JoinColumn(name = "cover_file_record_id")
+    private FileRecord coverFileRecord;
 
     @JsonIgnore
     @ManyToMany
@@ -40,7 +39,7 @@ public class Project {
     )
     private List<Organization> organizations;
 
-    @OneToMany(mappedBy = "project", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "project", fetch = FetchType.EAGER)
     private List<Segment> segments;
 
     @JsonIgnore
@@ -53,9 +52,9 @@ public class Project {
     private List<User> accessibleUsers;
 
     @JsonIgnore
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "file_record_id")
-    private FileRecord file;
+    private FileRecord sourceFileRecord;
 
     @UpdateTimestamp
     private LocalDateTime lastUpdatedTime;

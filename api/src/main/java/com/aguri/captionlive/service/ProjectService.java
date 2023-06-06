@@ -10,7 +10,7 @@ import java.util.List;
 public interface ProjectService {
     List<Project> getAllProjects();
 
-    Project createProject(ProjectRequest projectCreateRequest);
+    Project createProject(ProjectRequest projectRequest);
 
     Project getProjectById(Long id);
 
@@ -23,5 +23,4 @@ public interface ProjectService {
     List<Organization> getAllAccessibleOrganizations(Long projectId);
 
     List<Project> getAllPublicProjects();
-
 }

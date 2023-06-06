@@ -3,6 +3,7 @@ package com.aguri.captionlive.controller;
 import com.aguri.captionlive.DTO.ProjectRequest;
 import com.aguri.captionlive.common.resp.Resp;
 import com.aguri.captionlive.model.*;
+import com.aguri.captionlive.service.OwnershipService;
 import com.aguri.captionlive.service.ProjectService;
 import com.aguri.captionlive.service.SegmentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +34,8 @@ public class ProjectController {
     }
 
     @PostMapping
-    public ResponseEntity<Resp> createProject(@RequestBody ProjectRequest projectCreateRequest) {
-        Project createdProject = projectService.createProject(projectCreateRequest);
+    public ResponseEntity<Resp> createProject(@RequestBody ProjectRequest projectRequest) {
+        Project createdProject = projectService.createProject(projectRequest);
         return ResponseEntity.ok(Resp.ok(createdProject));
     }
 
@@ -50,23 +51,33 @@ public class ProjectController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("")
+    @PutMapping
     public ResponseEntity<Resp> updateProject(@RequestBody ProjectRequest projectRequest) {
         Project updatedProject = projectService.updateProject(projectRequest);
         return ResponseEntity.ok(Resp.ok(updatedProject));
     }
 
     @GetMapping("/{projectIid}/users")
-    public ResponseEntity<Resp> getAllUsers(@PathVariable Long projectIid) {
+    public ResponseEntity<Resp> getAllAccessibleUsers(@PathVariable Long projectIid) {
         List<User> users = projectService.getAllAccessibleUsers(projectIid);
         return ResponseEntity.ok(Resp.ok(users));
     }
 
-    @GetMapping("/{projectIid}/organizations")
-    public ResponseEntity<Resp> getAllOrganizations(@PathVariable Long projectIid) {
-        List<Organization> organizations = projectService.getAllAccessibleOrganizations(projectIid);
+    @GetMapping("/{projectId}/organizations")
+    public ResponseEntity<Resp> getAllOrganizations(@PathVariable Long projectId) {
+        List<Organization> organizations = projectService.getAllAccessibleOrganizations(projectId);
         return ResponseEntity.ok(Resp.ok(organizations));
     }
+
+    @Autowired
+    OwnershipService ownershipService;
+
+    @PutMapping("/{projectId}/organizations/{organizationId}")
+    public ResponseEntity<Resp> shareProject2Organization(@PathVariable Long organizationId, @PathVariable Long projectId) {
+        ownershipService.shareProject2Organization(projectId, organizationId);
+        return ResponseEntity.ok(Resp.ok());
+    }
+
 
     @GetMapping("/{projectId}/segments")
     public ResponseEntity<Resp> getAllSegments(@PathVariable Long projectId) {
