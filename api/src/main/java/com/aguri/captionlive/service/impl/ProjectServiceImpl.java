@@ -301,6 +301,17 @@ public class ProjectServiceImpl implements ProjectService {
         return projectRepository.findAllByIsPublic(true);
     }
 
+    @Override
+    public Project updateCover(Long projectId, Long coverId) {
+        Project project = getProjectById(projectId);
+        FileRecord fileRecord = null;
+        if (coverId != 0) {
+            fileRecord = new FileRecord(coverId);
+        }
+        project.setCoverFileRecord(fileRecord);
+        return projectRepository.save(project);
+    }
+
 
     private void updateDesiredFileNameIfDesiredFileNameNotNull(FileRecord sourceFileRecord, String desiredFileName) {
         if (desiredFileName != null) {
