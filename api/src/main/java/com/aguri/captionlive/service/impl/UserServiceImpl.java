@@ -95,4 +95,19 @@ public class UserServiceImpl implements UserService {
     public List<Project> getAllCommittedProjects(Long id) {
         return accessRepository.findAllByUserUserIdAndCommitment(id, Access.Commitment.COMMITTED).stream().map(Access::getProject).toList();
     }
+
+    @Override
+    public Object updateDescription(Long userId, String description) {
+        User user = getUserById(userId);
+        user.setDescription(description);
+        return userRepository.save(user);
+    }
+
+    @Override
+    public Object updateAvatar(Long userId, Long avatarId) {
+        var fileRecord = new FileRecord(avatarId);
+        User user = getUserById(userId);
+        user.setAvatar(fileRecord);
+        return userRepository.save(user);
+    }
 }
