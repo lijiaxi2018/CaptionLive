@@ -13,6 +13,8 @@ public class ProjectInfo {
 
     private Long organizationId;
 
+    private Boolean isCompleted;
+
     private String name;
 
     private LocalDateTime createdTime;

@@ -3,10 +3,7 @@ package com.aguri.captionlive.service.impl;
 import com.aguri.captionlive.DTO.OrganizationRequest;
 import com.aguri.captionlive.DTO.ProjectInfo;
 import com.aguri.captionlive.common.exception.EntityNotFoundException;
-import com.aguri.captionlive.model.FileRecord;
-import com.aguri.captionlive.model.Organization;
-import com.aguri.captionlive.model.Project;
-import com.aguri.captionlive.model.Segment;
+import com.aguri.captionlive.model.*;
 import com.aguri.captionlive.repository.OrganizationRepository;
 import com.aguri.captionlive.repository.ProjectRepository;
 import com.aguri.captionlive.service.OrganizationService;
@@ -71,6 +68,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         // fields copying...
         return projects.stream().map(project -> {
             ProjectInfo projectInfo = new ProjectInfo();
+            projectInfo.setIsCompleted(true);
             projectInfo.setOrganizationId(project.getProjectId());
             projectInfo.setName(project.getName());
             List<Segment> segments = project.getSegments();
@@ -80,7 +78,11 @@ public class OrganizationServiceImpl implements OrganizationService {
                 List<ProjectInfo.SegmentInfo.TaskInfo> taskInfos = segment.getTasks().stream().map(task -> {
                     ProjectInfo.SegmentInfo.TaskInfo taskInfo = new ProjectInfo.SegmentInfo.TaskInfo();
                     taskInfo.setWorkerUser(task.getWorker());
-                    taskInfo.setStatus(task.getStatus());
+                    Task.Status status = task.getStatus();
+                    if (status != Task.Status.COMPLETED) {
+                        projectInfo.setIsCompleted(false);
+                    }
+                    taskInfo.setStatus(status);
                     FileRecord fileRecord = task.getFile();
                     Long fileRecordId = 0L;
                     if (fileRecord != null) {
