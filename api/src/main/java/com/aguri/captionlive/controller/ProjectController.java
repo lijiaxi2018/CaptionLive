@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -83,5 +84,12 @@ public class ProjectController {
     public ResponseEntity<Resp> getAllSegments(@PathVariable Long projectId) {
         List<Segment> segments = segmentService.getAllSegments(projectId);
         return ResponseEntity.ok(Resp.ok(segments));
+    }
+
+    @PutMapping("/{projectId}/cover")
+    public ResponseEntity<Resp> updateCover(@RequestBody HashMap<String, String> body, @PathVariable Long projectId) {
+        Long coverId = Long.valueOf(body.get("coverId"));
+        Project updatedProject = projectService.updateCover(projectId, coverId);
+        return ResponseEntity.ok(Resp.ok(updatedProject));
     }
 }

@@ -25,7 +25,6 @@ public class ProjectRequest {
 
     private OperatorRequest Operator;
 
-    @Enumerated(EnumType.ORDINAL)
     private Project.Type type;
 
     private RemarkRequest remarkRequest;
@@ -42,7 +41,6 @@ public class ProjectRequest {
 
         private Integer endTime;
 
-        @Enumerated(EnumType.ORDINAL)
         private List<Task.Workflow> workflows;
 
         private RemarkRequest RemarkRequest;

@@ -5,16 +5,19 @@ import com.aguri.captionlive.model.Task;
 import com.aguri.captionlive.model.User;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
 public class ProjectInfo {
 
-    private String title;
-
-    private SegmentInfo overview;
-
     private Boolean isCompleted;
+
+    private String name;
+
+    private LocalDateTime createdTime;
+
+    private List<SegmentInfo.TaskInfo> taskInfos;
 
     private List<SegmentInfo> segmentInfos;
 
@@ -36,7 +39,7 @@ public class ProjectInfo {
 
             private User workerUser;
 
-            private Boolean hasUploadedFile;
+            private Long fileId;
 
             private Task.Status status;
         }

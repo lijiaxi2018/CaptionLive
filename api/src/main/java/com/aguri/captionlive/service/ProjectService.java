@@ -23,4 +23,6 @@ public interface ProjectService {
     List<Organization> getAllAccessibleOrganizations(Long projectId);
 
     List<Project> getAllPublicProjects();
+
+    Project updateCover(Long projectId, Long coverId);
 }
