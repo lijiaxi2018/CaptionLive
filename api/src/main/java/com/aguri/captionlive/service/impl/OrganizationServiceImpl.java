@@ -69,7 +69,6 @@ public class OrganizationServiceImpl implements OrganizationService {
         return projects.stream().map(project -> {
             ProjectInfo projectInfo = new ProjectInfo();
             projectInfo.setIsCompleted(true);
-            projectInfo.setOrganizationId(project.getProjectId());
             projectInfo.setName(project.getName());
             List<Segment> segments = project.getSegments();
             projectInfo.setCreatedTime(project.getCreatedTime());

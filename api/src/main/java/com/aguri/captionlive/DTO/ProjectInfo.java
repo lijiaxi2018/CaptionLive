@@ -11,8 +11,6 @@ import java.util.List;
 @Data
 public class ProjectInfo {
 
-    private Long organizationId;
-
     private Boolean isCompleted;
 
     private String name;
