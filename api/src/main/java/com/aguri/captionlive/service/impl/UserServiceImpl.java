@@ -61,8 +61,12 @@ public class UserServiceImpl implements UserService {
                 throw new RuntimeException("User already exists");
             }
         }
+        FileRecord fileRecord = null;
         BeanUtils.copyProperties(userRequest, user);
-        user.setAvatar(new FileRecord(userRequest.getAvatarId()));
+        if (userRequest.getAvatarId() != 0L) {
+            fileRecord = new FileRecord(userRequest.getAvatarId());
+        }
+        user.setAvatar(fileRecord);
         return userRepository.save(user);
     }
 
