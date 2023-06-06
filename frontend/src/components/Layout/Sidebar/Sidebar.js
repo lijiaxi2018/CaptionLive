@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Icon } from '@rsuite/icons';
 import { ImSphere } from 'react-icons/im';
 import { AiOutlineHome, AiOutlineMail, AiOutlineProject } from 'react-icons/ai';
@@ -8,10 +8,47 @@ import { SidebarData } from './SidebarData';
 import './Sidebar.css';
 import { IconContext } from 'react-icons';
 import { Sidenav, Nav, Toggle } from 'rsuite';
+import { useGetOrganizationsByUserQuery } from '../../../services/user';
+import { useSelector } from 'react-redux';
 
 function Sidebar() {
-  const [expanded, setExpanded] = React.useState(false);
-  const [activeKey, setActiveKey] = React.useState('1');
+  const [expanded, setExpanded] = useState(false);
+  const [activeKey, setActiveKey] = useState('1');
+  const [myorganizations, setMyorganizations] = useState([]);
+  const myUserId = useSelector((state) => state.userAuth.userId);
+  // const organizations = useGetOrganizationsByUserQuery(myUserId);
+
+  const organizations= useGetOrganizationsByUserQuery(myUserId, {
+    refetchOnMountOrArgChange: true,
+  });
+
+  useEffect(() => {
+    /** user login or logout will change myUserId */
+  }, [myUserId])
+  
+  useEffect(() => {
+    if (organizations.isLoading) {
+      /** it is fetching or loading data, simply wait */
+      setMyorganizations([]);
+    } else if (!organizations.isSuccess) {
+      /** has error */
+      console.log(`error: ${organizations.isError}`);
+      console.log(organizations.error);
+      // console.log(organizations);
+      setMyorganizations([]);
+    } else {
+      const message = organizations.data.message;
+      if (message === 'success') {
+        setMyorganizations(organizations.data.data);
+      } else {
+        setMyorganizations([]);
+      }
+      
+    }
+  }, [organizations])
+  
+  
+
   return (
     <div className='sidebar'>
       <IconContext.Provider value={{ color: '#4c4747' }}>
@@ -25,18 +62,11 @@ function Sidebar() {
               </Nav.Item>
 
               <Nav.Menu eventKey="2" title="我的字幕组" icon={<Icon as={VscOrganization} size="1em"/>}>
-                <Nav.Item href='/myorganizations' eventKey="2-1">
-                  <a href='/myorganizations'>烤兔摊字幕组</a>
-                </Nav.Item>
-                <Nav.Item href='/myorganizations' eventKey="2-2">
-                  <a href='/myorganizations'>烤鸭摊字幕组</a>
-                </Nav.Item>
-                <Nav.Item href='/myorganizations' eventKey="2-3">
-                  <a href='/myorganizations'>烤鱼摊字幕组</a>
-                </Nav.Item>
-                <Nav.Item href='/myorganizations' eventKey="2-4">
-                  <a href='/myorganizations'>烤鸡摊字幕组</a>
-                </Nav.Item>
+                {myorganizations.map((org) => (
+                  <Nav.Item key={org.organizationId} href={`/myorganizations/${org.organizationId}`} eventKey="2-1">
+                    <a href={`/myorganizations/${org.organizationId}`}>{org.name}</a>
+                  </Nav.Item>
+                ))}
               </Nav.Menu>
 
               <Nav.Menu eventKey="3" title="我的项目" icon={<Icon as={AiOutlineProject} size="1em"/>}>
