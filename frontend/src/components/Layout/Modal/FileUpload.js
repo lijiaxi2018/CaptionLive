@@ -22,7 +22,6 @@ const FileUpload = ({id, type}) => {
                   avatarId: fileRecordId,
                 })
                 .then((response) => {
-                  console.log(response);
                   // TODO: Deal with other return messages
                 })
             }).catch(error => {
