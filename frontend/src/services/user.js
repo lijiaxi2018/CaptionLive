@@ -43,6 +43,15 @@ export const userApi = createApi({
       invalidatesTags: ['Users']
     }),
 
+    putUserAvatarId: builder.mutation({
+      query: (user) => ({
+          url: `/users/${user.userId}/avatar`,
+          method: 'PUT',
+          body: user
+      }),
+      invalidatesTags: ['Users']
+    }),
+
     deleteUser: builder.mutation({
       query: (id) => ({
           url: `/users/${id}`,
@@ -64,6 +73,7 @@ export const {
   usePostUserMutation,
   usePutUserMutation,
   usePutUserDescriptionMutation,
+  usePutUserAvatarIdMutation,
   useDeleteUserMutation,
   useGetOrganizationsByUserQuery,
 } = userApi

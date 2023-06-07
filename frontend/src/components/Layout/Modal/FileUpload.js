@@ -1,10 +1,12 @@
 import React, { useCallback } from "react";
 import { useDropzone } from 'react-dropzone'
 import { usePostFilesMutation } from "../../../services/file";
+import { usePutUserAvatarIdMutation } from '../../../services/user';
 
 // Reference: https://www.npmjs.com/package/react-dropzone
-const FileUpload = () => {
+const FileUpload = ({id, type}) => {
     const [postFiles] = usePostFilesMutation();
+    const [putUserAvatarId] = usePutUserAvatarIdMutation();
 
     const onDrop = useCallback(acceptedFiles => {
         if (acceptedFiles.length > 0) {
@@ -13,7 +15,15 @@ const FileUpload = () => {
             var formData = new FormData();
             formData.append('file', acceptedFile)
             postFiles(formData).then((response) => {
-                alert('success');
+                const fileRecordId = response.data.data;
+
+                putUserAvatarId({
+                  userId: id,
+                  avatarId: fileRecordId,
+                })
+                .then((response) => {
+                  // TODO: Deal with other return messages
+                })
             }).catch(error => {
                 console.log(error);
             })
