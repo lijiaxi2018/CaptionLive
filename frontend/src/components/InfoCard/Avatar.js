@@ -2,8 +2,6 @@ import React from 'react';
 import { useGetUserQuery } from '../../services/user';
 
 function Avatar({userId, avatarSize, isBorder}) {
-  const avatarUrl = "url(https://via.placeholder.com/150)";
-  
   const userData = useGetUserQuery(userId);
   
   const hasAvatarFile = 
@@ -15,6 +13,13 @@ function Avatar({userId, avatarSize, isBorder}) {
     userId === -1 ? "" : 
     userData.isFetching ? "" : 
     userData.data.data.username[0];
+  
+  const avatarFileId = 
+    userId === -1 ? "" : 
+    userData.isFetching ? "" : 
+    userData.data.data.avatarId;  
+  
+  const avatarUrl = `url(http://localhost:8080/api/files/${avatarFileId})`;
 
   return (
     <div>
