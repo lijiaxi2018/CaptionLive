@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import static com.aguri.captionlive.model.FileRecord.generateFileRecord;
+
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -61,11 +63,8 @@ public class UserServiceImpl implements UserService {
                 throw new RuntimeException("User already exists");
             }
         }
-        FileRecord fileRecord = null;
         BeanUtils.copyProperties(userRequest, user);
-        if (userRequest.getAvatarId() != 0L) {
-            fileRecord = new FileRecord(userRequest.getAvatarId());
-        }
+        FileRecord fileRecord = generateFileRecord(userRequest.getAvatarId());
         user.setAvatar(fileRecord);
         return userRepository.save(user);
     }
@@ -105,8 +104,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Object updateAvatar(Long userId, Long avatarId) {
-        var fileRecord = new FileRecord(avatarId);
-        User user = getUserById(userId);
+        User user = userRepository.getReferenceById(userId);
+        FileRecord fileRecord = generateFileRecord(avatarId);
         user.setAvatar(fileRecord);
         return userRepository.save(user);
     }

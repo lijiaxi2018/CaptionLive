@@ -41,7 +41,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     public Organization createOrganization(OrganizationRequest organizationRequest) {
         Organization organization = new Organization();
         BeanUtils.copyProperties(organizationRequest, organization);
-        organization.setAvatar(new FileRecord(organizationRequest.getAvatarId()));
+        organization.setAvatar(FileRecord.generateFileRecord(organizationRequest.getAvatarId()));
         return organizationRepository.save(organization);
     }
 
@@ -50,7 +50,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         Organization existingOrganization = getOrganizationById(id);
         existingOrganization.setName(organizationRequest.getName());
         existingOrganization.setDescription(organizationRequest.getDescription());
-        existingOrganization.setAvatar(new FileRecord(organizationRequest.getAvatarId()));
+        existingOrganization.setAvatar(FileRecord.generateFileRecord(organizationRequest.getAvatarId()));
         return organizationRepository.save(existingOrganization);
     }
 

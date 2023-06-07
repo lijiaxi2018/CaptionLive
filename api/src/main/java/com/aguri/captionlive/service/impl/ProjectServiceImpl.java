@@ -304,10 +304,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public Project updateCover(Long projectId, Long coverId) {
         Project project = getProjectById(projectId);
-        FileRecord fileRecord = null;
-        if (coverId != 0) {
-            fileRecord = new FileRecord(coverId);
-        }
+        FileRecord fileRecord = FileRecord.generateFileRecord(coverId);
         project.setCoverFileRecord(fileRecord);
         return projectRepository.save(project);
     }

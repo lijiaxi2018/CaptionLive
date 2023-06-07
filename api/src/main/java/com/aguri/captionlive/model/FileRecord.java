@@ -1,6 +1,5 @@
 package com.aguri.captionlive.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -31,16 +30,17 @@ public class FileRecord {
     @CreationTimestamp
     private LocalDateTime createdTime;
 
-    public FileRecord(Long fileRecordId) {
-        FileRecordId = fileRecordId;
-    }
-
-    public FileRecord() {
-    }
-
     public String getSuffix() {
         return getOriginalName().split("\\.")[1];
     }
 
+    public static FileRecord generateFileRecord(Long id) {
+        FileRecord fileRecord = null;
+        if (id != 0L) {
+            fileRecord = new FileRecord();
+            fileRecord.setFileRecordId(id);
+        }
+        return fileRecord;
+    }
 
 }
