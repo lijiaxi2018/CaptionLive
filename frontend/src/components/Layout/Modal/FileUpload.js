@@ -15,8 +15,6 @@ const FileUpload = ({id, type}) => {
             var formData = new FormData();
             formData.append('file', acceptedFile)
             postFiles(formData).then((response) => {
-                console.log(response);
-
                 const fileRecordId = response.data.data;
 
                 putUserAvatarId({
