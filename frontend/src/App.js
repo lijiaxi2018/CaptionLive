@@ -30,9 +30,9 @@ function App() {
           <Route path="/myhome" element={<MyHome/>}/>
 
           <Route path="/myorganizations/:id" element={<Projects/>}/>
-          <Route path="/myorganizations/projects/:id" element={<Projects/>}/>
-          <Route path="/myorganizations/glossaries/:id" element={<Glossaries/>}/>
-          <Route path="/myorganizations/aboutorganization/:id" element={<AboutOrganization/>}/>
+          <Route path="/myorganizations/:id/projects" element={<Projects/>}/>
+          <Route path="/myorganizations/:id/glossaries" element={<Glossaries/>}/>
+          <Route path="/myorganizations/:id/aboutorganization" element={<AboutOrganization/>}/>
 
           <Route path="/myprojects" element={<CommittedProjects/>}/>
           <Route path="/myprojects/committedprojects" element={<CommittedProjects/>}/>
