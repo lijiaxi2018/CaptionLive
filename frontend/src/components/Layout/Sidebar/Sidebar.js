@@ -3,15 +3,18 @@ import { Icon } from '@rsuite/icons';
 import { ImSphere } from 'react-icons/im';
 import { AiOutlineHome, AiOutlineMail, AiOutlineProject } from 'react-icons/ai';
 import { VscOrganization } from 'react-icons/vsc';
-import { Link } from 'react-router-dom'
-import { SidebarData } from './SidebarData';
+// import { Link } from 'react-router-dom'
+// import { SidebarData } from './SidebarData';
 import './Sidebar.css';
 import { IconContext } from 'react-icons';
 import { Sidenav, Nav, Toggle } from 'rsuite';
 import { useGetOrganizationsByUserQuery } from '../../../services/user';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { updateSelectedOrgId } from '../../../redux/layoutSlice';
+import SidebarElement from './SidebarElement';
 
 function Sidebar() {
+  const dispatch = useDispatch()
   const [expanded, setExpanded] = useState(false);
   const [activeKey, setActiveKey] = useState('1');
   const [myorganizations, setMyorganizations] = useState([]);
@@ -47,7 +50,10 @@ function Sidebar() {
     }
   }, [organizations])
   
-  
+  const handleSelectOrgId = (newId) => {
+    // console.log(`set orgId ${newId}`);
+    dispatch(updateSelectedOrgId(newId));
+  }
 
   return (
     <div className='sidebar'>
@@ -62,11 +68,19 @@ function Sidebar() {
               </Nav.Item>
 
               <Nav.Menu eventKey="2" title="我的字幕组" icon={<Icon as={VscOrganization} size="1em"/>}>
-                {myorganizations.map((org) => (
-                  <Nav.Item key={org.organizationId} href={`/myorganizations/${org.organizationId}`} eventKey="2-1">
-                    <a href={`/myorganizations/${org.organizationId}`}>{org.name}</a>
-                  </Nav.Item>
-                ))}
+                {myorganizations.map((org) => {
+                  const id = org.organizationId
+                  return (
+                    <SidebarElement 
+                      key={id}
+                      id={id}
+                      eventKey={'2-1'}
+                      href={`/myorganizations/${id}`}
+                      name={org.name}
+                      onClick={() => handleSelectOrgId(id)}
+                    />
+                  )
+                })}
               </Nav.Menu>
 
               <Nav.Menu eventKey="3" title="我的项目" icon={<Icon as={AiOutlineProject} size="1em"/>}>

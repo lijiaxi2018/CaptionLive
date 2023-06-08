@@ -1,14 +1,26 @@
 @import "rsuite/dist/rsuite.css";
 
 .sidebar-lvl-2 {
-  width: 125px;
+  width: 140px;
   position: absolute;
   left: 50px;
   top: 0;
   z-index: 10;
+  background-color: rgba(255, 255, 255, 0);
+}
+
+.selected-lvl2 {
+  font-weight: bold;
 }
 
 /* .rs-sidenav-default .rs-sidenav-item, .rs-sidenav-default .rs-dropdown-toggle, .rs-sidenav-default .rs-sidenav-toggle-button {
-        padding-left: 20px;
-        padding-right: 20px;
+  background-color: #ffffff;
+} */
+
+.rs-sidenav-default {
+  background-color: #ffffff;
+}
+
+/* .rs-sidenav-default .rs-sidenav-item, .rs-sidenav-default .rs-dropdown-toggle, .rs-sidenav-default .rs-sidenav-toggle-button {
+  background-color: #ffffff;
 } */

@@ -1,26 +1,71 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom'
 import { SidebarData } from './SidebarData';
 import './Sidebarlvl2.css';
 import { IconContext } from 'react-icons';
 import { Sidenav, Nav } from 'rsuite';
+import SidebarElement from './SidebarElement';
+import { useSelector, useDispatch } from 'react-redux';
+import { updateSelectedLvl2Id } from '../../../redux/layoutSlice';
 
-function Sidebarlvl2() {  
+const Sidebarlvl2 = () => {  
+    const dispatch = useDispatch()
+    const selectedOrgId = useSelector((state) => state.layout.selectedOrgId);
+    const selectedLvl2Id = useSelector((state) => state.layout.selectedLvl2Id);
+    
+    const data = [
+        {path:'projects', name:'工作表'},
+        {path:'glossaries', name:'词汇表'},
+        {path:'aboutorganization', name:'关于'}
+    ]
+
+    const handleSelectLvl2 = (newId) => {
+        dispatch(updateSelectedLvl2Id(newId));
+    }
+
+    // useEffect(() => {
+    //     console.log(`changed to ${selectedLvl2Id}`);
+    // }, [selectedLvl2Id]);
+
     return (
       <div className='sidebar-lvl-2' >
         <IconContext.Provider value={{ color: '#fff' }}>
                 <Sidenav>
                     <Sidenav.Body>
                         <Nav>
-                            <Nav.Item href='/myorganizations/projects' eventKey="1">
-                                工作表
-                            </Nav.Item>
-                            <Nav.Item href='/myorganizations/glossaries' eventKey="2">
-                                词汇表
-                            </Nav.Item>
-                            <Nav.Item href='/myorganizations/aboutorganization' eventKey="3">
-                                关于
-                            </Nav.Item>
+                            {data.map((obj, key) => {
+                                // console.log(key);
+                                // console.log(obj);
+                                if (key === selectedLvl2Id) {
+                                    /** current tab is selected */
+                                    return (
+                                        <Nav.Item 
+                                            key={key} 
+                                            href={`/myorganizations/${selectedOrgId}/${obj.path}`} 
+                                            eventKey={`${key}`}
+                                            className='selected-lvl2'
+                                            onClick={() => handleSelectLvl2(key)}
+                                            style={{'background-color': '#ffffff'}}
+                                        >
+                                            {`| ${obj.name}`}
+                                        </Nav.Item>
+                                    );
+                                } else {
+                                    return (
+                                        <Nav.Item
+                                            key={key} 
+                                            href={`/myorganizations/${selectedOrgId}/${obj.path}`} 
+                                            eventKey={`${key}`}
+                                            className='sidebar-item-lvl2'
+                                            onClick={() => handleSelectLvl2(key)}
+                                            style={{'background-color': '#ffffff'}}
+                                        >
+                                            {obj.name}
+                                        </Nav.Item>
+                                    );
+                                }
+                                
+                            })}
                         </Nav>
                     </Sidenav.Body>
                 </Sidenav>
