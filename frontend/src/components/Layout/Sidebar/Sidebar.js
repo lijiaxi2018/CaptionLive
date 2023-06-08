@@ -5,6 +5,7 @@ import { AiOutlineHome, AiOutlineMail, AiOutlineProject } from 'react-icons/ai';
 import { VscOrganization } from 'react-icons/vsc';
 // import { Link } from 'react-router-dom'
 // import { SidebarData } from './SidebarData';
+import "rsuite/dist/rsuite.css"
 import './Sidebar.css';
 import { IconContext } from 'react-icons';
 import { Sidenav, Nav, Toggle } from 'rsuite';

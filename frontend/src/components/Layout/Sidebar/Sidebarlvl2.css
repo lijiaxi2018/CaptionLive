@@ -1,4 +1,4 @@
-@import "rsuite/dist/rsuite.css";
+/* @import "rsuite/dist/rsuite.css"; */
 
 .sidebar-lvl-2 {
   width: 140px;
@@ -13,13 +13,26 @@
   font-weight: bold;
 }
 
-/* .rs-sidenav-default .rs-sidenav-item, .rs-sidenav-default .rs-dropdown-toggle, .rs-sidenav-default .rs-sidenav-toggle-button {
-  background-color: #ffffff;
-} */
-
-.rs-sidenav-default {
+#sidebar-item-lvl2 {
   background-color: #ffffff;
 }
+#sidebar-item-lvl2:hover {
+  background-color: #e5e5ea;
+  
+}
+
+
+#sidenav-out {
+  background-color: #ffffff;
+}
+
+#sidenav-body{
+  background-color: #ffffff;
+}
+
+/* .rs-sidenav-default {
+  background-color: #ffffff;
+} */
 
 /* .rs-sidenav-default .rs-sidenav-item, .rs-sidenav-default .rs-dropdown-toggle, .rs-sidenav-default .rs-sidenav-toggle-button {
   background-color: #ffffff;

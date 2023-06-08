@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom'
 import { SidebarData } from './SidebarData';
-import './Sidebarlvl2.css';
 import { IconContext } from 'react-icons';
 import { Sidenav, Nav } from 'rsuite';
 import SidebarElement from './SidebarElement';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateSelectedLvl2Id } from '../../../redux/layoutSlice';
+import "rsuite/dist/rsuite.css"
+import './Sidebarlvl2.css';
 
 const Sidebarlvl2 = () => {  
     const dispatch = useDispatch()
@@ -30,8 +31,8 @@ const Sidebarlvl2 = () => {
     return (
       <div className='sidebar-lvl-2' >
         <IconContext.Provider value={{ color: '#fff' }}>
-                <Sidenav>
-                    <Sidenav.Body>
+                <Sidenav id='sidenav-out'>
+                    <Sidenav.Body id='sidenav-body'>
                         <Nav>
                             {data.map((obj, key) => {
                                 // console.log(key);
@@ -43,9 +44,10 @@ const Sidebarlvl2 = () => {
                                             key={key} 
                                             href={`/myorganizations/${selectedOrgId}/${obj.path}`} 
                                             eventKey={`${key}`}
+                                            id='sidebar-item-lvl2'
                                             className='selected-lvl2'
                                             onClick={() => handleSelectLvl2(key)}
-                                            style={{'background-color': '#ffffff'}}
+                                            // style={{'background-color': '#ffffff'}}
                                         >
                                             {`| ${obj.name}`}
                                         </Nav.Item>
@@ -56,9 +58,10 @@ const Sidebarlvl2 = () => {
                                             key={key} 
                                             href={`/myorganizations/${selectedOrgId}/${obj.path}`} 
                                             eventKey={`${key}`}
-                                            className='sidebar-item-lvl2'
+                                            id='sidebar-item-lvl2'
+                                            // className='sidebar-item-lvl2'
                                             onClick={() => handleSelectLvl2(key)}
-                                            style={{'background-color': '#ffffff'}}
+                                            // style={{'background-color': '#ffffff'}}
                                         >
                                             {obj.name}
                                         </Nav.Item>
