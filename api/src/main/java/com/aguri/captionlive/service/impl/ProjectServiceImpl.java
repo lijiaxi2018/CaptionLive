@@ -143,9 +143,7 @@ public class ProjectServiceImpl implements ProjectService {
 
         segment.setSummary(segmentRequest.getSummary());
 
-        segment.setBeginTime(segmentRequest.getBeginTime());
-
-        segment.setEndTime(segmentRequest.getEndTime());
+        segment.setScope(segmentRequest.getScope());
 
         segment.setIsGlobal(false);
 
@@ -246,9 +244,7 @@ public class ProjectServiceImpl implements ProjectService {
 
                 existingSegment.setSummary(segmentRequest.getSummary());
 
-                existingSegment.setBeginTime(segmentRequest.getBeginTime());
-
-                existingSegment.setEndTime(segmentRequest.getEndTime());
+                existingSegment.setScope(segmentRequest.getScope());
 
                 if (!Objects.equals(remarkRequest.getContent(), existingRemark.getContent())) {
                     existingRemark.setContent(remarkRequest.getContent());

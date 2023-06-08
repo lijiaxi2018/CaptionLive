@@ -20,7 +20,6 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long taskId;
 
-    @Enumerated(EnumType.STRING)
     private Workflow type;
 
     private Status status;

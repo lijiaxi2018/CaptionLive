@@ -108,7 +108,7 @@ function EntityInfo({userId}) {
             </div>
             
             <div style={{ 'marginTop': '25px' }}>
-              <FileUpload/>
+              <FileUpload id={userId} type={0}/>
             </div>
           </div>
 

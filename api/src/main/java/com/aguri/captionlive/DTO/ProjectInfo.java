@@ -26,9 +26,7 @@ public class ProjectInfo {
 
         private String summary;
 
-        private Integer beginTime;
-
-        private Integer endTime;
+        private String scope;
 
         private List<TaskInfo> taskInfos;
 

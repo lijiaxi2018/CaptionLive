@@ -95,8 +95,7 @@ public class OrganizationServiceImpl implements OrganizationService {
                 } else {
                     ProjectInfo.SegmentInfo segmentInfo = new ProjectInfo.SegmentInfo();
                     segmentInfo.setSummary(segment.getSummary());
-                    segmentInfo.setBeginTime(segment.getBeginTime());
-                    segmentInfo.setEndTime(segment.getEndTime());
+                    segmentInfo.setScope(segment.getScope());
                     segmentInfo.setRemarks(segment.getRemarks());
                     segmentInfo.setTaskInfos(taskInfos);
                     projectInfo.getSegmentInfos().add(segmentInfo);
