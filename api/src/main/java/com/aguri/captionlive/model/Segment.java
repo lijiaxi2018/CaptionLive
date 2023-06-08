@@ -25,9 +25,7 @@ public class Segment {
 
     private String summary;
 
-    private Integer beginTime;
-
-    private Integer endTime;
+    private String scope;
 
     @OneToMany(mappedBy = "segment", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private List<Task> tasks;

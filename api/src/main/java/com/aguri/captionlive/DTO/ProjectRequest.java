@@ -37,9 +37,7 @@ public class ProjectRequest {
 
         private String summary;
 
-        private Integer beginTime;
-
-        private Integer endTime;
+        private String scope;
 
         private List<Task.Workflow> workflows;
 

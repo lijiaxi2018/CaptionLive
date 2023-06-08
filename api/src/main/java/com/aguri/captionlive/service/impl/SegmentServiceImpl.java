@@ -33,8 +33,7 @@ public class SegmentServiceImpl implements SegmentService {
         // Update the segment properties
         existingSegment.setIsGlobal(segment.getIsGlobal());
         existingSegment.setSummary(segment.getSummary());
-        existingSegment.setBeginTime(segment.getBeginTime());
-        existingSegment.setEndTime(segment.getEndTime());
+        existingSegment.setScope(segment.getScope());
         // Update other properties as needed
 
         // Save the updated segment
@@ -58,6 +57,7 @@ public class SegmentServiceImpl implements SegmentService {
     public void deleteSegment(Long segmentId) {
         segmentRepository.deleteById(segmentId);
     }
+
     @Override
     public List<Segment> getAllSegments(Long projectId) {
         return segmentRepository.findAllByProjectProjectId(projectId);
