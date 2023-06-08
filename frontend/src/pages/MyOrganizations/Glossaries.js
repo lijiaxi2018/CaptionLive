@@ -14,10 +14,14 @@ function Glossaries() {
 
   return (
     <div>
-      <Sidebarlvl2 />
-      <div className='general-page-container-reduced'>
+      <div className='general-page-container'>
         <Header title={organizationName} icon = {VscOrganization} />
-        <h1>Glossaries</h1>
+        <Sidebarlvl2 />
+        
+        <div className='general-page-container-reduced'>
+          <h1>Glossaries</h1>
+        </div>
+      
       </div>
     </div>  
   );
