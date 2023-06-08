@@ -25,4 +25,6 @@ public interface ProjectService {
     List<Project> getAllPublicProjects();
 
     Project updateCover(Long projectId, Long coverId);
+
+    void shareProject2User(Long projectId, Long userId);
 }

@@ -96,7 +96,7 @@ public class ProjectServiceImpl implements ProjectService {
 
         project.setType(projectRequest.getType());
 
-        FileRecord fileRecord = fileRecordRepository.getReferenceById(projectRequest.getSourceFileRecordId());
+        FileRecord fileRecord = FileRecord.generateFileRecord(projectRequest.getSourceFileRecordId());
         project.setSourceFileRecord(fileRecord);
         updateDesiredFileNameIfDesiredFileNameNotNull(fileRecord, desiredFileName);
 
@@ -196,7 +196,7 @@ public class ProjectServiceImpl implements ProjectService {
         Project existingProject = getProjectById(projectId);
         String desiredFileName = projectRequest.getFileName();
 
-        FileRecord fileRecord = fileRecordRepository.getReferenceById(projectRequest.getSourceFileRecordId());
+        FileRecord fileRecord = FileRecord.generateFileRecord(projectRequest.getSourceFileRecordId());
         existingProject.setSourceFileRecord(fileRecord);
 
         existingProject.setName(projectRequest.getName());
@@ -307,6 +307,11 @@ public class ProjectServiceImpl implements ProjectService {
         FileRecord fileRecord = FileRecord.generateFileRecord(coverId);
         project.setCoverFileRecord(fileRecord);
         return projectRepository.save(project);
+    }
+
+    @Override
+    public void shareProject2User(Long projectId, Long userId) {
+        shareProject2UserWithPermission(userId, projectId, Access.Permission.Editable);
     }
 
 
