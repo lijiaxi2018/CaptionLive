@@ -68,6 +68,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         // fields copying...
         return projects.stream().map(project -> {
             ProjectInfo projectInfo = new ProjectInfo();
+            projectInfo.setProjectId(project.getProjectId());
             projectInfo.setIsCompleted(true);
             projectInfo.setName(project.getName());
             List<Segment> segments = project.getSegments();
@@ -88,12 +89,14 @@ public class OrganizationServiceImpl implements OrganizationService {
                         fileRecordId = fileRecord.getFileRecordId();
                     }
                     taskInfo.setFileId(fileRecordId);
+                    taskInfo.setTaskId(task.getTaskId());
                     return taskInfo;
                 }).toList();
                 if (segment.getIsGlobal()) {
                     projectInfo.setTaskInfos(taskInfos);
                 } else {
                     ProjectInfo.SegmentInfo segmentInfo = new ProjectInfo.SegmentInfo();
+                    segmentInfo.setSegmentId(segment.getSegmentId());
                     segmentInfo.setSummary(segment.getSummary());
                     segmentInfo.setScope(segment.getScope());
                     segmentInfo.setRemarks(segment.getRemarks());
