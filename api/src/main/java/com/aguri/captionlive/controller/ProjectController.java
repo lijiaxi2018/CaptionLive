@@ -79,6 +79,12 @@ public class ProjectController {
         return ResponseEntity.ok(Resp.ok());
     }
 
+    @PutMapping("/{projectId}/users/{userId}")
+    public ResponseEntity<Resp> shareProject2User(@PathVariable Long projectId, @PathVariable Long userId) {
+        projectService.shareProject2User(projectId, userId);
+        return ResponseEntity.ok(Resp.ok());
+    }
+
 
     @GetMapping("/{projectId}/segments")
     public ResponseEntity<Resp> getAllSegments(@PathVariable Long projectId) {

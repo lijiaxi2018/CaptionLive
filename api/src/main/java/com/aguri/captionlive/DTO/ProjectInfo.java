@@ -11,6 +11,8 @@ import java.util.List;
 @Data
 public class ProjectInfo {
 
+    private Long projectId;
+
     private Boolean isCompleted;
 
     private String name;
@@ -24,6 +26,8 @@ public class ProjectInfo {
     @Data
     public static class SegmentInfo {
 
+        private Long segmentId;
+
         private String summary;
 
         private String scope;
@@ -34,6 +38,8 @@ public class ProjectInfo {
 
         @Data
         public static class TaskInfo {
+
+            private Long taskId;
 
             private User workerUser;
 
