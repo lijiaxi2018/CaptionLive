@@ -95,8 +95,12 @@ public class ProjectServiceImpl implements ProjectService {
         project.setIsPublic(projectRequest.getIsPublic());
 
         project.setType(projectRequest.getType());
+        Long sourceFileRecordId = projectRequest.getSourceFileRecordId();
 
-        FileRecord fileRecord = FileRecord.generateFileRecord(projectRequest.getSourceFileRecordId());
+        FileRecord fileRecord = null;
+        if (sourceFileRecordId != 0) {
+            fileRecord = fileRecordRepository.getReferenceById(sourceFileRecordId);
+        }
         project.setSourceFileRecord(fileRecord);
         updateDesiredFileNameIfDesiredFileNameNotNull(fileRecord, desiredFileName);
 
