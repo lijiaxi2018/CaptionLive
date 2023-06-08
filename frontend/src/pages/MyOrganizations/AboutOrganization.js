@@ -14,10 +14,14 @@ function AboutOrganization() {
 
   return (
     <div>
-      <Sidebarlvl2 />
-      <div className='general-page-container-reduced'>
+      <div className='general-page-container'>
         <Header title={organizationName} icon = {VscOrganization} />
-        <h1>About Organization</h1>
+        <Sidebarlvl2 />
+        
+        <div className='general-page-container-reduced'>
+          <h1>About Organization</h1>
+        </div>
+      
       </div>
     </div>  
   );

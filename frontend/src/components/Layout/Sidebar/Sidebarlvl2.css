@@ -1,10 +1,11 @@
 /* @import "rsuite/dist/rsuite.css"; */
 
 .sidebar-lvl-2 {
-  width: 140px;
+  
   position: absolute;
   left: 50px;
-  top: 0;
+  top: 120px;
+  width: 140px;
   z-index: 10;
   background-color: rgba(255, 255, 255, 0);
 }
