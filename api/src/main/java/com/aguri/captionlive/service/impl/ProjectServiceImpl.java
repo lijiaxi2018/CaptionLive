@@ -257,12 +257,11 @@ public class ProjectServiceImpl implements ProjectService {
                 FileRecord fileRecord = fileRecordRepository.getReferenceById(projectRequest.getSourceFileRecordId());
                 updateDesiredFileNameIfDesiredFileNameNotNull(fileRecord, desiredFileName);
                 existingSegment.getTasks().forEach(task -> {
-                    if (task.getType() == Task.Workflow.SOURCE && task.getFile().getFileRecordId().equals(projectRequest.getSourceFileRecordId())) {
+                    if (task.getType() == Task.Workflow.SOURCE) {
                         task.setFile(fileRecord);
                         taskRepository.save(task);
                     }
                 });
-
 
             } else if (!segmentRequestMap.containsKey(existingSegment.getSegmentId())) {
                 deleteSegments.add(existingSegment);
