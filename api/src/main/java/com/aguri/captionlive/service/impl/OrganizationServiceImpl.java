@@ -63,6 +63,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Override
     public List<ProjectInfo> getPagedProjects(Long organizationId, String searchTxt, int page, int size, String sortBy, String sortOrder) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(sortOrder), sortBy));
+        getOrganizationById(organizationId);
         Page<Project> projectsPage = projectRepository.findAllByOrganizationsOrganizationIdAndNameContaining(organizationId, searchTxt, pageable);
         List<Project> projects = projectsPage.getContent();
         // fields copying...
@@ -78,6 +79,7 @@ public class OrganizationServiceImpl implements OrganizationService {
                 List<ProjectInfo.SegmentInfo.TaskInfo> taskInfos = segment.getTasks().stream().map(task -> {
                     ProjectInfo.SegmentInfo.TaskInfo taskInfo = new ProjectInfo.SegmentInfo.TaskInfo();
                     taskInfo.setWorkerUser(task.getWorker());
+                    taskInfo.setType(task.getType());
                     Task.Status status = task.getStatus();
                     if (status != Task.Status.COMPLETED) {
                         projectInfo.setIsCompleted(false);

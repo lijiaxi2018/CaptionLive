@@ -45,6 +45,8 @@ public class ProjectInfo {
 
             private Long fileId;
 
+            private Task.Workflow type;
+
             private Task.Status status;
         }
 
