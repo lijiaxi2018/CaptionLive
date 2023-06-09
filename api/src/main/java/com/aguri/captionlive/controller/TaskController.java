@@ -73,5 +73,4 @@ public class TaskController {
         return ResponseEntity.ok(Resp.ok(taskService.uploadFile(taskId, fileRecordId)));
     }
 
-
 }

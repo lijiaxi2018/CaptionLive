@@ -44,7 +44,7 @@ public class ProjectController {
     @GetMapping("/{id}")
     public ResponseEntity<Resp> getProjectById(@PathVariable Long id) {
         Project project = projectService.getProjectById(id);
-        return ResponseEntity.ok(Resp.ok(ProjectInfo.generateProjectInfo(List.of(project))));
+        return ResponseEntity.ok(Resp.ok(project));
     }
 
     @DeleteMapping("/{id}")
