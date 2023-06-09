@@ -6,12 +6,23 @@ import { parseTaskType } from '../../utils/segment';
 import { Icon } from '@rsuite/icons';
 import { FaAngleUp, FaAngleDown } from 'react-icons/fa';
 
-function Segment({segmentId, type}) {
+function Segment({segmentId, type, data}) {
+  const orgId = 1;
+  const orgProjectsResults = useGetOrganizationProjectsQuery(orgId);
+
+  const orgProjectsFetched = 
+    orgId === -1 ? false : 
+    orgProjectsResults.isFetching ? false : 
+    true;
+  
+  const segmentDataNew = orgProjectsFetched === false ? {} : orgProjectsResults.data.data[0].segmentInfos[0];
+  console.log(segmentDataNew);
+  
   const [expanded, setExpanded] = useState(false);
 
-  const orgProjects = useGetOrganizationProjectsQuery(1);
-  console.log(orgProjects);
 
+  
+  
   const segmentResult = useGetSegmentQuery(segmentId);
   
   const segmentData = 
@@ -24,12 +35,10 @@ function Segment({segmentId, type}) {
     segmentResult.isFetching ? false : 
     true;
   
-  // console.log(segmentData);
-  
-  const summary = segmentData === {} ? '获取中...' : segmentData.summary;
-  const scope = segmentData === {} ? '获取中...' : segmentData.scope;
-  const tasks = segmentData === {} ? [] : segmentData.tasks;
-  // console.log(tasks);
+  const summary = data.summary;
+  const scope = data.scope;
+  const tasks = data.taskInfos;
+  console.log(tasks);
 
   return (
     <div className='segment-container'>
@@ -47,7 +56,7 @@ function Segment({segmentId, type}) {
         </div>
 
         <div>
-          {fetched && tasks.map((task) =>
+          {tasks.map((task) =>
             <div key={task.taskId} className='segment-item-container'>
               <label className='general-font-medium-small-bold'>{parseTaskType(task.type)}:</label>
               <label className='general-font-medium-small'></label>
