@@ -1,5 +1,6 @@
 package com.aguri.captionlive.service.impl;
 
+import com.aguri.captionlive.DTO.ProjectInfo;
 import com.aguri.captionlive.DTO.ProjectRequest;
 import com.aguri.captionlive.common.exception.EntityNotFoundException;
 import com.aguri.captionlive.common.util.FileRecordUtil;
@@ -295,8 +296,8 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<Project> getAllPublicProjects() {
-        return projectRepository.findAllByIsPublic(true);
+    public List<ProjectInfo> getAllPublicProjects() {
+        return ProjectInfo.generateProjectInfo(projectRepository.findAllByIsPublic(true));
     }
 
     @Override
@@ -371,5 +372,4 @@ public class ProjectServiceImpl implements ProjectService {
 
         return remark;
     }
-
 }

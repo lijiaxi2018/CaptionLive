@@ -1,5 +1,6 @@
 package com.aguri.captionlive.controller;
 
+import com.aguri.captionlive.DTO.ProjectInfo;
 import com.aguri.captionlive.DTO.UserRequest;
 import com.aguri.captionlive.common.resp.Resp;
 import com.aguri.captionlive.model.Organization;
@@ -19,15 +20,15 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping
-    public ResponseEntity<Resp> getAllUsers() {
-        return ResponseEntity.ok(Resp.ok(userService.getAllUsers()));
-    }
-
-    @PostMapping
-    public ResponseEntity<Resp> createUser(@RequestBody UserRequest userRequest) {
-        return ResponseEntity.ok(Resp.ok(userService.createUser(userRequest)));
-    }
+//    @GetMapping
+//    public ResponseEntity<Resp> getAllUsers() {
+//        return ResponseEntity.ok(Resp.ok(userService.getAllUsers()));
+//    }
+//
+//    @PostMapping
+//    public ResponseEntity<Resp> createUser(@RequestBody UserRequest userRequest) {
+//        return ResponseEntity.ok(Resp.ok(userService.createUser(userRequest)));
+//    }
 
     @GetMapping("/{id}")
     public ResponseEntity<Resp> getUserById(@PathVariable Long id) {
@@ -48,13 +49,13 @@ public class UserController {
 
     @GetMapping("/{userId}/accessibleProjects")
     public ResponseEntity<Resp> getAllAccessibleProjects(@PathVariable Long userId) {
-        List<Project> allAccessibleProjects = userService.getAllAccessibleProjects(userId);
+        List<ProjectInfo> allAccessibleProjects = userService.getAllAccessibleProjects(userId);
         return ResponseEntity.ok(Resp.ok(allAccessibleProjects));
     }
 
     @GetMapping("/{userId}/committedProjects")
     public ResponseEntity<Resp> getAllCommittedProjects(@PathVariable Long userId) {
-        List<Project> allAccessibleProjects = userService.getAllCommittedProjects(userId);
+        List<ProjectInfo> allAccessibleProjects = userService.getAllCommittedProjects(userId);
         return ResponseEntity.ok(Resp.ok(allAccessibleProjects));
     }
 

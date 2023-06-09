@@ -1,5 +1,6 @@
 package com.aguri.captionlive.service.impl;
 
+import com.aguri.captionlive.DTO.ProjectInfo;
 import com.aguri.captionlive.DTO.UserRequest;
 import com.aguri.captionlive.common.exception.EntityNotFoundException;
 import com.aguri.captionlive.common.util.FileRecordUtil;
@@ -86,24 +87,25 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<Project> getAllAccessibleProjects(Long userId) {
-        return getUserById(userId).getAccessibleProjects();
+    public List<ProjectInfo> getAllAccessibleProjects(Long userId) {
+        return ProjectInfo.generateProjectInfo(getUserById(userId).getAccessibleProjects());
     }
 
     @Override
-    public List<Project> getAllCommittedProjects(Long id) {
-        return accessRepository.findAllByUserUserIdAndCommitment(id, Access.Commitment.COMMITTED).stream().map(Access::getProject).toList();
+    public List<ProjectInfo> getAllCommittedProjects(Long id) {
+        List<Project> list = accessRepository.findAllByUserUserIdAndCommitment(id, Access.Commitment.COMMITTED).stream().map(Access::getProject).toList();
+        return ProjectInfo.generateProjectInfo(list);
     }
 
     @Override
-    public Object updateDescription(Long userId, String description) {
+    public User updateDescription(Long userId, String description) {
         User user = getUserById(userId);
         user.setDescription(description);
         return userRepository.save(user);
     }
 
     @Override
-    public Object updateAvatar(Long userId, Long avatarId) {
+    public User updateAvatar(Long userId, Long avatarId) {
         User user = userRepository.getReferenceById(userId);
         FileRecord fileRecord = FileRecordUtil.generateFileRecord(avatarId);
         user.setAvatar(fileRecord);

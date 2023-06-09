@@ -8,6 +8,7 @@ import com.aguri.captionlive.model.*;
 import com.aguri.captionlive.repository.OrganizationRepository;
 import com.aguri.captionlive.repository.ProjectRepository;
 import com.aguri.captionlive.service.OrganizationService;
+import com.aguri.captionlive.service.ProjectService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,7 +17,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -67,45 +67,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         Page<Project> projectsPage = projectRepository.findAllByOrganizationsOrganizationIdAndNameContaining(organizationId, searchTxt, pageable);
         List<Project> projects = projectsPage.getContent();
         // fields copying...
-        return projects.stream().map(project -> {
-            ProjectInfo projectInfo = new ProjectInfo();
-            projectInfo.setProjectId(project.getProjectId());
-            projectInfo.setIsCompleted(true);
-            projectInfo.setName(project.getName());
-            List<Segment> segments = project.getSegments();
-            projectInfo.setCreatedTime(project.getCreatedTime());
-            projectInfo.setSegmentInfos(new ArrayList<>());
-            segments.forEach(segment -> {
-                List<ProjectInfo.SegmentInfo.TaskInfo> taskInfos = segment.getTasks().stream().map(task -> {
-                    ProjectInfo.SegmentInfo.TaskInfo taskInfo = new ProjectInfo.SegmentInfo.TaskInfo();
-                    taskInfo.setWorkerUser(task.getWorker());
-                    Task.Status status = task.getStatus();
-                    if (status != Task.Status.COMPLETED) {
-                        projectInfo.setIsCompleted(false);
-                    }
-                    taskInfo.setStatus(status);
-                    FileRecord fileRecord = task.getFile();
-                    Long fileRecordId = 0L;
-                    if (fileRecord != null) {
-                        fileRecordId = fileRecord.getFileRecordId();
-                    }
-                    taskInfo.setFileId(fileRecordId);
-                    taskInfo.setTaskId(task.getTaskId());
-                    return taskInfo;
-                }).toList();
-                if (segment.getIsGlobal()) {
-                    projectInfo.setTaskInfos(taskInfos);
-                } else {
-                    ProjectInfo.SegmentInfo segmentInfo = new ProjectInfo.SegmentInfo();
-                    segmentInfo.setSegmentId(segment.getSegmentId());
-                    segmentInfo.setSummary(segment.getSummary());
-                    segmentInfo.setScope(segment.getScope());
-                    segmentInfo.setRemarks(segment.getRemarks());
-                    segmentInfo.setTaskInfos(taskInfos);
-                    projectInfo.getSegmentInfos().add(segmentInfo);
-                }
-            });
-            return projectInfo;
-        }).toList();
+        return ProjectInfo.generateProjectInfo(projects);
     }
+
 }

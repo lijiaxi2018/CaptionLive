@@ -1,5 +1,6 @@
 package com.aguri.captionlive.service;
 
+import com.aguri.captionlive.DTO.ProjectInfo;
 import com.aguri.captionlive.DTO.UserRequest;
 import com.aguri.captionlive.model.Project;
 import com.aguri.captionlive.model.User;
@@ -22,9 +23,9 @@ public interface UserService {
 
     List<User> getUsersByOrganizationId(Long organizationId);
 
-    List<Project> getAllAccessibleProjects(Long userId);
+    List<ProjectInfo> getAllAccessibleProjects(Long userId);
 
-    List<Project> getAllCommittedProjects(Long id);
+    List<ProjectInfo> getAllCommittedProjects(Long id);
 
     Object updateDescription(Long userId, String description);
 
