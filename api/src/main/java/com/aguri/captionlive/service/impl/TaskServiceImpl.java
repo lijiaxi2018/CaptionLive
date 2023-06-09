@@ -123,6 +123,7 @@ public class TaskServiceImpl implements TaskService {
     public Task uploadFileAndTaskStatusChange(Long taskId, Long fileRecordId) {
         Task task = taskRepository.getReferenceById(taskId);
         FileRecord fileRecord = FileRecordUtil.generateFileRecord(fileRecordId);
+        task.setStatus(Task.Status.COMPLETED);
         if (fileRecord == null) {
             task.setStatus(Task.Status.IN_PROGRESS);
         }
