@@ -1,7 +1,7 @@
 import React from 'react';
 import Sidebarlvl2 from '../../components/Layout/Sidebar/Sidebarlvl2';
 import Header from '../../components/Layout/Header/Header';
-import Segment from '../../components/Project/Segment';
+import Worksheet from '../../components/Project/Worksheet';
 import { VscOrganization } from 'react-icons/vsc';
 import { useGetOrganizationQuery } from '../../services/organization';
 import { useParams } from 'react-router';
@@ -20,7 +20,7 @@ function Projects() {
         <Sidebarlvl2 />
         
         <div className='general-page-container-reduced'>
-        <Segment segmentId={2} type={0} />
+        <Worksheet />
         </div>
       
       </div>
