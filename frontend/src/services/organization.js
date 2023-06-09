@@ -15,10 +15,17 @@ export const organizationApi = createApi({
       query: () => '/organizations',
       providesTags: ['Organizations']
     }),
+
+    getOrganizationProjects: builder.query({
+      query: (projectid) => `/organizations/${projectid}/projects`,
+      params: { page: '0', size: '10', sortBy: 'createdTime', sortOrder: 'asc',  },
+      providesTags: ['Organizations']
+    }),
   }),
 })
 
 export const { 
   useGetOrganizationQuery, 
-  useGetAllOrganizationsQuery
+  useGetAllOrganizationsQuery,
+  useGetOrganizationProjectsQuery,
 } = organizationApi
