@@ -66,7 +66,7 @@ public class ProjectController {
     }
 
     @GetMapping("/{projectId}/organizations")
-    public ResponseEntity<Resp> getAllOrganizations(@PathVariable Long projectId) {
+    public ResponseEntity<Resp> getAllAccessibleOrganizations(@PathVariable Long projectId) {
         List<Organization> organizations = projectService.getAllAccessibleOrganizations(projectId);
         return ResponseEntity.ok(Resp.ok(organizations));
     }
