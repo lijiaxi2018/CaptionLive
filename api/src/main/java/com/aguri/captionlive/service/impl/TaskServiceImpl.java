@@ -94,11 +94,8 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Task withdrawalAssign(Long taskId, Long userId) {
+    public Task withdrawalAssign(Long taskId) {
         Task existingTask = taskRepository.getReferenceById(taskId);
-        if (!Objects.equals(existingTask.getWorker().getUserId(), userId)) {
-            throw new RuntimeException("The current user has not accepted the task");
-        }
 
         if (existingTask.getStatus() != Task.Status.IN_PROGRESS) {
             throw new RuntimeException("Cannot withdraw task in its current state");
@@ -123,9 +120,13 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Task uploadFile(Long taskId, Long fileRecordId) {
+    public Task uploadFileAndTaskStatusChange(Long taskId, Long fileRecordId) {
         Task task = taskRepository.getReferenceById(taskId);
-        task.setFile(FileRecordUtil.generateFileRecord(fileRecordId));
+        FileRecord fileRecord = FileRecordUtil.generateFileRecord(fileRecordId);
+        if (fileRecord == null) {
+            task.setStatus(Task.Status.IN_PROGRESS);
+        }
+        task.setFile(fileRecord);
         return taskRepository.save(task);
     }
 

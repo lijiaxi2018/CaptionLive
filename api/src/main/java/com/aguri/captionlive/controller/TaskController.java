@@ -8,8 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-
 @RestController
 @RequestMapping("/api/tasks")
 public class TaskController {
@@ -44,17 +42,17 @@ public class TaskController {
 //        return ResponseEntity.ok(Resp.ok());
 //    }
 
-    @PutMapping("/{taskId}/commit/{userId}")
-    public ResponseEntity<Resp> commit(@PathVariable Long taskId, @PathVariable Long userId) {
-        Task updatedTask = taskService.commitTask(taskId, userId);
-        return ResponseEntity.ok(Resp.ok(updatedTask));
-    }
+//    @PutMapping("/{taskId}/commit/{userId}")
+//    public ResponseEntity<Resp> commit(@PathVariable Long taskId, @PathVariable Long userId) {
+//        Task updatedTask = taskService.commitTask(taskId, userId);
+//        return ResponseEntity.ok(Resp.ok(updatedTask));
+//    }
 
-    @DeleteMapping("/{taskId}/commit/{userId}")
-    public ResponseEntity<Resp> withdrawalCommit(@PathVariable Long taskId, @PathVariable Long userId) {
-        Task updatedTask = taskService.withdrawalCommit(taskId, userId);
-        return ResponseEntity.ok(Resp.ok(updatedTask));
-    }
+//    @DeleteMapping("/{taskId}/commit/{userId}")
+//    public ResponseEntity<Resp> withdrawalCommit(@PathVariable Long taskId, @PathVariable Long userId) {
+//        Task updatedTask = taskService.withdrawalCommit(taskId, userId);
+//        return ResponseEntity.ok(Resp.ok(updatedTask));
+//    }
 
     @PutMapping("/{taskId}/assign/{userId}")
     public ResponseEntity<Resp> assign(@PathVariable Long taskId, @PathVariable Long userId) {
@@ -62,15 +60,15 @@ public class TaskController {
         return ResponseEntity.ok(Resp.ok(updatedTask));
     }
 
-    @DeleteMapping("/{taskId}/assign/{userId}")
-    public ResponseEntity<Resp> withdrawalAssign(@PathVariable Long taskId, @PathVariable Long userId) {
-        Task updatedTask = taskService.withdrawalAssign(taskId, userId);
+    @DeleteMapping("/{taskId}/assign")
+    public ResponseEntity<Resp> withdrawalAssign(@PathVariable Long taskId) {
+        Task updatedTask = taskService.withdrawalAssign(taskId);
         return ResponseEntity.ok(Resp.ok(updatedTask));
     }
 
     @PutMapping("/{taskId}/file/{fileRecordId}")
-    public ResponseEntity<Resp> uploadFile(@PathVariable Long taskId, @PathVariable Long fileRecordId) {
-        return ResponseEntity.ok(Resp.ok(taskService.uploadFile(taskId, fileRecordId)));
+    public ResponseEntity<Resp> uploadFileAndTaskStatusChange(@PathVariable Long taskId, @PathVariable Long fileRecordId) {
+        return ResponseEntity.ok(Resp.ok(taskService.uploadFileAndTaskStatusChange(taskId, fileRecordId)));
     }
 
 }
