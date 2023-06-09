@@ -322,7 +322,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public List<ProjectInfo> getAllPublicProjects() {
-        return ProjectInfo.generateProjectInfo(projectRepository.findAllByIsPublic(true));
+        return ProjectInfo.generateProjectInfos(projectRepository.findAllByIsPublic(true));
     }
 
     @Override

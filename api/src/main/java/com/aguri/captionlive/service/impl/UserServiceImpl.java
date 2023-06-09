@@ -89,13 +89,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<ProjectInfo> getAllAccessibleProjects(Long userId) {
         List<Project> accessibleProjects = getUserById(userId).getAccessibleProjects();
-        return ProjectInfo.generateProjectInfo(accessibleProjects);
+        return ProjectInfo.generateProjectInfos(accessibleProjects);
     }
 
     @Override
     public List<ProjectInfo> getAllCommittedProjects(Long id) {
         List<Project> list = accessRepository.findAllByUserUserIdAndCommitment(id, Access.Commitment.COMMITTED).stream().map(Access::getProject).toList();
-        return ProjectInfo.generateProjectInfo(list);
+        return ProjectInfo.generateProjectInfos(list);
     }
 
     @Override

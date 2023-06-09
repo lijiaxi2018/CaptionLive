@@ -8,7 +8,6 @@ import com.aguri.captionlive.model.*;
 import com.aguri.captionlive.repository.OrganizationRepository;
 import com.aguri.captionlive.repository.ProjectRepository;
 import com.aguri.captionlive.service.OrganizationService;
-import com.aguri.captionlive.service.ProjectService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -67,7 +66,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         Page<Project> projectsPage = projectRepository.findAllByOrganizationsOrganizationIdAndNameContaining(organizationId, searchTxt, pageable);
         List<Project> projects = projectsPage.getContent();
         // fields copying...
-        return ProjectInfo.generateProjectInfo(projects);
+        return ProjectInfo.generateProjectInfos(projects);
     }
 
 }

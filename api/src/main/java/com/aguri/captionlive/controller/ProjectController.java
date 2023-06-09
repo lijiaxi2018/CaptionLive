@@ -43,19 +43,19 @@ public class ProjectController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Resp> getProjectById(@PathVariable Long id) {
-        Project project = projectService.getProjectById(id);
-        return ResponseEntity.ok(Resp.ok(project));
+        ProjectInfo projectInfo = ProjectInfo.generateProjectInfo(projectService.getProjectById(id));
+        return ResponseEntity.ok(Resp.ok(projectInfo));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProject(@PathVariable Long id) {
+    public ResponseEntity<Resp> deleteProject(@PathVariable Long id) {
         projectService.deleteProject(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(Resp.ok());
     }
 
     @PutMapping
     public ResponseEntity<Resp> updateProject(@RequestBody ProjectRequest projectRequest) {
-        Project updatedProject = projectService.updateProject(projectRequest);
+        ProjectInfo updatedProject = ProjectInfo.generateProjectInfo(projectService.updateProject(projectRequest));
         return ResponseEntity.ok(Resp.ok(updatedProject));
     }
 
