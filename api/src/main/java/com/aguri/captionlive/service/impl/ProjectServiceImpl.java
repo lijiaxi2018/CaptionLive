@@ -2,6 +2,7 @@ package com.aguri.captionlive.service.impl;
 
 import com.aguri.captionlive.DTO.ProjectRequest;
 import com.aguri.captionlive.common.exception.EntityNotFoundException;
+import com.aguri.captionlive.common.util.FileRecordUtil;
 import com.aguri.captionlive.model.*;
 import com.aguri.captionlive.repository.*;
 import com.aguri.captionlive.service.FileRecordService;
@@ -97,10 +98,7 @@ public class ProjectServiceImpl implements ProjectService {
         project.setType(projectRequest.getType());
         Long sourceFileRecordId = projectRequest.getSourceFileRecordId();
 
-        FileRecord fileRecord = null;
-        if (sourceFileRecordId != 0) {
-            fileRecord = fileRecordRepository.getReferenceById(sourceFileRecordId);
-        }
+        FileRecord fileRecord = FileRecordUtil.generateFileRecord(sourceFileRecordId);
         project.setSourceFileRecord(fileRecord);
         updateDesiredFileNameIfDesiredFileNameNotNull(fileRecord, desiredFileName);
 
@@ -198,7 +196,7 @@ public class ProjectServiceImpl implements ProjectService {
         Project existingProject = getProjectById(projectId);
         String desiredFileName = projectRequest.getFileName();
 
-        FileRecord fileRecord = FileRecord.generateFileRecord(projectRequest.getSourceFileRecordId());
+        FileRecord fileRecord = FileRecordUtil.generateFileRecord(projectRequest.getSourceFileRecordId());
         existingProject.setSourceFileRecord(fileRecord);
 
         existingProject.setName(projectRequest.getName());
@@ -304,7 +302,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public Project updateCover(Long projectId, Long coverId) {
         Project project = getProjectById(projectId);
-        FileRecord fileRecord = FileRecord.generateFileRecord(coverId);
+        FileRecord fileRecord = FileRecordUtil.generateFileRecord(coverId);
         project.setCoverFileRecord(fileRecord);
         return projectRepository.save(project);
     }

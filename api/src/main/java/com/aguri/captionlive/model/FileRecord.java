@@ -34,13 +34,13 @@ public class FileRecord {
         return getOriginalName().split("\\.")[1];
     }
 
-    public static FileRecord generateFileRecord(Long id) {
-        FileRecord fileRecord = null;
-        if (id != 0L) {
-            fileRecord = new FileRecord();
-            fileRecord.setFileRecordId(id);
-        }
-        return fileRecord;
-    }
+//    public static FileRecord generateFileRecord(Long id) {
+//        FileRecord fileRecord = null;
+//        if (id != 0L) {
+//            fileRecord = new FileRecord();
+//            fileRecord.setFileRecordId(id);
+//        }
+//        return fileRecord;
+//    }
 
 }

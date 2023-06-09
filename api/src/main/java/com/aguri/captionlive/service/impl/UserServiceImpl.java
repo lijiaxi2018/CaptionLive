@@ -2,6 +2,7 @@ package com.aguri.captionlive.service.impl;
 
 import com.aguri.captionlive.DTO.UserRequest;
 import com.aguri.captionlive.common.exception.EntityNotFoundException;
+import com.aguri.captionlive.common.util.FileRecordUtil;
 import com.aguri.captionlive.model.*;
 import com.aguri.captionlive.repository.*;
 import com.aguri.captionlive.service.OrganizationService;
@@ -14,7 +15,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import static com.aguri.captionlive.model.FileRecord.generateFileRecord;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -64,7 +64,7 @@ public class UserServiceImpl implements UserService {
             }
         }
         BeanUtils.copyProperties(userRequest, user);
-        FileRecord fileRecord = generateFileRecord(userRequest.getAvatarId());
+        FileRecord fileRecord = FileRecordUtil.generateFileRecord(userRequest.getAvatarId());
         user.setAvatar(fileRecord);
         return userRepository.save(user);
     }
@@ -105,7 +105,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Object updateAvatar(Long userId, Long avatarId) {
         User user = userRepository.getReferenceById(userId);
-        FileRecord fileRecord = generateFileRecord(avatarId);
+        FileRecord fileRecord = FileRecordUtil.generateFileRecord(avatarId);
         user.setAvatar(fileRecord);
         return userRepository.save(user);
     }

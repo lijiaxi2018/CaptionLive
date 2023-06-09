@@ -3,6 +3,7 @@ package com.aguri.captionlive.service.impl;
 import com.aguri.captionlive.DTO.OrganizationRequest;
 import com.aguri.captionlive.DTO.ProjectInfo;
 import com.aguri.captionlive.common.exception.EntityNotFoundException;
+import com.aguri.captionlive.common.util.FileRecordUtil;
 import com.aguri.captionlive.model.*;
 import com.aguri.captionlive.repository.OrganizationRepository;
 import com.aguri.captionlive.repository.ProjectRepository;
@@ -41,7 +42,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     public Organization createOrganization(OrganizationRequest organizationRequest) {
         Organization organization = new Organization();
         BeanUtils.copyProperties(organizationRequest, organization);
-        organization.setAvatar(FileRecord.generateFileRecord(organizationRequest.getAvatarId()));
+        organization.setAvatar(FileRecordUtil.generateFileRecord(organizationRequest.getAvatarId()));
         return organizationRepository.save(organization);
     }
 
@@ -50,7 +51,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         Organization existingOrganization = getOrganizationById(id);
         existingOrganization.setName(organizationRequest.getName());
         existingOrganization.setDescription(organizationRequest.getDescription());
-        existingOrganization.setAvatar(FileRecord.generateFileRecord(organizationRequest.getAvatarId()));
+        existingOrganization.setAvatar(FileRecordUtil.generateFileRecord(organizationRequest.getAvatarId()));
         return organizationRepository.save(existingOrganization);
     }
 
