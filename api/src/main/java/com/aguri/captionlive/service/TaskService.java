@@ -21,6 +21,7 @@ public interface TaskService {
 
     Task withdrawalAssign(Long taskId, Long userId);
 
-
     Task assign(Long taskId, Long userId);
+
+    Task uploadFile(Long taskId, Long fileRecordId);
 }

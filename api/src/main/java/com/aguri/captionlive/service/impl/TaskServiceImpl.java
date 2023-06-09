@@ -1,6 +1,8 @@
 package com.aguri.captionlive.service.impl;
 
 import com.aguri.captionlive.common.exception.EntityNotFoundException;
+import com.aguri.captionlive.common.util.FileRecordUtil;
+import com.aguri.captionlive.model.FileRecord;
 import com.aguri.captionlive.model.Task;
 import com.aguri.captionlive.model.User;
 import com.aguri.captionlive.repository.TaskRepository;
@@ -118,6 +120,13 @@ public class TaskServiceImpl implements TaskService {
         existingTask.setWorker(user);
         existingTask.setStatus(Task.Status.IN_PROGRESS);
         return taskRepository.save(existingTask);
+    }
+
+    @Override
+    public Task uploadFile(Long taskId, Long fileRecordId) {
+        Task task = taskRepository.getReferenceById(taskId);
+        task.setFile(FileRecordUtil.generateFileRecord(fileRecordId));
+        return taskRepository.save(task);
     }
 
 }
