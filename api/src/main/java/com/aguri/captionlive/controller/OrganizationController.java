@@ -68,7 +68,7 @@ public class OrganizationController {
             @RequestParam(value = "searchTxt", defaultValue = "") String searchTxt,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "created_time") String sortBy,
+            @RequestParam(defaultValue = "createdTime") String sortBy,
             @RequestParam(defaultValue = "asc") String sortOrder) {
 
         List<ProjectInfo> projectsInfo = organizationService.getPagedProjects(organizationId, searchTxt, page, size, sortBy, sortOrder);
