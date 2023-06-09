@@ -1,7 +1,6 @@
 package com.aguri.captionlive.service.impl;
 
 import com.aguri.captionlive.common.exception.EntityNotFoundException;
-import com.aguri.captionlive.common.exception.OperationNotAllowException;
 import com.aguri.captionlive.model.Task;
 import com.aguri.captionlive.model.User;
 import com.aguri.captionlive.repository.TaskRepository;
@@ -68,17 +67,42 @@ public class TaskServiceImpl implements TaskService {
         if (!Objects.equals(existingTask.getWorker().getUserId(), userId)) {
             throw new RuntimeException("The current user has not accepted the task");
         }
+
+        if (existingTask.getStatus() != Task.Status.IN_PROGRESS) {
+            throw new RuntimeException("Cannot commit task in its current state");
+        }
+
         existingTask.setStatus(Task.Status.COMPLETED);
         return taskRepository.save(existingTask);
     }
 
     @Override
-    public Task withdrawalTask(Long taskId, Long userId) {
+    public Task withdrawalCommit(Long taskId, Long userId) {
         Task existingTask = taskRepository.getReferenceById(taskId);
         if (!Objects.equals(existingTask.getWorker().getUserId(), userId)) {
             throw new RuntimeException("The current user has not accepted the task");
         }
+
+        if (existingTask.getStatus() != Task.Status.COMPLETED) {
+            throw new RuntimeException("Cannot withdraw task in its current state");
+        }
+
         existingTask.setStatus(Task.Status.IN_PROGRESS);
+        return taskRepository.save(existingTask);
+    }
+
+    @Override
+    public Task withdrawalAssign(Long taskId, Long userId) {
+        Task existingTask = taskRepository.getReferenceById(taskId);
+        if (!Objects.equals(existingTask.getWorker().getUserId(), userId)) {
+            throw new RuntimeException("The current user has not accepted the task");
+        }
+
+        if (existingTask.getStatus() != Task.Status.IN_PROGRESS) {
+            throw new RuntimeException("Cannot withdraw task in its current state");
+        }
+
+        existingTask.setStatus(Task.Status.NOT_ASSIGNED);
         return taskRepository.save(existingTask);
     }
 
@@ -86,11 +110,14 @@ public class TaskServiceImpl implements TaskService {
     public Task assign(Long taskId, Long userId) {
         User user = userRepository.getReferenceById(userId);
         Task existingTask = taskRepository.getReferenceById(taskId);
+
         if (existingTask.getStatus() != Task.Status.NOT_ASSIGNED) {
-            throw new RuntimeException("task status is not " + Task.Status.NOT_ASSIGNED);
+            throw new RuntimeException("Cannot assign task in its current state");
         }
+
         existingTask.setWorker(user);
         existingTask.setStatus(Task.Status.IN_PROGRESS);
         return taskRepository.save(existingTask);
     }
+
 }

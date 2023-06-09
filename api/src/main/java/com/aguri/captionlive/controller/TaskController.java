@@ -1,21 +1,12 @@
 package com.aguri.captionlive.controller;
 
 import com.aguri.captionlive.common.resp.Resp;
-import com.aguri.captionlive.model.FileRecord;
 import com.aguri.captionlive.model.Task;
 import com.aguri.captionlive.service.FileRecordService;
 import com.aguri.captionlive.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
 
 @RestController
 @RequestMapping("/api/tasks")
@@ -57,9 +48,9 @@ public class TaskController {
         return ResponseEntity.ok(Resp.ok(updatedTask));
     }
 
-    @PutMapping("/{taskId}/withdrawal/{userId}")
-    public ResponseEntity<Resp> withdrawal(@PathVariable Long taskId, @PathVariable Long userId) {
-        Task updatedTask = taskService.withdrawalTask(taskId, userId);
+    @DeleteMapping("/{taskId}/commit/{userId}")
+    public ResponseEntity<Resp> withdrawalCommit(@PathVariable Long taskId, @PathVariable Long userId) {
+        Task updatedTask = taskService.withdrawalCommit(taskId, userId);
         return ResponseEntity.ok(Resp.ok(updatedTask));
     }
 
@@ -68,5 +59,12 @@ public class TaskController {
         Task updatedTask = taskService.assign(taskId, userId);
         return ResponseEntity.ok(Resp.ok(updatedTask));
     }
+
+    @DeleteMapping("/{taskId}/assign/{userId}")
+    public ResponseEntity<Resp> withdrawalAssign(@PathVariable Long taskId, @PathVariable Long userId) {
+        Task updatedTask = taskService.withdrawalAssign(taskId, userId);
+        return ResponseEntity.ok(Resp.ok(updatedTask));
+    }
+
 
 }

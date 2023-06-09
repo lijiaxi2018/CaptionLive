@@ -19,10 +19,10 @@ public class RemarkController {
         return ResponseEntity.ok(Resp.ok(remarkService.updateRemark(remarkId, remark)));
     }
 
-    @PostMapping
-    public ResponseEntity<Resp> updateRemark(@RequestBody Remark remark) {
-        return ResponseEntity.ok(Resp.ok(remarkService.createRemark(remark)));
-    }
+//    @PostMapping
+//    public ResponseEntity<Resp> updateRemark(@RequestBody Remark remark) {
+//        return ResponseEntity.ok(Resp.ok(remarkService.createRemark(remark)));
+//    }
 
     @DeleteMapping("/{remarkId}")
     public ResponseEntity<Void> deleteRemark(@PathVariable Long remarkId) {

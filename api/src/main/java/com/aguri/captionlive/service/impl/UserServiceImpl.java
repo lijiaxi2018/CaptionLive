@@ -88,7 +88,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<ProjectInfo> getAllAccessibleProjects(Long userId) {
-        return ProjectInfo.generateProjectInfo(getUserById(userId).getAccessibleProjects());
+        List<Project> accessibleProjects = getUserById(userId).getAccessibleProjects();
+        return ProjectInfo.generateProjectInfo(accessibleProjects);
     }
 
     @Override

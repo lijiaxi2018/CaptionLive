@@ -3,11 +3,13 @@ package com.aguri.captionlive.controller;
 import com.aguri.captionlive.common.resp.Resp;
 import com.aguri.captionlive.model.Segment;
 import com.aguri.captionlive.model.Task;
+import com.aguri.captionlive.service.RemarkService;
 import com.aguri.captionlive.service.SegmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -52,4 +54,15 @@ public class SegmentController {
 //        List<Task> tasks = segmentService.getSegmentById(segmentId).getTasks();
 //        return ResponseEntity.ok(Resp.ok(tasks));
 //    }
+
+    @Autowired
+    private RemarkService remarkService;
+
+    @PostMapping("/{segmentId}/remark")
+    public ResponseEntity<Resp> addRemark(@PathVariable Long segmentId, @RequestBody HashMap<String, String> body) {
+        String content = body.get("content");
+        Long userId = Long.valueOf(body.get("userId"));
+        return ResponseEntity.ok(Resp.ok(remarkService.addRemark(content, userId, segmentId)));
+    }
+
 }

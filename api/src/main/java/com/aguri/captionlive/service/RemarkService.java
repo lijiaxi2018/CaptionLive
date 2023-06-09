@@ -14,4 +14,6 @@ public interface RemarkService {
     void deleteRemark(Long id);
 
     Remark updateRemark(Long id, Remark remark);
+
+    Object addRemark(String content, Long userId, Long segmentId);
 }
