@@ -15,9 +15,9 @@ public interface TaskService {
 
     void deleteTask(Long taskId);
 
-    Task commitTask(Long taskId);
+    Task commitTask(Long taskId, Long userId);
 
-    Task withdrawalTask(Long taskId);
+    Task withdrawalTask(Long taskId, Long userId);
 
     Task assign(Long taskId, Long userId);
 }

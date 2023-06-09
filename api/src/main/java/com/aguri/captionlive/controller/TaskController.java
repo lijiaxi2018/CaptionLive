@@ -27,39 +27,39 @@ public class TaskController {
     @Autowired
     public FileRecordService fileRecordService;
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Resp> getTaskById(@PathVariable Long id) {
-        Task task = taskService.getTaskById(id);
-        return ResponseEntity.ok(Resp.ok(task));
-    }
+//    @GetMapping("/{id}")
+//    public ResponseEntity<Resp> getTaskById(@PathVariable Long id) {
+//        Task task = taskService.getTaskById(id);
+//        return ResponseEntity.ok(Resp.ok(task));
+//    }
 
-    @PostMapping
-    public ResponseEntity<Resp> createTask(@RequestBody Task task) {
-        Task createdTask = taskService.saveTask(task);
-        return ResponseEntity.ok(Resp.ok(createdTask));
-    }
+//    @PostMapping
+//    public ResponseEntity<Resp> createTask(@RequestBody Task task) {
+//        Task createdTask = taskService.saveTask(task);
+//        return ResponseEntity.ok(Resp.ok(createdTask));
+//    }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Resp> updateTask(@PathVariable Long id, @RequestBody Task task) {
-        Task updatedTask = taskService.updateTask(id, task);
-        return ResponseEntity.ok(Resp.ok(updatedTask));
-    }
+//    @PutMapping("/{id}")
+//    public ResponseEntity<Resp> updateTask(@PathVariable Long id, @RequestBody Task task) {
+//        Task updatedTask = taskService.updateTask(id, task);
+//        return ResponseEntity.ok(Resp.ok(updatedTask));
+//    }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Resp> deleteTask(@PathVariable Long id) {
-        taskService.deleteTask(id);
-        return ResponseEntity.noContent().build();
-    }
+//    @DeleteMapping("/{id}")
+//    public ResponseEntity<Resp> deleteTask(@PathVariable Long id) {
+//        taskService.deleteTask(id);
+//        return ResponseEntity.ok(Resp.ok());
+//    }
 
     @PutMapping("/{taskId}/commit/{userId}")
     public ResponseEntity<Resp> commit(@PathVariable Long taskId, @PathVariable Long userId) {
-        Task updatedTask = taskService.commitTask(taskId);
+        Task updatedTask = taskService.commitTask(taskId, userId);
         return ResponseEntity.ok(Resp.ok(updatedTask));
     }
 
     @PutMapping("/{taskId}/withdrawal/{userId}")
     public ResponseEntity<Resp> withdrawal(@PathVariable Long taskId, @PathVariable Long userId) {
-        Task updatedTask = taskService.withdrawalTask(taskId);
+        Task updatedTask = taskService.withdrawalTask(taskId, userId);
         return ResponseEntity.ok(Resp.ok(updatedTask));
     }
 

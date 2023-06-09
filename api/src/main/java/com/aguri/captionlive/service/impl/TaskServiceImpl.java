@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -62,29 +63,31 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Task commitTask(Long taskId) {
-        Task existingTask = getTaskById(taskId);
+    public Task commitTask(Long taskId, Long userId) {
+        Task existingTask = taskRepository.getReferenceById(taskId);
+        if (!Objects.equals(existingTask.getWorker().getUserId(), userId)) {
+            throw new RuntimeException("The current user has not accepted the task");
+        }
         existingTask.setStatus(Task.Status.COMPLETED);
         return taskRepository.save(existingTask);
     }
 
     @Override
-    public Task withdrawalTask(Long taskId) {
-        Task existingTask = getTaskById(taskId);
+    public Task withdrawalTask(Long taskId, Long userId) {
+        Task existingTask = taskRepository.getReferenceById(taskId);
+        if (!Objects.equals(existingTask.getWorker().getUserId(), userId)) {
+            throw new RuntimeException("The current user has not accepted the task");
+        }
         existingTask.setStatus(Task.Status.IN_PROGRESS);
         return taskRepository.save(existingTask);
     }
 
     @Override
     public Task assign(Long taskId, Long userId) {
-        if (!userRepository.existsById(userId)) {
-            throw new EntityNotFoundException("User not found with id: " + userId);
-        }
-        User user = new User();
-        user.setUserId(userId);
-        Task existingTask = getTaskById(taskId);
+        User user = userRepository.getReferenceById(userId);
+        Task existingTask = taskRepository.getReferenceById(taskId);
         if (existingTask.getStatus() != Task.Status.NOT_ASSIGNED) {
-            throw new OperationNotAllowException("task status is not " + Task.Status.NOT_ASSIGNED);
+            throw new RuntimeException("task status is not " + Task.Status.NOT_ASSIGNED);
         }
         existingTask.setWorker(user);
         existingTask.setStatus(Task.Status.IN_PROGRESS);
