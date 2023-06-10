@@ -25,9 +25,9 @@ public class RemarkController {
 //    }
 
     @DeleteMapping("/{remarkId}")
-    public ResponseEntity<Void> deleteRemark(@PathVariable Long remarkId) {
+    public ResponseEntity<Resp> deleteRemark(@PathVariable Long remarkId) {
         remarkService.getRemarkById(remarkId);
         remarkService.deleteRemark(remarkId);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(Resp.ok());
     }
 }

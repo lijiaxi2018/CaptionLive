@@ -93,9 +93,8 @@ public class ProjectController {
 //    }
 //
 
-    @PutMapping("/{projectId}/cover")
-    public ResponseEntity<Resp> updateCover(@RequestBody HashMap<String, String> body, @PathVariable Long projectId) {
-        Long coverId = Long.valueOf(body.get("coverId"));
+    @PutMapping("/{projectId}/cover/{coverId}")
+    public ResponseEntity<Resp> updateCover(@PathVariable Long projectId, @PathVariable Long coverId) {
         Project updatedProject = projectService.updateCover(projectId, coverId);
         return ResponseEntity.ok(Resp.ok(updatedProject));
     }
