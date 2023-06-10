@@ -1,44 +1,48 @@
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux'
 import TaskStatusIcon from '../InfoCard/TaskStatusIcon';
-import { useGetSegmentQuery } from '../../services/segment';
-import { useGetOrganizationProjectsQuery } from '../../services/organization';
-import { parseTaskType } from '../../utils/segment';
+import { parseTaskType, parseScope } from '../../utils/segment';
 import { Icon } from '@rsuite/icons';
 import { FaAngleUp, FaAngleDown } from 'react-icons/fa';
 
-function Segment({segmentId, type, data}) {
-  const orgId = 1;
-  const orgProjectsResults = useGetOrganizationProjectsQuery(orgId);
 
-  const orgProjectsFetched = 
-    orgId === -1 ? false : 
-    orgProjectsResults.isFetching ? false : 
-    true;
-  
-  const segmentDataNew = orgProjectsFetched === false ? {} : orgProjectsResults.data.data[0].segmentInfos[0];
-  console.log(segmentDataNew);
-  
+
+function parseTaskText(task) {
+  if (task.workerUser === null) {
+    return [parseTaskType(task.type) + ':', ''];
+  } else {
+    return [parseTaskType(task.type) + ':', task.workerUser.username];
+  }
+}
+
+
+
+function Segment({data}) {
+  const myUserId = useSelector((state) => state.userAuth.userId);
   const [expanded, setExpanded] = useState(false);
 
-
-  
-  
-  const segmentResult = useGetSegmentQuery(segmentId);
-  
-  const segmentData = 
-    segmentId === undefined ? {} : 
-    segmentResult.isFetching ? {} : 
-    segmentResult.data.data;
-  
-  const fetched = 
-    segmentId === undefined ? false : 
-    segmentResult.isFetching ? false : 
-    true;
-  
   const summary = data.summary;
   const scope = data.scope;
   const tasks = data.taskInfos;
-  console.log(tasks);
+  
+  function parseTaskButton(task) {
+    if (task.status === 'NOT_ASSIGNED') {
+      return (<button className='general-button-green'>承接</button>);
+    } else if (task.status === 'IN_PROGRESS' && task.workerUser.userId !== myUserId) {
+      return;
+    } else if (task.status === 'IN_PROGRESS' && task.workerUser.userId === myUserId) {
+      return (
+        <div>
+          <button className='general-button-grey'>上传</button>
+          <button className='general-button-red'>放弃</button>
+        </div>
+      );
+    } else if (task.status === 'COMPLETED' && task.workerUser.userId !== myUserId) {
+      return <p></p>;
+    } else if (task.status === 'COMPLETED' && task.workerUser.userId === myUserId) {
+      return (<button className='general-button-grey'>删除</button>);
+    }
+  }
 
   return (
     <div className='segment-container'>
@@ -48,27 +52,37 @@ function Segment({segmentId, type, data}) {
         <label className='general-font-medium-small-bold'>{summary}</label>
       </div>
 
+      <div className='segment-status-icon-container'>
+        {tasks.map((task) =>
+          <div key={task.taskId}>
+            <TaskStatusIcon type={task.type} status={task.status}/>
+          </div>
+        )}
+      </div>
+
       { expanded &&
       <div>
         <div className='segment-item-container'>
           <label className='general-font-medium-small-bold'>起讫: </label>
-          <label className='general-font-medium-small'>{scope}</label>
+          <label className='general-font-medium-small'>{parseScope(scope)}</label>
         </div>
 
         <div>
           {tasks.map((task) =>
             <div key={task.taskId} className='segment-item-container'>
-              <label className='general-font-medium-small-bold'>{parseTaskType(task.type)}:</label>
-              <label className='general-font-medium-small'></label>
+              <label className='general-font-medium-small-bold'>
+                {parseTaskText(task)[0]}
+              </label>
+              <label className='general-font-medium-small'>
+                {parseTaskText(task)[1]}
+              </label>
+              {parseTaskButton(task)}
             </div>
           )}
         </div>
       </div>
       }
-      <TaskStatusIcon type={'TIMELINE'} status={'NOT_ASSIGNED'}/>
     </div>
-
-    
   );
 }
 

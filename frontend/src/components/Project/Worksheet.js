@@ -6,17 +6,12 @@ function Worksheet() {
   const orgId = 1;
   const orgProjectsResults = useGetOrganizationProjectsQuery(orgId);
 
-  const segmentData = orgProjectsResults.isFetching ? {} : orgProjectsResults.data.data[0].segmentInfos[0];
+  const segmentData = orgProjectsResults.isFetching ? null : orgProjectsResults.data.data[0].segmentInfos[0];
   console.log(segmentData);
-
-  // const orgProjectsFetched = 
-  //   orgId === -1 ? false : 
-  //   orgProjectsResults.isFetching ? false : 
-  //   true;
   
   return (
     <div>
-      { segmentData !== {} &&
+      { segmentData !== null &&
         <Segment data={segmentData}/>
       }
     </div>
