@@ -1,7 +1,9 @@
 package com.aguri.captionlive.service.impl;
 
+import com.aguri.captionlive.DTO.ProjectInfo;
 import com.aguri.captionlive.DTO.ProjectRequest;
 import com.aguri.captionlive.common.exception.EntityNotFoundException;
+import com.aguri.captionlive.common.util.FileRecordUtil;
 import com.aguri.captionlive.model.*;
 import com.aguri.captionlive.repository.*;
 import com.aguri.captionlive.service.FileRecordService;
@@ -64,6 +66,13 @@ public class ProjectServiceImpl implements ProjectService {
 
         Project project = createProjectByProjectRequest(projectRequest);
 
+
+//        String desiredFileName = projectRequest.getFileName();
+//        Long sourceFileRecordId = projectRequest.getSourceFileRecordId();
+//        FileRecord fileRecord = FileRecordUtil.generateFileRecord(sourceFileRecordId);
+//        project.setSourceFileRecord(fileRecord);
+//        updateDesiredFileNameIfDesiredFileNameNotNull(fileRecord, desiredFileName);
+
         createProjectCascadeEntities(projectRequest, project);
 
         Long projectId = project.getProjectId();
@@ -88,21 +97,19 @@ public class ProjectServiceImpl implements ProjectService {
 
     private Project createProjectByProjectRequest(ProjectRequest projectRequest) {
         Project project = new Project();
-        String desiredFileName = projectRequest.getFileName();
+
 
         project.setName(projectRequest.getName());
 
         project.setIsPublic(projectRequest.getIsPublic());
 
         project.setType(projectRequest.getType());
-        Long sourceFileRecordId = projectRequest.getSourceFileRecordId();
 
-        FileRecord fileRecord = null;
-        if (sourceFileRecordId != 0) {
-            fileRecord = fileRecordRepository.getReferenceById(sourceFileRecordId);
-        }
-        project.setSourceFileRecord(fileRecord);
-        updateDesiredFileNameIfDesiredFileNameNotNull(fileRecord, desiredFileName);
+//        String desiredFileName = projectRequest.getFileName();
+//        Long sourceFileRecordId = projectRequest.getSourceFileRecordId();
+//        FileRecord fileRecord = FileRecordUtil.generateFileRecord(sourceFileRecordId);
+//        project.setSourceFileRecord(fileRecord);
+//        updateDesiredFileNameIfDesiredFileNameNotNull(fileRecord, desiredFileName);
 
         projectRepository.save(project);
         return project;
@@ -135,6 +142,15 @@ public class ProjectServiceImpl implements ProjectService {
         remarks.add(remark);
 
         List<Task> newTasks = generateTasksForGlobalSegmentByProjectType(globalSegment, type);
+        newTasks.forEach(task -> {
+            if (task.getType() == Task.Workflow.SOURCE) {
+                String desiredFileName = projectRequest.getFileName();
+                Long sourceFileRecordId = projectRequest.getSourceFileRecordId();
+                FileRecord fileRecord = FileRecordUtil.generateFileRecord(sourceFileRecordId);
+                task.setFile(fileRecord);
+                updateDesiredFileNameIfDesiredFileNameNotNull(fileRecord, desiredFileName);
+            }
+        });
         tasks.addAll(newTasks);
 
         segments.add(globalSegment);
@@ -198,8 +214,8 @@ public class ProjectServiceImpl implements ProjectService {
         Project existingProject = getProjectById(projectId);
         String desiredFileName = projectRequest.getFileName();
 
-        FileRecord fileRecord = FileRecord.generateFileRecord(projectRequest.getSourceFileRecordId());
-        existingProject.setSourceFileRecord(fileRecord);
+//        FileRecord fileRecord = FileRecordUtil.generateFileRecord(projectRequest.getSourceFileRecordId());
+//        existingProject.setSourceFileRecord(fileRecord);
 
         existingProject.setName(projectRequest.getName());
 
@@ -208,7 +224,6 @@ public class ProjectServiceImpl implements ProjectService {
         boolean isTypeUpdate = existingProject.getType() != projectRequest.getType();
         existingProject.setType(projectRequest.getType());
 
-        updateDesiredFileNameIfDesiredFileNameNotNull(fileRecord, desiredFileName);
 
         List<Segment> updateSegments = new ArrayList<>();
         List<Segment> deleteSegments = new ArrayList<>();
@@ -239,6 +254,15 @@ public class ProjectServiceImpl implements ProjectService {
                     deleteTasks.addAll(existingSegment.getTasks());
                     createTasks.addAll(newTasks);
                 }
+                FileRecord fileRecord = fileRecordRepository.getReferenceById(projectRequest.getSourceFileRecordId());
+                updateDesiredFileNameIfDesiredFileNameNotNull(fileRecord, desiredFileName);
+                existingSegment.getTasks().forEach(task -> {
+                    if (task.getType() == Task.Workflow.SOURCE) {
+                        task.setFile(fileRecord);
+                        taskRepository.save(task);
+                    }
+                });
+
             } else if (!segmentRequestMap.containsKey(existingSegment.getSegmentId())) {
                 deleteSegments.add(existingSegment);
             } else {
@@ -297,14 +321,14 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<Project> getAllPublicProjects() {
-        return projectRepository.findAllByIsPublic(true);
+    public List<ProjectInfo> getAllPublicProjects() {
+        return ProjectInfo.generateProjectInfos(projectRepository.findAllByIsPublic(true));
     }
 
     @Override
     public Project updateCover(Long projectId, Long coverId) {
         Project project = getProjectById(projectId);
-        FileRecord fileRecord = FileRecord.generateFileRecord(coverId);
+        FileRecord fileRecord = FileRecordUtil.generateFileRecord(coverId);
         project.setCoverFileRecord(fileRecord);
         return projectRepository.save(project);
     }
@@ -373,5 +397,4 @@ public class ProjectServiceImpl implements ProjectService {
 
         return remark;
     }
-
 }

@@ -1,5 +1,6 @@
 package com.aguri.captionlive.service;
 
+import com.aguri.captionlive.DTO.ProjectInfo;
 import com.aguri.captionlive.DTO.ProjectRequest;
 import com.aguri.captionlive.model.Organization;
 import com.aguri.captionlive.model.Project;
@@ -22,7 +23,7 @@ public interface ProjectService {
 
     List<Organization> getAllAccessibleOrganizations(Long projectId);
 
-    List<Project> getAllPublicProjects();
+    List<ProjectInfo> getAllPublicProjects();
 
     Project updateCover(Long projectId, Long coverId);
 

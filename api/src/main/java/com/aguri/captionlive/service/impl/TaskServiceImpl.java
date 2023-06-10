@@ -1,7 +1,8 @@
 package com.aguri.captionlive.service.impl;
 
 import com.aguri.captionlive.common.exception.EntityNotFoundException;
-import com.aguri.captionlive.common.exception.OperationNotAllowException;
+import com.aguri.captionlive.common.util.FileRecordUtil;
+import com.aguri.captionlive.model.FileRecord;
 import com.aguri.captionlive.model.Task;
 import com.aguri.captionlive.model.User;
 import com.aguri.captionlive.repository.TaskRepository;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -62,32 +64,71 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Task commitTask(Long taskId) {
-        Task existingTask = getTaskById(taskId);
+    public Task commitTask(Long taskId, Long userId) {
+        Task existingTask = taskRepository.getReferenceById(taskId);
+        if (!Objects.equals(existingTask.getWorker().getUserId(), userId)) {
+            throw new RuntimeException("The current user has not accepted the task");
+        }
+
+        if (existingTask.getStatus() != Task.Status.IN_PROGRESS) {
+            throw new RuntimeException("Cannot commit task in its current state");
+        }
+
         existingTask.setStatus(Task.Status.COMPLETED);
         return taskRepository.save(existingTask);
     }
 
     @Override
-    public Task withdrawalTask(Long taskId) {
-        Task existingTask = getTaskById(taskId);
+    public Task withdrawalCommit(Long taskId, Long userId) {
+        Task existingTask = taskRepository.getReferenceById(taskId);
+        if (!Objects.equals(existingTask.getWorker().getUserId(), userId)) {
+            throw new RuntimeException("The current user has not accepted the task");
+        }
+
+        if (existingTask.getStatus() != Task.Status.COMPLETED) {
+            throw new RuntimeException("Cannot withdraw task in its current state");
+        }
+
         existingTask.setStatus(Task.Status.IN_PROGRESS);
         return taskRepository.save(existingTask);
     }
 
     @Override
+    public Task withdrawalAssign(Long taskId) {
+        Task existingTask = taskRepository.getReferenceById(taskId);
+
+        if (existingTask.getStatus() != Task.Status.IN_PROGRESS) {
+            throw new RuntimeException("Cannot withdraw task in its current state");
+        }
+
+        existingTask.setStatus(Task.Status.NOT_ASSIGNED);
+        return taskRepository.save(existingTask);
+    }
+
+    @Override
     public Task assign(Long taskId, Long userId) {
-        if (!userRepository.existsById(userId)) {
-            throw new EntityNotFoundException("User not found with id: " + userId);
-        }
-        User user = new User();
-        user.setUserId(userId);
-        Task existingTask = getTaskById(taskId);
+        User user = userRepository.getReferenceById(userId);
+        Task existingTask = taskRepository.getReferenceById(taskId);
+
         if (existingTask.getStatus() != Task.Status.NOT_ASSIGNED) {
-            throw new OperationNotAllowException("task status is not " + Task.Status.NOT_ASSIGNED);
+            throw new RuntimeException("Cannot assign task in its current state");
         }
+
         existingTask.setWorker(user);
         existingTask.setStatus(Task.Status.IN_PROGRESS);
         return taskRepository.save(existingTask);
     }
+
+    @Override
+    public Task uploadFileAndTaskStatusChange(Long taskId, Long fileRecordId) {
+        Task task = taskRepository.getReferenceById(taskId);
+        FileRecord fileRecord = FileRecordUtil.generateFileRecord(fileRecordId);
+        task.setStatus(Task.Status.COMPLETED);
+        if (fileRecord == null) {
+            task.setStatus(Task.Status.IN_PROGRESS);
+        }
+        task.setFile(fileRecord);
+        return taskRepository.save(task);
+    }
+
 }

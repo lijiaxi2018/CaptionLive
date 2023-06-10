@@ -3,6 +3,7 @@ package com.aguri.captionlive.service.impl;
 import com.aguri.captionlive.DTO.OrganizationRequest;
 import com.aguri.captionlive.DTO.ProjectInfo;
 import com.aguri.captionlive.common.exception.EntityNotFoundException;
+import com.aguri.captionlive.common.util.FileRecordUtil;
 import com.aguri.captionlive.model.*;
 import com.aguri.captionlive.repository.OrganizationRepository;
 import com.aguri.captionlive.repository.ProjectRepository;
@@ -15,7 +16,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -41,7 +41,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     public Organization createOrganization(OrganizationRequest organizationRequest) {
         Organization organization = new Organization();
         BeanUtils.copyProperties(organizationRequest, organization);
-        organization.setAvatar(FileRecord.generateFileRecord(organizationRequest.getAvatarId()));
+        organization.setAvatar(FileRecordUtil.generateFileRecord(organizationRequest.getAvatarId()));
         return organizationRepository.save(organization);
     }
 
@@ -50,7 +50,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         Organization existingOrganization = getOrganizationById(id);
         existingOrganization.setName(organizationRequest.getName());
         existingOrganization.setDescription(organizationRequest.getDescription());
-        existingOrganization.setAvatar(FileRecord.generateFileRecord(organizationRequest.getAvatarId()));
+        existingOrganization.setAvatar(FileRecordUtil.generateFileRecord(organizationRequest.getAvatarId()));
         return organizationRepository.save(existingOrganization);
     }
 
@@ -66,45 +66,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         Page<Project> projectsPage = projectRepository.findAllByOrganizationsOrganizationIdAndNameContaining(organizationId, searchTxt, pageable);
         List<Project> projects = projectsPage.getContent();
         // fields copying...
-        return projects.stream().map(project -> {
-            ProjectInfo projectInfo = new ProjectInfo();
-            projectInfo.setProjectId(project.getProjectId());
-            projectInfo.setIsCompleted(true);
-            projectInfo.setName(project.getName());
-            List<Segment> segments = project.getSegments();
-            projectInfo.setCreatedTime(project.getCreatedTime());
-            projectInfo.setSegmentInfos(new ArrayList<>());
-            segments.forEach(segment -> {
-                List<ProjectInfo.SegmentInfo.TaskInfo> taskInfos = segment.getTasks().stream().map(task -> {
-                    ProjectInfo.SegmentInfo.TaskInfo taskInfo = new ProjectInfo.SegmentInfo.TaskInfo();
-                    taskInfo.setWorkerUser(task.getWorker());
-                    Task.Status status = task.getStatus();
-                    if (status != Task.Status.COMPLETED) {
-                        projectInfo.setIsCompleted(false);
-                    }
-                    taskInfo.setStatus(status);
-                    FileRecord fileRecord = task.getFile();
-                    Long fileRecordId = 0L;
-                    if (fileRecord != null) {
-                        fileRecordId = fileRecord.getFileRecordId();
-                    }
-                    taskInfo.setFileId(fileRecordId);
-                    taskInfo.setTaskId(task.getTaskId());
-                    return taskInfo;
-                }).toList();
-                if (segment.getIsGlobal()) {
-                    projectInfo.setTaskInfos(taskInfos);
-                } else {
-                    ProjectInfo.SegmentInfo segmentInfo = new ProjectInfo.SegmentInfo();
-                    segmentInfo.setSegmentId(segment.getSegmentId());
-                    segmentInfo.setSummary(segment.getSummary());
-                    segmentInfo.setScope(segment.getScope());
-                    segmentInfo.setRemarks(segment.getRemarks());
-                    segmentInfo.setTaskInfos(taskInfos);
-                    projectInfo.getSegmentInfos().add(segmentInfo);
-                }
-            });
-            return projectInfo;
-        }).toList();
+        return ProjectInfo.generateProjectInfos(projects);
     }
+
 }

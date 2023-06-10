@@ -51,11 +51,6 @@ public class Project {
     )
     private List<User> accessibleUsers;
 
-    @JsonIgnore
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "file_record_id")
-    private FileRecord sourceFileRecord;
-
     @UpdateTimestamp
     private LocalDateTime lastUpdatedTime;
 
