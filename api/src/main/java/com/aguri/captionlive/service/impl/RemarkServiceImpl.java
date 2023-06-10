@@ -38,9 +38,9 @@ public class RemarkServiceImpl implements RemarkService {
     }
 
     @Override
-    public Remark updateRemark(Long id, Remark remark) {
+    public Remark updateRemark(Long id, String content) {
         Remark exitingRemark = getRemarkById(id);
-        exitingRemark.setContent(remark.getContent());
+        exitingRemark.setContent(content);
         return remarkRepository.save(exitingRemark);
     }
 
