@@ -25,16 +25,16 @@ public class OrganizationController {
     @Autowired
     private UserService userService;
 
-    @GetMapping
-    public ResponseEntity<Resp> getAllOrganizations() {
-        List<Organization> organizations = organizationService.getAllOrganizations();
-        return ResponseEntity.ok(Resp.ok(organizations));
-    }
+//    @GetMapping
+//    public ResponseEntity<Resp> getAllOrganizations() {
+//        List<Organization> organizations = organizationService.getAllOrganizations();
+//        return ResponseEntity.ok(Resp.ok(organizations));
+//    }
 
     @PostMapping
     public ResponseEntity<Resp> createOrganization(@RequestBody OrganizationRequest organization) {
         Organization createdOrganization = organizationService.createOrganization(organization);
-        return ResponseEntity.status(HttpStatus.CREATED).body(Resp.ok(createdOrganization));
+        return ResponseEntity.ok(Resp.ok(createdOrganization));
     }
 
     @GetMapping("/{id}")

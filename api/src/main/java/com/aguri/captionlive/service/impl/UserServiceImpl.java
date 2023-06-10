@@ -1,7 +1,9 @@
 package com.aguri.captionlive.service.impl;
 
+import com.aguri.captionlive.DTO.ProjectInfo;
 import com.aguri.captionlive.DTO.UserRequest;
 import com.aguri.captionlive.common.exception.EntityNotFoundException;
+import com.aguri.captionlive.common.util.FileRecordUtil;
 import com.aguri.captionlive.model.*;
 import com.aguri.captionlive.repository.*;
 import com.aguri.captionlive.service.OrganizationService;
@@ -14,7 +16,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import static com.aguri.captionlive.model.FileRecord.generateFileRecord;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -64,7 +65,7 @@ public class UserServiceImpl implements UserService {
             }
         }
         BeanUtils.copyProperties(userRequest, user);
-        FileRecord fileRecord = generateFileRecord(userRequest.getAvatarId());
+        FileRecord fileRecord = FileRecordUtil.generateFileRecord(userRequest.getAvatarId());
         user.setAvatar(fileRecord);
         return userRepository.save(user);
     }
@@ -86,26 +87,28 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<Project> getAllAccessibleProjects(Long userId) {
-        return getUserById(userId).getAccessibleProjects();
+    public List<ProjectInfo> getAllAccessibleProjects(Long userId) {
+        List<Project> accessibleProjects = getUserById(userId).getAccessibleProjects();
+        return ProjectInfo.generateProjectInfos(accessibleProjects);
     }
 
     @Override
-    public List<Project> getAllCommittedProjects(Long id) {
-        return accessRepository.findAllByUserUserIdAndCommitment(id, Access.Commitment.COMMITTED).stream().map(Access::getProject).toList();
+    public List<ProjectInfo> getAllCommittedProjects(Long id) {
+        List<Project> list = accessRepository.findAllByUserUserIdAndCommitment(id, Access.Commitment.COMMITTED).stream().map(Access::getProject).toList();
+        return ProjectInfo.generateProjectInfos(list);
     }
 
     @Override
-    public Object updateDescription(Long userId, String description) {
+    public User updateDescription(Long userId, String description) {
         User user = getUserById(userId);
         user.setDescription(description);
         return userRepository.save(user);
     }
 
     @Override
-    public Object updateAvatar(Long userId, Long avatarId) {
+    public User updateAvatar(Long userId, Long avatarId) {
         User user = userRepository.getReferenceById(userId);
-        FileRecord fileRecord = generateFileRecord(avatarId);
+        FileRecord fileRecord = FileRecordUtil.generateFileRecord(avatarId);
         user.setAvatar(fileRecord);
         return userRepository.save(user);
     }
