@@ -30,10 +30,10 @@ public class UserController {
 //        return ResponseEntity.ok(Resp.ok(userService.getAllUsers()));
 //    }
 //
-//    @PostMapping
-//    public ResponseEntity<Resp> createUser(@RequestBody UserRequest userRequest) {
-//        return ResponseEntity.ok(Resp.ok(userService.createUser(userRequest)));
-//    }
+    @PostMapping
+    public ResponseEntity<Resp> createUser(@RequestBody UserRequest userRequest) {
+        return ResponseEntity.ok(Resp.ok(userService.createUser(userRequest)));
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<Resp> getUserById(@PathVariable Long id) {
@@ -66,6 +66,7 @@ public class UserController {
 
     @GetMapping("/{userId}/organizations")
     public ResponseEntity<Resp> getMyOrganizations(@PathVariable Long userId) {
+        System.out.println("/{userId}/organizations");
         List<Organization> organizations = userService.getUserById(userId).getOrganizations();
         return ResponseEntity.ok(Resp.ok(organizations));
     }
