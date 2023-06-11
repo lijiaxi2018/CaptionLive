@@ -63,9 +63,9 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Override
     public List<ProjectInfo> getPagedProjects(Long organizationId, String searchTxt, int page, int size, String sortBy, String sortOrder) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(sortOrder), sortBy));
+        getOrganizationById(organizationId);
         Page<Project> projectsPage = projectRepository.findAllByOrganizationsOrganizationIdAndNameContaining(organizationId, searchTxt, pageable);
         List<Project> projects = projectsPage.getContent();
-        // fields copying...
         return ProjectInfo.generateProjectInfos(projects);
     }
 
