@@ -78,6 +78,7 @@ public class ProjectInfo {
                 }
                 taskInfo.setFileId(fileRecordId);
                 taskInfo.setTaskId(task.getTaskId());
+                taskInfo.setType(task.getType());
                 return taskInfo;
             }).toList();
             if (segment.getIsGlobal()) {
