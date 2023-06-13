@@ -58,3 +58,8 @@ VALUES (0, 0, 3),
        (0, 3, 3),
        (0, 7, 3)
 ON CONFLICT DO NOTHING;
+
+INSERT INTO glossary (category, explanation, remark, romanization, source, term, organization_id)
+VALUES ('人名', '阿兔嘭', '', 'agupon', '大和抚子之道', 'あぐぽん', 1),
+       ('人名', '大西亚玖璃', '', 'ounishi aguri', '大和抚子之道', '⼤⻄亜玖璃', 1)
+ON CONFLICT DO NOTHING;
