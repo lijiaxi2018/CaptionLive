@@ -10,5 +10,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface GlossaryRepository extends JpaRepository<Glossary, Long> {
-    List<Glossary> findByOrganizationOrganizationId(Long organizationId);
+    List<Glossary> findByOrganizationId(Long organizationId);
 }
