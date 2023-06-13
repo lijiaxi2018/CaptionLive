@@ -10,5 +10,5 @@ import java.util.Optional;
 @Repository
 public interface MessageRepository extends JpaRepository<Message, Long> {
 
-    List<Message> findByRequestId(Long requestId);
+    List<Message> findAllByRequestRequestId(Long requestId);
 }

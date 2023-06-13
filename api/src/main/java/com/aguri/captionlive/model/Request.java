@@ -5,27 +5,34 @@ import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Entity
-@Table(name = "messages")
-public class Message {
+@Table(name = "request")
+public class Request {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long messageId;
+    private Long requestId;
 
-    @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name = "request_id")
-    private Request request;
+    private Long type;
 
-    private Boolean isReply;
+    private int status;
 
-    private String Content;
+    private Long sender;
+
+    private Long recipient;
+
+    private boolean senderRead;
+
+    private boolean recipientRead;
+
+    private String body;
+
+    @OneToMany(mappedBy = "request", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    private List<Message> messages;
 
     @UpdateTimestamp
     private LocalDateTime lastUpdatedTime;
