@@ -374,6 +374,32 @@
   width: 100%;
 }
 
+.glossary-button-group{
+  width: 100%;
+  /* background-color: #5bc96d; */
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.glossary-button-modal {
+  /* position: absolute; */
+  /* position:; */
+  /* width: ; */
+  position: relative;
+  left: 80%;
+  width: 100px;
+  border-radius: 10px;
+}
+
+.glossary-button-modal:hover {
+  color: #e8e5e6;
+  background-color: #7f7f7f;
+  /* position: relative;
+  left: 80%;
+  width: 100px;
+  border-radius: 10px; */
+}
+
 #glossary-search-bar {
   width: 100%;
   font-size: 25px;
@@ -393,7 +419,10 @@
   padding-left: 50px;
   height: 600px;
   padding-top: 40px;
-  background-color: #7f7f7f;
+  background-color: #7f7f7fd3;
   border-radius: 40px;
+}
 
+.rs-btn {
+  margin-right: 10px;
 }

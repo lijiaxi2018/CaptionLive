@@ -19,9 +19,9 @@ function Glossaries() {
   const glossariesData = useGetAllGlossariesQuery(organizationId, {
     refetchOnMountOrArgChange: true,
   })
-  // console.log(glossariesData)
+  
   const glossaries = glossariesData.isFetching ? [] : glossariesData.data.data;
-  // console.log(glossaries);
+  
 
   const [formOpen, setFormOpen] = useState(false); // whether open the form for add new glossary
   return (
@@ -31,12 +31,22 @@ function Glossaries() {
         <Sidebarlvl2 />
         
         <div className='general-page-container-reduced'>
-          <h1>Glossaries</h1>
-          <button onClick={() => setFormOpen(!formOpen)}>add</button>
-          {formOpen && (<GlossariesForm organizationId={organizationId}/>)}
-          <GlossariesTable
-            glossaries={glossaries} 
-          />
+          {/* <h1>Glossaries</h1> */}
+          <div className='glossary-button-group'>
+            <button
+              className='glossary-button-modal' 
+              onClick={() => setFormOpen(!formOpen)}
+            >
+                新增单词
+            </button>
+          </div>
+          
+          {formOpen && (
+            <GlossariesForm 
+              organizationId={organizationId}
+              onClose={() => setFormOpen(false)}
+            />)}
+          <GlossariesTable glossaries={glossaries} />
         </div>
       
       </div>

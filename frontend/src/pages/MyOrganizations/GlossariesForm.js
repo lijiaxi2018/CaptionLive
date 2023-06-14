@@ -1,6 +1,6 @@
 import { useState, useRef, forwardRef } from 'react';
 import { usePostGlossariesMutation } from '../../services/glossary';
-import { Form, ButtonToolbar, Button, Input, Schema } from 'rsuite';
+import { Form, Button, Schema } from 'rsuite';
 import "rsuite/dist/rsuite.css";
 
 /**
@@ -29,6 +29,7 @@ const model = Schema.Model({
 
 const GlossariesForm = ({
     organizationId,
+    onClose,
     source='',
     romanization='',
     term='',
@@ -46,16 +47,32 @@ const GlossariesForm = ({
         explanation: explanation,
         remark: remark,
         category: category,
-        createdTime: new Date(),
-        lastUpdatedTime: new Date(),
+        // createdTime: new Date(),
+        // lastUpdatedTime: new Date(),
     })
     const [formError, setFormError] = useState({});
 
     const [postGlossary] = usePostGlossariesMutation();
 
     const handleSubmit = () => {
-        console.log(`submit mode: ${editMode}`);
-        console.log(formValue);
+        if (!formRef.current.check()) {
+            /** current form is not valid */
+            alert('current form not valid');
+        } else {
+            console.log(`submit mode: ${editMode}`);
+            console.log(formValue);
+            postGlossary(formValue)
+            .then((response) => {
+                const message = response.data.message;
+                if (message == 'success') {
+                    alert('词汇添加成功');
+                    console.log(response.data);
+                } else {
+                    alert(`添加失败，错误信息：${message}`);
+                }
+            })
+        }
+        
     }
     
     return (
@@ -67,14 +84,18 @@ const GlossariesForm = ({
             formValue={formValue}
             model={model}
           >
-            <TextField name="source" label="source" />
-            <TextField name="romanization" label="romanization" />
-            <TextField name="term" label="term" />
-            <TextField name="explanation" label="explanation" />
-            <TextField name="remark" label="explanation" />
-            <TextField name="category" label="explanation" />
+            <TextField name="source" label="出自" />
+            <TextField name="romanization" label="罗马音" />
+            <TextField name="term" label="原文" />
+            <TextField name="explanation" label="释义" />
+            <TextField name="remark" label="备注" />
+            <TextField name="category" label="分类" />
           </Form>
-          <Button onClick={handleSubmit}>Submit</Button>
+          <div className='glossary-button-group'>
+            <Button onClick={handleSubmit}>提交</Button>
+            <Button onClick={onClose}>关闭</Button>
+          </div>
+          
         </div>
     )
 }
