@@ -18,8 +18,6 @@ public class ProjectInfo {
 
     private LocalDateTime createdTime;
 
-    private List<SegmentInfo.TaskInfo> taskInfos;
-
     private List<SegmentInfo> segmentInfos;
 
     @Data
@@ -30,6 +28,8 @@ public class ProjectInfo {
         private String summary;
 
         private String scope;
+
+        private Boolean isGlobal;
 
         private List<TaskInfo> taskInfos;
 
@@ -81,17 +81,14 @@ public class ProjectInfo {
                 taskInfo.setType(task.getType());
                 return taskInfo;
             }).toList();
-            if (segment.getIsGlobal()) {
-                projectInfo.setTaskInfos(taskInfos);
-            } else {
-                SegmentInfo segmentInfo = new SegmentInfo();
-                segmentInfo.setSegmentId(segment.getSegmentId());
-                segmentInfo.setSummary(segment.getSummary());
-                segmentInfo.setScope(segment.getScope());
-                segmentInfo.setRemarks(segment.getRemarks());
-                segmentInfo.setTaskInfos(taskInfos);
-                projectInfo.getSegmentInfos().add(segmentInfo);
-            }
+            SegmentInfo segmentInfo = new SegmentInfo();
+            segmentInfo.setSegmentId(segment.getSegmentId());
+            segmentInfo.setSummary(segment.getSummary());
+            segmentInfo.setScope(segment.getScope());
+            segmentInfo.setRemarks(segment.getRemarks());
+            segmentInfo.setTaskInfos(taskInfos);
+            segmentInfo.setIsGlobal(segment.getIsGlobal());
+            projectInfo.getSegmentInfos().add(segmentInfo);
         });
         return projectInfo;
     }
