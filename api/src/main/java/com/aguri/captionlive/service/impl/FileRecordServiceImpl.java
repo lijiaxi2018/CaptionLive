@@ -8,16 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -76,10 +75,15 @@ public class FileRecordServiceImpl implements FileRecordService {
         String filePath = fileRecord.getPath();
         String storedName = fileRecord.getStoredName();
         Resource fileResource = new FileSystemResource(filePath + File.separator + storedName);
+
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.valueOf(fileRecord.getType()));
+        String encodedFileName = URLEncoder.encode(fileRecord.getOriginalName(), StandardCharsets.UTF_8);
+        headers.setContentDisposition(ContentDisposition.builder("attachment").filename(encodedFileName).build());
+
         return new ResponseEntity<>(fileResource, headers, HttpStatus.OK);
     }
+
 
     @Override
     public Long uploadSmallSizeFile(MultipartFile file) {
