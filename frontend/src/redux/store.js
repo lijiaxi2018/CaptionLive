@@ -6,6 +6,7 @@ import { authApi } from '../services/auth'
 import { fileApi } from '../services/file'
 import { organizationApi } from '../services/organization'
 import { segmentApi } from '../services/segment'
+import { glossaryApi } from '../services/glossary'
 
 export const store = configureStore({
   reducer: {
@@ -16,6 +17,7 @@ export const store = configureStore({
     [fileApi.reducerPath]: fileApi.reducer,
     [organizationApi.reducerPath]: organizationApi.reducer,
     [segmentApi.reducerPath]: segmentApi.reducer,
+    [glossaryApi.reducerPath]: glossaryApi.reducer,
   },
 
   middleware: (getDefaultMiddleware) =>
@@ -25,5 +27,6 @@ export const store = configureStore({
       fileApi.middleware,
       organizationApi.middleware,
       segmentApi.middleware,
+      glossaryApi.middleware,
     ]),
 })

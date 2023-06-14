@@ -364,3 +364,36 @@
   margin-left: 2px;
   margin-right: 2px;
 }
+
+
+/* for GlossaryTable.js  */
+.glossary-table {
+  width: 100%;
+}
+.glossary-table table {
+  width: 100%;
+}
+
+#glossary-search-bar {
+  width: 100%;
+  font-size: 25px;
+  height: 40px;
+  border-radius: 30px;
+  padding-left: 20px;
+  color: #4c4747;
+  background-color: #98989839;
+  border-style: none;
+}
+
+.glossary-form {
+  z-index: 10;
+  position: absolute;
+  left: 200px;
+  width: 400px;
+  padding-left: 50px;
+  height: 600px;
+  padding-top: 40px;
+  background-color: #7f7f7f;
+  border-radius: 40px;
+
+}
