@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import TaskStatusIcon from '../InfoCard/TaskStatusIcon';
-import { openUploaderWindow, updateCurrentIdToUpload, updateCurrentUploadType } from '../../redux/fileSlice';
 import { useAssignTaskMutation, useWithdrawTaskMutation } from '../../services/organization';
-import { parseTaskType, parseScope } from '../../utils/segment';
+import { parseTaskType } from '../../utils/segment';
 import { Icon } from '@rsuite/icons';
 import { FaAngleUp, FaAngleDown } from 'react-icons/fa';
-import FileUploader from '../Layout/Modal/FileUploader';
 
 // TODO: Submit File
 // TODO: Secession Store If Expanded
@@ -20,10 +18,7 @@ function parseTaskText(task) {
 }
 
 function Segment({data}) {
-  const dispatch = useDispatch();
-  
   const myUserId = useSelector((state) => state.userAuth.userId);
-  const isOpenUploaderWindow = useSelector((state) => state.file.openUploaderWindow);
   const [expanded, setExpanded] = useState(false);
 
   const [assignTaskMutation] = useAssignTaskMutation()
@@ -46,15 +41,9 @@ function Segment({data}) {
     })
   }
 
-  function handleUpload(taskId) {
-    dispatch(updateCurrentIdToUpload(taskId));
-    dispatch(updateCurrentUploadType(3));
-    dispatch(openUploaderWindow());
-  }
-
-  const summary = data.summary;
-  const scope = data.scope;
-  const tasks = data.taskInfos;
+  const summary = '概览';
+  // const scope = data.scope;
+  const tasks = data;
   
   function parseTaskButton(task) {
     if (task.status === 'NOT_ASSIGNED') {
@@ -64,7 +53,7 @@ function Segment({data}) {
     } else if (task.status === 'IN_PROGRESS' && task.workerUser.userId === myUserId) {
       return (
         <div>
-          <button className='general-button-grey' onClick={() => handleUpload(task.taskId)}>上传</button>
+          <button className='general-button-grey'>上传</button>
           <button className='general-button-red' onClick={() => withdrawTask(task.taskId)}>放弃</button>
         </div>
       );
@@ -77,10 +66,6 @@ function Segment({data}) {
 
   return (
     <div className='segment-container'>
-      
-      { isOpenUploaderWindow === 1 &&
-        <FileUploader />
-      }
       
       <div className='segment-title-container'>
         <button className='general-icon-button' onClick={() => setExpanded(!expanded)}><Icon as={expanded ? FaAngleUp : FaAngleDown} size="2.5em" style={{ marginRight: '10px' }}/></button>
@@ -97,10 +82,10 @@ function Segment({data}) {
 
       { expanded &&
       <div>
-        <div className='segment-item-container'>
+        {/* <div className='segment-item-container'>
           <label className='general-font-medium-small-bold'>起讫: </label>
           <label className='general-font-medium-small'>{parseScope(scope)}</label>
-        </div>
+        </div> */}
 
         <div>
           {tasks.map((task) =>
@@ -116,7 +101,7 @@ function Segment({data}) {
           )}
         </div>
       </div>
-      }  
+      }
     </div>
   );
 }

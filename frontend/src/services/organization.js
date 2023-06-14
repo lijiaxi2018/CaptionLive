@@ -20,6 +20,30 @@ export const organizationApi = createApi({
       query: (projectid) => `/organizations/${projectid}/projects`,
       providesTags: ['Organizations']
     }),
+
+    assignTask: builder.mutation({
+      query: (commitment) => ({
+        url: `/tasks/${commitment.taskId}/assign/${commitment.userId}`,
+        method: 'PUT',
+      }),
+      invalidatesTags: ['Organizations']
+    }),
+
+    assignFileToTask: builder.mutation({
+      query: (ownership) => ({
+        url: `/tasks/${ownership.taskId}/file/${ownership.fileRecordId}`,
+        method: 'PUT',
+      }),
+      invalidatesTags: ['Organizations']
+    }),
+
+    withdrawTask: builder.mutation({
+      query: (taskId) => ({
+        url: `/tasks/${taskId}/assign`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Organizations']
+    }),
   }),
 })
 
@@ -27,4 +51,7 @@ export const {
   useGetOrganizationQuery, 
   useGetAllOrganizationsQuery,
   useGetOrganizationProjectsQuery,
+  useAssignTaskMutation, 
+  useAssignFileToTaskMutation, 
+  useWithdrawTaskMutation, 
 } = organizationApi

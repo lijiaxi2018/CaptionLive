@@ -5,7 +5,7 @@ import { toggleInEditUser } from '../../redux/layoutSlice';
 import { useGetUserQuery } from '../../services/user';
 import { usePutUserDescriptionMutation } from '../../services/user';
 
-import FileUpload from '../Layout/Modal/FileUpload';
+import FileDropZone from '../Layout/Modal/FileDropZone';
 import Avatar from './Avatar';
 
 function EntityInfo({userId}) {
@@ -108,7 +108,7 @@ function EntityInfo({userId}) {
             </div>
             
             <div style={{ 'marginTop': '25px' }}>
-              <FileUpload id={userId} type={0}/>
+              <FileDropZone id={userId} type={0}/>
             </div>
           </div>
 

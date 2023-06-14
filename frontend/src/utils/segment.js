@@ -9,6 +9,15 @@ export function parseTaskType(type) {
     case 'CHECK':
       return '校对'
     
+    case 'SOURCE':
+      return '源'
+    
+    case 'F_CHECK':
+      return '终校'
+    
+    case 'RENDERING':
+      return '压制'
+    
     default:
       return '';
   }
@@ -24,6 +33,15 @@ export function parseTaskTypeInitial(type) {
     
     case 'CHECK':
       return '校'
+    
+    case 'SOURCE':
+      return '源'
+    
+    case 'F_CHECK':
+      return '终'
+    
+    case 'RENDERING':
+      return '压'
     
     default:
       return '';
@@ -47,9 +65,6 @@ export function parseScope(scope) {
   const colonIndex = scope.indexOf(':');
   const startTime = scope.substring(0, colonIndex);
   const endTime = scope.substring(colonIndex + 1);
-
-  console.log(startTime);
-  console.log(endTime);
 
   return parseTime(startTime) + ' - ' + parseTime(endTime);
 }
