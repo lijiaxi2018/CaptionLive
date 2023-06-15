@@ -6,7 +6,7 @@ import { AiOutlineUpload } from 'react-icons/ai';
 
 import { usePostFilesMutation } from "../../../services/file";
 import { useAssignFileToTaskMutation } from '../../../services/organization';
-import { closeUploaderWindow } from '../../../redux/fileSlice';
+import { closeUploaderWindow, updateCurrentIdToUpload, updateCurrentUploadType } from '../../../redux/fileSlice';
 
 // Reference: https://www.npmjs.com/package/react-dropzone
 const FileUploader = () => {
@@ -37,6 +37,9 @@ const FileUploader = () => {
                         fileRecordId: myFileRecordId,
                     })
                     .then((response) => {
+                        dispatch(updateCurrentIdToUpload(-1));
+                        dispatch(updateCurrentUploadType(-1));
+                        dispatch(closeUploaderWindow());
                     // TODO: Deal with other return messages
                     })
                 }

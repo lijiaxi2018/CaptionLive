@@ -56,6 +56,9 @@ export function parseTaskStatus(status) {
     case 'IN_PROGRESS':
       return '#7fb9d8'
     
+    case 'COMPLETED':
+      return '#5bc96d'
+    
     default:
       return '';
   }

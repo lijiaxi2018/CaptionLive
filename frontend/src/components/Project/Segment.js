@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
+
 import TaskStatusIcon from '../InfoCard/TaskStatusIcon';
 import { openUploaderWindow, updateCurrentIdToUpload, updateCurrentUploadType } from '../../redux/fileSlice';
-import { useAssignTaskMutation, useWithdrawTaskMutation } from '../../services/organization';
+import { useAssignTaskMutation, useWithdrawTaskMutation, useAssignFileToTaskMutation } from '../../services/organization';
 import { parseTaskType, parseScope } from '../../utils/segment';
 import { Icon } from '@rsuite/icons';
 import { FaAngleUp, FaAngleDown } from 'react-icons/fa';
 import FileUploader from '../Layout/Modal/FileUploader';
 
-// TODO: Submit File
 // TODO: Secession Store If Expanded
 
 function parseTaskText(task) {
@@ -20,14 +20,16 @@ function parseTaskText(task) {
 }
 
 function Segment({data}) {
+  console.log(data)
   const dispatch = useDispatch();
   
   const myUserId = useSelector((state) => state.userAuth.userId);
   const isOpenUploaderWindow = useSelector((state) => state.file.openUploaderWindow);
   const [expanded, setExpanded] = useState(false);
 
-  const [assignTaskMutation] = useAssignTaskMutation()
-  const [withdrawTaskMutation] = useWithdrawTaskMutation()
+  const [assignTaskMutation] = useAssignTaskMutation();
+  const [withdrawTaskMutation] = useWithdrawTaskMutation();
+  const [assignFileToTaskMutation] = useAssignFileToTaskMutation();
   
   function assignTask(userId, taskId) {
     assignTaskMutation({
@@ -46,14 +48,24 @@ function Segment({data}) {
     })
   }
 
-  function handleUpload(taskId) {
-    dispatch(updateCurrentIdToUpload(taskId));
+  function handleUpload(myTaskId) {
+    dispatch(updateCurrentIdToUpload(myTaskId));
     dispatch(updateCurrentUploadType(3));
     dispatch(openUploaderWindow());
   }
 
-  const summary = data.summary;
-  const scope = data.scope;
+  function handleDelete(myTaskId) {
+    assignFileToTaskMutation({
+      taskId: myTaskId,
+      fileRecordId: 0,
+    })
+    .then((response) => {
+      // TODO: Deal with other return messages
+    })
+  }
+
+  const summary = data.isGlobal ? '概览' : data.summary;
+  const scope = data.isGlobal ? '' : data.scope;
   const tasks = data.taskInfos;
   
   function parseTaskButton(task) {
@@ -71,7 +83,18 @@ function Segment({data}) {
     } else if (task.status === 'COMPLETED' && task.workerUser.userId !== myUserId) {
       return <p></p>;
     } else if (task.status === 'COMPLETED' && task.workerUser.userId === myUserId) {
-      return (<button className='general-button-grey'>删除</button>);
+      let downloadUrl = 'http://localhost:8080/api/files/' + task.fileId;
+      return (
+        <div>
+          <button className='general-button-grey' onClick={() => handleDelete(task.taskId)}>删除</button>
+          <a
+            href={downloadUrl}
+          >
+            <button className='general-button-grey'>下载</button>
+          </a>
+          
+        </div>
+      );
     }
   }
 
@@ -97,11 +120,12 @@ function Segment({data}) {
 
       { expanded &&
       <div>
-        <div className='segment-item-container'>
-          <label className='general-font-medium-small-bold'>起讫: </label>
-          <label className='general-font-medium-small'>{parseScope(scope)}</label>
-        </div>
-
+        { !data.isGlobal && 
+          <div className='segment-item-container'>
+            <label className='general-font-medium-small-bold'>起讫: </label>
+            <label className='general-font-medium-small'>{parseScope(scope)}</label>
+          </div>
+        }
         <div>
           {tasks.map((task) =>
             <div key={task.taskId} className='segment-item-container'>
