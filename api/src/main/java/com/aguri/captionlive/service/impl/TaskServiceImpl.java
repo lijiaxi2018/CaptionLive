@@ -90,7 +90,6 @@ public class TaskServiceImpl implements TaskService {
         }
 
         existingTask.setStatus(Task.Status.IN_PROGRESS);
-        existingTask.setWorker(null);
         return taskRepository.save(existingTask);
     }
 
@@ -103,6 +102,7 @@ public class TaskServiceImpl implements TaskService {
         }
 
         existingTask.setStatus(Task.Status.NOT_ASSIGNED);
+        existingTask.setWorker(null);
         return taskRepository.save(existingTask);
     }
 
