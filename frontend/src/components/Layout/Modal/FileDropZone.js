@@ -4,7 +4,7 @@ import { usePostFilesMutation } from "../../../services/file";
 import { usePutUserAvatarIdMutation } from '../../../services/user';
 
 // Reference: https://www.npmjs.com/package/react-dropzone
-const FileUpload = ({id, type}) => {
+const FileDropZone = ({id, type}) => {
     const [postFiles] = usePostFilesMutation();
     const [putUserAvatarId] = usePutUserAvatarIdMutation();
 
@@ -46,4 +46,4 @@ const FileUpload = ({id, type}) => {
     );
 }
 
-export default FileUpload;
+export default FileDropZone;

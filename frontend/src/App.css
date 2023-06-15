@@ -62,7 +62,7 @@
 
 /* Sign In and Sign UP */
 .sign-in-up-container {
-  position: absolute;
+  position: fixed;
   z-index: 2;
   top: 30%;
   left: 30%;
@@ -288,6 +288,30 @@
   padding: 5px;
 }
 
+.file-uploader-container {
+  position: fixed;
+  z-index: 2;
+  top: 30%;
+  left: 35%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+
+  height: 300px;
+  width: 450px;
+  border-radius: 8px;
+  border: 0px solid #b0acad;
+  background-color: #ffffff;
+  padding: 20px;
+  box-shadow: 0px 0px 30px;
+
+  font-size: 15px;
+  letter-spacing: 1px;
+}
+
 .general-avatar {
   display: inline-block;
   width: 200px;
@@ -318,6 +342,7 @@
   border-radius: 8px;
   border: 1px solid #b0acad;
   background-color: #ffffff;
+  margin-bottom: 10px;
   padding: 20px;
 }
 
