@@ -3,13 +3,12 @@ import { useSelector, useDispatch } from 'react-redux'
 
 import TaskStatusIcon from '../InfoCard/TaskStatusIcon';
 import { openUploaderWindow, updateCurrentIdToUpload, updateCurrentUploadType } from '../../redux/fileSlice';
+import { openSegment, closeSegment } from '../../redux/layoutSlice';
 import { useAssignTaskMutation, useWithdrawTaskMutation, useAssignFileToTaskMutation } from '../../services/organization';
 import { parseTaskType, parseScope } from '../../utils/segment';
 import { Icon } from '@rsuite/icons';
 import { FaAngleUp, FaAngleDown } from 'react-icons/fa';
 import FileUploader from '../Layout/Modal/FileUploader';
-
-// TODO: Secession Store If Expanded
 
 function parseTaskText(task) {
   if (task.workerUser === null) {
@@ -20,12 +19,11 @@ function parseTaskText(task) {
 }
 
 function Segment({data}) {
-  console.log(data)
   const dispatch = useDispatch();
   
   const myUserId = useSelector((state) => state.userAuth.userId);
+  const myOpenedSegmentIds = useSelector((state) => state.layout.openedSegmentIds);
   const isOpenUploaderWindow = useSelector((state) => state.file.openUploaderWindow);
-  const [expanded, setExpanded] = useState(false);
 
   const [assignTaskMutation] = useAssignTaskMutation();
   const [withdrawTaskMutation] = useWithdrawTaskMutation();
@@ -98,6 +96,14 @@ function Segment({data}) {
     }
   }
 
+  function handleExpanded() {
+    dispatch(openSegment(data.segmentId));
+  }
+
+  function handleMinimized() {
+    dispatch(closeSegment(data.segmentId));
+  }
+
   return (
     <div className='segment-container'>
       
@@ -106,7 +112,15 @@ function Segment({data}) {
       }
       
       <div className='segment-title-container'>
-        <button className='general-icon-button' onClick={() => setExpanded(!expanded)}><Icon as={expanded ? FaAngleUp : FaAngleDown} size="2.5em" style={{ marginRight: '10px' }}/></button>
+        {
+          !myOpenedSegmentIds.includes(data.segmentId) &&
+          <button className='general-icon-button' onClick={() => handleExpanded()}><Icon as={FaAngleDown} size="2.5em" style={{ marginRight: '10px' }}/></button>
+        }
+
+        {
+          myOpenedSegmentIds.includes(data.segmentId) &&
+          <button className='general-icon-button' onClick={() => handleMinimized()}><Icon as={FaAngleUp} size="2.5em" style={{ marginRight: '10px' }}/></button>
+        }
         <label className='general-font-medium-small-bold'>{summary}</label>
       </div>
 
@@ -118,7 +132,7 @@ function Segment({data}) {
         )}
       </div>
 
-      { expanded &&
+      { myOpenedSegmentIds.includes(data.segmentId) &&
       <div>
         { !data.isGlobal && 
           <div className='segment-item-container'>
