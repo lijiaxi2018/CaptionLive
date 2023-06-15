@@ -13,7 +13,11 @@ const TextField = forwardRef((props, ref) => {
     return (
         <Form.Group controlId={`${name}-4`} ref={ref}>
             <Form.ControlLabel>{label}</Form.ControlLabel>
-            <Form.Control name={name} accepter={accepter} {...rest}/>
+            <Form.Control 
+              name={name} 
+              accepter={accepter}
+              {...rest}
+            />
         </Form.Group>
     ); 
 });
@@ -77,6 +81,7 @@ const GlossariesForm = ({
     
     return (
         <div className='glossary-form'>
+          <h1>编辑词汇</h1>
           <Form
             ref={formRef}
             onChange={setFormValue}
@@ -84,12 +89,12 @@ const GlossariesForm = ({
             formValue={formValue}
             model={model}
           >
-            <TextField name="source" label="出自" />
-            <TextField name="romanization" label="罗马音" />
-            <TextField name="term" label="原文" />
-            <TextField name="explanation" label="释义" />
-            <TextField name="remark" label="备注" />
-            <TextField name="category" label="分类" />
+            <TextField name="source" label="出自 *" placeholder="请输入词汇出自" />
+            <TextField name="romanization" label="罗马音 *" placeholder="请输入词汇罗马音" />
+            <TextField name="term" label="原文 *" placeholder="请输入词汇原文" />
+            <TextField name="explanation" label="释义 *" placeholder="请输入词汇释义" />
+            <TextField name="remark" label="备注 *" placeholder="请输入词汇备注" />
+            <TextField name="category" label="分类 *" placeholder="请输入词汇分类" />
           </Form>
           <div className='glossary-button-group'>
             <Button onClick={handleSubmit}>提交</Button>

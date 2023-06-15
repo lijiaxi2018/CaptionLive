@@ -415,9 +415,10 @@
   z-index: 10;
   position: absolute;
   left: 200px;
-  width: 400px;
-  padding-left: 50px;
-  height: 600px;
+  width: 440px;
+  padding-left: 40px;
+  padding-right: 40px;
+  height: 550px;
   padding-top: 40px;
   background-color: #7f7f7fd3;
   border-radius: 40px;
@@ -425,4 +426,13 @@
 
 .rs-btn {
   margin-right: 10px;
+}
+
+.rs-form-group {
+  display: flex;
+}
+
+.rs-form-control-label {
+  padding-top: 7px;
+  width: 100px;
 }
