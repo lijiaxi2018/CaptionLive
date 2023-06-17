@@ -5,6 +5,7 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Data
@@ -63,7 +64,7 @@ public class ProjectInfo {
         projectInfo.setCreatedTime(project.getCreatedTime());
         projectInfo.setSegmentInfos(new ArrayList<>());
         segments.forEach(segment -> {
-            List<SegmentInfo.TaskInfo> taskInfos = segment.getTasks().stream().map(task -> {
+            List<SegmentInfo.TaskInfo> taskInfos = segment.getTasks().stream().sorted(Comparator.comparingInt(t -> t.getType().getValue())).map(task -> {
                 SegmentInfo.TaskInfo taskInfo = new SegmentInfo.TaskInfo();
                 taskInfo.setWorkerUser(task.getWorker());
                 Task.Status status = task.getStatus();
