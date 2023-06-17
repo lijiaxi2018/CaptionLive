@@ -26,6 +26,8 @@ public class Task {
 
     private LocalDate acceptedTime;
 
+    private Integer displayOrder;
+
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "segment_id")
