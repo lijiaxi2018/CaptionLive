@@ -23,7 +23,7 @@ public class ProjectRequest {
 
     private Boolean isPublic;
 
-    private OperatorRequest Operator;
+    private Long operatorId;
 
     private Project.Type type;
 
@@ -49,8 +49,4 @@ public class ProjectRequest {
         private String content;
     }
 
-    @Data
-    public static class OperatorRequest {
-        private Long userId;
-    }
 }

@@ -91,7 +91,7 @@ public class FileRecordServiceImpl implements FileRecordService {
         String storedName = UUID.randomUUID().toString().replaceAll("-", "");
         OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
         String logicalDirectory = DateTimeFormatter.ofPattern("yyyy-MM-dd").format(now);
-        String filePath = fileStorageDirectory + File.separator + logicalDirectory;
+        String filePath = fileStorageDirectory.replace('/', File.separatorChar) + File.separator + logicalDirectory;
 
         // Save the file to the storage directory
         String path = filePath + File.separator + storedName;

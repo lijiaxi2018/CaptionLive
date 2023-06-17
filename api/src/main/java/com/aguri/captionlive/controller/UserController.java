@@ -66,7 +66,6 @@ public class UserController {
 
     @GetMapping("/{userId}/organizations")
     public ResponseEntity<Resp> getMyOrganizations(@PathVariable Long userId) {
-        System.out.println("/{userId}/organizations");
         List<Organization> organizations = userService.getUserById(userId).getOrganizations();
         return ResponseEntity.ok(Resp.ok(organizations));
     }
