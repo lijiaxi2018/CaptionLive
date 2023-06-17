@@ -1,5 +1,6 @@
 package com.aguri.captionlive.DTO;
 
+import com.aguri.captionlive.common.util.FileRecordUtil;
 import com.aguri.captionlive.model.*;
 import lombok.Data;
 
@@ -13,6 +14,8 @@ public class ProjectInfo {
     private Long projectId;
 
     private Boolean isCompleted;
+
+    private Long coverFileRecordId;
 
     private String name;
 
@@ -58,6 +61,12 @@ public class ProjectInfo {
         ProjectInfo projectInfo = new ProjectInfo();
         projectInfo.setProjectId(project.getProjectId());
         projectInfo.setIsCompleted(true);
+        FileRecord coverFileRecord = project.getCoverFileRecord();
+        if (coverFileRecord != null) {
+            projectInfo.setCoverFileRecordId(coverFileRecord.getFileRecordId());
+        } else {
+            projectInfo.setCoverFileRecordId(0L);
+        }
         projectInfo.setName(project.getName());
         List<Segment> segments = project.getSegments();
         projectInfo.setCreatedTime(project.getCreatedTime());
