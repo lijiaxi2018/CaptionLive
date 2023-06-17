@@ -1,48 +1,69 @@
 import React from 'react';
 import { useGetUserQuery } from '../../services/user';
+import { useGetProjectQuery } from '../../services/project';
 
-function Avatar({userId, avatarSize, isBorder}) {
-  const userData = useGetUserQuery(userId);
+function Avatar({userId, avatarSize, type}) {
   
-  const hasAvatarFile = 
+  function parseUserData(fetchedData) {
+    let styleSheet = { 'width': avatarSize, 'height': avatarSize, 'fontSize': avatarSize/1.7, 'borderRadius': '50%' };
+
+    let initial = fetchedData.data.data.username[0];
+
+    if (fetchedData.data.data.avatarId === 0) {
+      return (
+        <div style={styleSheet} className='general-avatar-text'>
+          <label>{initial}</label>
+        </div>
+      );
+    } else {
+      let avatarUrl = `url(http://localhost:8080/api/files/${fetchedData.data.data.avatarId})`;
+      styleSheet['backgroundImage'] = avatarUrl;
+
+      return (
+        <div>
+          <div style={styleSheet} className='general-avatar'></div>
+        </div>
+      );
+    }
+  }
+
+  function parseProjectData(fetchedData) {
+    let styleSheet = { 'width': avatarSize * 1.33, 'height': avatarSize, 'fontSize': avatarSize/1.7, 'borderRadius': '10%' };
+    
+    let initial = fetchedData.data.data.name[0];
+
+    if (fetchedData.data.data.coverFileRecordId === 0) {
+      return (
+        <div style={styleSheet} className='general-avatar-text'>
+          <label>{initial}</label>
+        </div>
+      );
+    } else {
+      let avatarUrl = `url(http://localhost:8080/api/files/${fetchedData.data.data.coverFileRecordId})`;
+      styleSheet['backgroundImage'] = avatarUrl;
+
+      return (
+        <div>
+          <div style={styleSheet} className='general-avatar'></div>
+        </div>
+      );
+    }
+  }
+
+  const fetchedData = useGetUserQuery(userId);
+  const fetchedDataProject = useGetProjectQuery(userId);
+  
+  const fetched = 
     userId === -1 ? false : 
-    userData.isFetching ? false : 
-    userData.data.data.avatarId === 0 ? false : true;
-
-  const initial = 
-    userId === -1 ? "" : 
-    userData.isFetching ? "" : 
-    userData.data.data.username[0];
-  
-  const avatarFileId = 
-    userId === -1 ? "" : 
-    userData.isFetching ? "" : 
-    userData.data.data.avatarId;  
-  
-  const avatarUrl = `url(http://localhost:8080/api/files/${avatarFileId})`;
+    (fetchedData.isFetching || fetchedDataProject.isFetching) ? false : 
+    true;
 
   return (
     <div>
-      { hasAvatarFile &&
+      { fetched &&
         <div>
-          <div style={{ 'backgroundImage': avatarUrl, 'width': avatarSize, 'height': avatarSize, 'fontSize': avatarSize/2 }} className='general-avatar'></div>
-        </div>
-      }
-
-      { !hasAvatarFile &&
-        <div>
-          { isBorder &&
-            <div style={{ 'width': avatarSize, 'height': avatarSize, 'fontSize': avatarSize/1.7, 'border': '2px solid #a0a0a0' }} className='general-avatar-text'>
-              <label>{initial}</label>
-            </div>
-          }
-
-          { !isBorder &&
-            <div style={{ 'width': avatarSize, 'height': avatarSize, 'fontSize': avatarSize/1.7 }} className='general-avatar-text'>
-              <label>{initial}</label>
-            </div>
-          }
-          
+          { (type === 1) && parseUserData(fetchedData) }
+          { (type === 2) && parseProjectData(fetchedDataProject) }
         </div>
       }
     </div>

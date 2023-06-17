@@ -1,27 +1,77 @@
 import React from 'react';
+import { useSelector, useDispatch } from 'react-redux'
+import { FaCircle } from 'react-icons/fa';
 import Segment from './Segment';
-import { useGetOrganizationProjectsQuery } from '../../services/organization';
+import Avatar from '../InfoCard/Avatar';
+import FileUploader from '../Layout/Modal/FileUploader';
+import { openUploaderWindow, updateCurrentIdToUpload, updateCurrentUploadType } from '../../redux/fileSlice';
 
-function Worksheet() {
-  const orgId = 1;
-  const orgProjectsResults = useGetOrganizationProjectsQuery(orgId);
-  const segments = orgProjectsResults.isFetching ? null : orgProjectsResults.data.data[0].segmentInfos;
+function Worksheet({data}) {
+  const dispatch = useDispatch();
 
-  function parseSegment(segment) {
-    return (<Segment data={segment}/>);
+  const segments = data.segmentInfos;
+  const isOpenUploaderWindow = useSelector((state) => state.file.openUploaderWindow);
+
+  function handleUpload(myProjectId) {
+    dispatch(updateCurrentIdToUpload(myProjectId));
+    dispatch(updateCurrentUploadType(2));
+    dispatch(openUploaderWindow());
   }
-  
+
+  function parseStatusColor(status) {
+    if (status) {
+      return '#a6ddaf';
+    } else {
+      return '#a9d0e3';
+    }
+  }
+
+  function parseStatusBorder(status) {
+    if (status) {
+      return '5px solid #a6ddaf';
+    } else {
+      return '5px solid #a9d0e3';
+    }
+  }
+
+  console.log(data);
+
   return (
-    <div>
-      { !orgProjectsResults.isFetching &&
-      <div>
+    <div className='worksheet-container' style={{ 'border' : parseStatusBorder(data.isCompleted) }}>
+
+      { isOpenUploaderWindow === 1 &&
+        <FileUploader />
+      }
+
+      <div className='worksheet-info-container'>
+        
+        <div className='general-row-align'>
+          <FaCircle size="2em" style={{ color : parseStatusColor(data.isCompleted), marginRight: '10px' }}/>
+          <label className='general-font-medium-small-bold'>{data.name}</label>
+        </div>
+
+        <div style={{ marginTop: '30px' }}></div>
+
+        <div className='general-column-align'>
+          <div>
+            <Avatar userId={1} avatarSize={175} type={2}></Avatar>
+          </div>
+
+          <div>
+            <button className='general-button-grey' style={{ marginTop: '20px' }} onClick={() => handleUpload(data.projectId)}>上传封面</button>
+          </div>
+        </div>
+
+      </div>
+
+      <div className='worksheet-segments-container'>
         {segments.map((segment) =>
           <div key={segment.segmentId}>
-            {parseSegment(segment)}
+            <Segment data={segment}/>
           </div>
         )}
       </div>
-      }
+      
     </div>
 
     

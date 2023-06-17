@@ -79,7 +79,7 @@ function EntityInfo({userId}) {
         <div className='entity-info-window'>
           <div className='entity-info-avatar'>
             <div style={{ 'marginTop': '25px' }}>
-              <Avatar userId={userId} avatarSize={200} isBorder={false}></Avatar>
+              <Avatar userId={userId} avatarSize={200} type={1}></Avatar>
             </div>
           </div>
 
@@ -104,7 +104,7 @@ function EntityInfo({userId}) {
         <div className='entity-info-window'>
           <div className='entity-info-avatar'>
             <div style={{ 'marginTop': '25px' }}>
-              <Avatar userId={userId} avatarSize={200} isBorder={false}></Avatar>
+              <Avatar userId={userId} avatarSize={200} type={1}></Avatar>
             </div>
             
             <div style={{ 'marginTop': '25px' }}>

@@ -6,6 +6,7 @@ import { userApi } from '../services/user'
 import { authApi } from '../services/auth'
 import { fileApi } from '../services/file'
 import { organizationApi } from '../services/organization'
+import { projectApi } from '../services/project'
 import { segmentApi } from '../services/segment'
 
 export const store = configureStore({
@@ -17,6 +18,7 @@ export const store = configureStore({
     [authApi.reducerPath]: authApi.reducer,
     [fileApi.reducerPath]: fileApi.reducer,
     [organizationApi.reducerPath]: organizationApi.reducer,
+    [projectApi.reducerPath]: projectApi.reducer,
     [segmentApi.reducerPath]: segmentApi.reducer,
   },
 
@@ -26,6 +28,7 @@ export const store = configureStore({
       authApi.middleware,
       fileApi.middleware,
       organizationApi.middleware,
+      projectApi.middleware,
       segmentApi.middleware,
     ]),
 })
