@@ -34,8 +34,6 @@ function Worksheet({data}) {
     }
   }
 
-  console.log(data);
-
   return (
     <div className='worksheet-container' style={{ 'border' : parseStatusBorder(data.isCompleted) }}>
 
