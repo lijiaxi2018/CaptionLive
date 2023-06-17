@@ -18,6 +18,21 @@ export function parseTaskType(type) {
     case 'RENDERING':
       return '压制'
     
+    case 'K_TIMELINE':
+      return 'K轴'
+    
+    case 'S_TIMELINE':
+      return '歌轴'
+    
+    case 'EFFECT':
+      return '特效'
+    
+    case 'POLISHING':
+      return '润色'
+    
+    case 'EMBEDDING':
+      return '嵌字'
+    
     default:
       return '';
   }
@@ -42,6 +57,21 @@ export function parseTaskTypeInitial(type) {
     
     case 'RENDERING':
       return '压'
+
+    case 'K_TIMELINE':
+      return 'K'
+    
+    case 'S_TIMELINE':
+      return '歌'
+    
+    case 'EFFECT':
+      return '特'
+    
+    case 'POLISHING':
+      return '润'
+    
+    case 'EMBEDDING':
+      return '嵌'
     
     default:
       return '';

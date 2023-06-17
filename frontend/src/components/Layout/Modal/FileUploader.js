@@ -6,6 +6,7 @@ import { AiOutlineUpload } from 'react-icons/ai';
 
 import { usePostFilesMutation } from "../../../services/file";
 import { useAssignFileToTaskMutation } from '../../../services/organization';
+import { usePutProjectCoverIdMutation } from '../../../services/project';
 import { closeUploaderWindow, updateCurrentIdToUpload, updateCurrentUploadType } from '../../../redux/fileSlice';
 
 // Reference: https://www.npmjs.com/package/react-dropzone
@@ -21,6 +22,7 @@ const FileUploader = () => {
 
     const [postFiles] = usePostFilesMutation();
     const [assignFileToTaskMutation] = useAssignFileToTaskMutation();
+    const [putProjectCoverIdMutation] = usePutProjectCoverIdMutation();
 
     const onDrop = useCallback(acceptedFiles => {
         if (acceptedFiles.length > 0) {
@@ -42,7 +44,19 @@ const FileUploader = () => {
                         dispatch(closeUploaderWindow());
                     // TODO: Deal with other return messages
                     })
-                }
+                } else if (myCurrentUploadType === 2) {
+                  putProjectCoverIdMutation({
+                    projectId: myCurrentIdToUpload,
+                    coverId: myFileRecordId,
+                  })
+                  .then((response) => {
+                    dispatch(updateCurrentIdToUpload(-1));
+                    dispatch(updateCurrentUploadType(-1));
+                    dispatch(closeUploaderWindow());
+                  // TODO: Deal with other return messages
+                  })
+              }
+
             }).catch(error => {
                 console.log(error);
             })

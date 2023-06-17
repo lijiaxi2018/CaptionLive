@@ -37,7 +37,7 @@ function Header({title, icon}) {
             {/* <label style={{ 'marginRight': '10px' }} >{welcomePrompt}</label> */}
 
             <div style={{ 'marginRight': '10px' }} >
-              <Avatar userId={userId} avatarSize={50} isBorder={true}></Avatar>
+              <Avatar userId={userId} avatarSize={50} type={1}></Avatar>
             </div>
             
             <button className="general-button-grey" onClick={loginOut}>登出</button>
