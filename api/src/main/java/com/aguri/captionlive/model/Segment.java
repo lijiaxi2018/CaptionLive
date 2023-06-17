@@ -3,7 +3,6 @@ package com.aguri.captionlive.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -26,6 +25,8 @@ public class Segment {
     private String summary;
 
     private String scope;
+
+    private Integer displayOrder;
 
     @OneToMany(mappedBy = "segment", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private List<Task> tasks;
