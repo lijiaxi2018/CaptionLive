@@ -2,9 +2,6 @@ package com.aguri.captionlive.DTO;
 
 import com.aguri.captionlive.model.Project;
 import com.aguri.captionlive.model.Task;
-import com.aguri.captionlive.model.User;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import lombok.Data;
 
 import java.util.List;
@@ -23,7 +20,7 @@ public class ProjectRequest {
 
     private Boolean isPublic;
 
-    private OperatorRequest Operator;
+    private Long operatorId;
 
     private Project.Type type;
 
@@ -47,10 +44,5 @@ public class ProjectRequest {
     @Data
     public static class RemarkRequest {
         private String content;
-    }
-
-    @Data
-    public static class OperatorRequest {
-        private Long userId;
     }
 }

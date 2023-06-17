@@ -79,7 +79,7 @@ public class ProjectServiceImpl implements ProjectService {
 
         shareProject2Organization(projectId, projectRequest.getOrganizationId());
 
-        shareProject2UserWithPermission(projectRequest.getOperator().getUserId(), projectId, Access.Permission.Creator);
+        shareProject2UserWithPermission(projectRequest.getOperatorId(), projectId, Access.Permission.Creator);
 
         return project;
     }
@@ -121,14 +121,14 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     private void generateCreateSubSegmentsBySegmentRequests(ProjectRequest projectRequest, Project project, List<Task> tasks, List<Remark> remarks, List<Segment> segments) {
-        Long createBy = projectRequest.getOperator().getUserId();
+        Long createBy = projectRequest.getOperatorId();
         List<ProjectRequest.SegmentRequest> segmentRequests = projectRequest.getSegmentRequests();
         segmentRequests.forEach(segmentRequest ->
                 generateCreateSubSegmentBySegmentRequest(project, tasks, remarks, segments, createBy, segmentRequest));
     }
 
     private void generateCreateGlobalSegmentByProjectRequest(ProjectRequest projectRequest, Project project, List<Task> tasks, List<Remark> remarks, List<Segment> segments) {
-        Long createBy = projectRequest.getOperator().getUserId();
+        Long createBy = projectRequest.getOperatorId();
         Project.Type type = projectRequest.getType();
         Segment globalSegment = new Segment();
 
@@ -232,7 +232,7 @@ public class ProjectServiceImpl implements ProjectService {
         List<Task> createTasks = new ArrayList<>();
         List<Remark> updateRemarks = new ArrayList<>();
         List<Remark> createRemarks = new ArrayList<>();
-        Long createBy = projectRequest.getOperator().getUserId();
+        Long createBy = projectRequest.getOperatorId();
         List<Segment> existingSegments = existingProject.getSegments();
         Map<Long, ProjectRequest.SegmentRequest> segmentRequestMap =
                 projectRequest.getSegmentRequests().stream()
