@@ -125,7 +125,7 @@ public class ProjectController {
             description = "Request body containing name, type, and workflows",
             content = @Content(mediaType = "application/json",
                     schema = @Schema(implementation = Map.class, requiredProperties = {"name", "type", "workflows"}),
-                    examples = @ExampleObject(value = "{\"name\": \"TESTPROJECT\", \"type\": \"AUDIO_AND_VIDEO\", \"workflows\":[\"TIMELINE\", \"SOURCE\"]}")
+                    examples = @ExampleObject(value = "{\"name\": \"TEST_PROJECT\", \"type\": \"AUDIO_AND_VIDEO\", \"workflows\":[\"TIMELINE\", \"SOURCE\"]}")
             )
     )
     public Resp createSegment(@RequestBody Map<String, Object> request) {

@@ -98,9 +98,9 @@ public class SegmentController {
      * @return Resp对象表示响应结果
      */
     @PostMapping
-    @Operation(summary = "Create segment", description = "Create a new segment")
+    @Operation(summary = "Create Segment", description = "Create a new segment")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Segment created successfully",
+            @ApiResponse(responseCode = "200", description = "Remark created successfully",
                     content = @Content(schema = @Schema(implementation = Resp.class)))
     })
     @io.swagger.v3.oas.annotations.parameters.RequestBody(
@@ -119,7 +119,7 @@ public class SegmentController {
         String scope = (String) request.get("scope");
 
         // 使用正则表达式验证scope格式
-        if (Pattern.matches("\\d+:\\d+", scope)) {
+        if (!Pattern.matches("\\d+:\\d+", scope)) {
             throw new RuntimeException("scope format error");
         }
 
