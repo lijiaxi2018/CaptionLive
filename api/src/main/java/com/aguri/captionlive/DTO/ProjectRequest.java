@@ -2,9 +2,6 @@ package com.aguri.captionlive.DTO;
 
 import com.aguri.captionlive.model.Project;
 import com.aguri.captionlive.model.Task;
-import com.aguri.captionlive.model.User;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import lombok.Data;
 
 import java.util.List;

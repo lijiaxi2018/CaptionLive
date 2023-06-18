@@ -24,4 +24,6 @@ public interface TaskService {
     Task assign(Long taskId, Long userId);
 
     Task uploadFileAndTaskStatusChange(Long taskId, Long fileRecordId);
+
+    List<Task> saveTasks(List<Task> taskList);
 }

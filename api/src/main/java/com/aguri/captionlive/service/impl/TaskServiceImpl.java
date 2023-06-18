@@ -132,4 +132,9 @@ public class TaskServiceImpl implements TaskService {
         return taskRepository.save(task);
     }
 
+    @Override
+    public List<Task> saveTasks(List<Task> taskList) {
+        return taskRepository.saveAll(taskList);
+    }
+
 }

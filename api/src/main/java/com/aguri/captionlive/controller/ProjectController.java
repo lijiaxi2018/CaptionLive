@@ -7,12 +7,13 @@ import com.aguri.captionlive.model.*;
 import com.aguri.captionlive.service.OwnershipService;
 import com.aguri.captionlive.service.ProjectService;
 import com.aguri.captionlive.service.SegmentService;
+import com.aguri.captionlive.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/projects")
@@ -22,6 +23,9 @@ public class ProjectController {
 
     @Autowired
     private SegmentService segmentService;
+
+    @Autowired
+    private TaskService taskService;
 
 //    @GetMapping
 //    public ResponseEntity<Resp> getAllProjects() {
@@ -35,11 +39,11 @@ public class ProjectController {
         return ResponseEntity.ok(Resp.ok(projects));
     }
 
-    @PostMapping
-    public ResponseEntity<Resp> createProject(@RequestBody ProjectRequest projectRequest) {
-        Project createdProject = projectService.createProject(projectRequest);
-        return ResponseEntity.ok(Resp.ok(createdProject));
-    }
+//    @PostMapping
+//    public ResponseEntity<Resp> createProject(@RequestBody ProjectRequest projectRequest) {
+//        Project createdProject = projectService.createProject(projectRequest);
+//        return ResponseEntity.ok(Resp.ok(createdProject));
+//    }
 
     @GetMapping("/{id}")
     public ResponseEntity<Resp> getProjectById(@PathVariable Long id) {
@@ -97,5 +101,34 @@ public class ProjectController {
     public ResponseEntity<Resp> updateCover(@PathVariable Long projectId, @PathVariable Long coverId) {
         Project updatedProject = projectService.updateCover(projectId, coverId);
         return ResponseEntity.ok(Resp.ok(updatedProject));
+    }
+
+    @PostMapping
+    public Resp createSegment(@RequestBody Map<String, Object> request) {
+        // 从请求中获取数据
+        String name = (String) request.get("name");
+        String type = (String) request.get("type");
+        List<String> workflows = (List<String>) request.get("workflows");
+
+        Project project = new Project();
+        project.setName(name);
+        project.setIsPublic(false);
+        project.setType(Project.Type.valueOf(type));
+        Project savedProject = projectService.createProject(project);
+
+        Segment globalSegment = new Segment();
+
+        globalSegment.setIsGlobal(true);
+        globalSegment.setProject(savedProject);
+        segmentService.saveSegment(globalSegment);
+        taskService.saveTasks(workflows.stream().map(workflow -> {
+            Task task = new Task();
+            task.setSegment(globalSegment);
+            task.setStatus(Task.Status.NOT_ASSIGNED);
+            task.setType(Task.Workflow.valueOf(workflow));
+            return task;
+        }).toList());
+        // 返回响应
+        return Resp.ok(savedProject);
     }
 }

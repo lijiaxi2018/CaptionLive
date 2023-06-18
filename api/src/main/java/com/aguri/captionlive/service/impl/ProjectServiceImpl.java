@@ -84,6 +84,11 @@ public class ProjectServiceImpl implements ProjectService {
         return project;
     }
 
+    @Override
+    public Project createProject(Project newProject) {
+        return projectRepository.save(newProject);
+    }
+
     private void createProjectCascadeEntities(ProjectRequest projectRequest, Project project) {
         List<Task> tasks = new ArrayList<>();
         List<Remark> remarks = new ArrayList<>();
