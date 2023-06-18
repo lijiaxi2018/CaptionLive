@@ -8,6 +8,12 @@ import com.aguri.captionlive.service.OwnershipService;
 import com.aguri.captionlive.service.ProjectService;
 import com.aguri.captionlive.service.SegmentService;
 import com.aguri.captionlive.service.TaskService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -103,24 +109,45 @@ public class ProjectController {
         return ResponseEntity.ok(Resp.ok(updatedProject));
     }
 
+    /**
+     * 创建项目和全局片段
+     *
+     * @param request 包含请求参数的Map，包括name、type和workflows
+     * @return Resp对象表示响应结果
+     */
     @PostMapping
+    @Operation(summary = "Create project and global segment", description = "Create a new project and its global segment")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Project and segment created successfully",
+                    content = @Content(schema = @Schema(implementation = Resp.class)))
+    })
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "Request body containing name, type, and workflows",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = Map.class, requiredProperties = {"name", "type", "workflows"}),
+                    examples = @ExampleObject(value = "{\"name\": \"TESTPROJECT\", \"type\": \"AUDIO_AND_VIDEO\", \"workflows\":[\"TIMELINE\", \"SOURCE\"]}")
+            )
+    )
     public Resp createSegment(@RequestBody Map<String, Object> request) {
-        // 从请求中获取数据
+        // 从请求参数中获取name、type和workflows
         String name = (String) request.get("name");
         String type = (String) request.get("type");
         List<String> workflows = (List<String>) request.get("workflows");
 
+        // 创建一个新的Project对象
         Project project = new Project();
         project.setName(name);
         project.setIsPublic(false);
         project.setType(Project.Type.valueOf(type));
         Project savedProject = projectService.createProject(project);
 
+        // 创建全局片段对象
         Segment globalSegment = new Segment();
-
         globalSegment.setIsGlobal(true);
         globalSegment.setProject(savedProject);
         segmentService.saveSegment(globalSegment);
+
+        // 根据workflows创建相应的Task对象并保存
         taskService.saveTasks(workflows.stream().map(workflow -> {
             Task task = new Task();
             task.setSegment(globalSegment);
@@ -128,7 +155,9 @@ public class ProjectController {
             task.setType(Task.Workflow.valueOf(workflow));
             return task;
         }).toList());
+
         // 返回响应
         return Resp.ok(savedProject);
     }
+
 }
