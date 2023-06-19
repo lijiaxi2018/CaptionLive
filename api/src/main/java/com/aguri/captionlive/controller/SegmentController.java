@@ -118,10 +118,10 @@ public class SegmentController {
         String summary = (String) request.get("summary");
         String scope = (String) request.get("scope");
 
-        // 使用正则表达式验证scope格式
-        if (!Pattern.matches("\\d+:\\d+", scope)) {
-            throw new RuntimeException("scope format error");
-        }
+//        // 使用正则表达式验证scope格式
+//        if (!Pattern.matches("\\d+:\\d+", scope)) {
+//            throw new RuntimeException("scope format error");
+//        }
 
         // 从请求参数中获取workflows
         List<String> workflows = (List<String>) request.get("workflows");
