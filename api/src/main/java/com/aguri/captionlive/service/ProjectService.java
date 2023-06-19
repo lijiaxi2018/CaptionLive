@@ -12,6 +12,7 @@ public interface ProjectService {
     List<Project> getAllProjects();
 
     Project createProject(ProjectRequest projectRequest);
+    Project createProject(Project newProject);
 
     Project getProjectById(Long id);
 
