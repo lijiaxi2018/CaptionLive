@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.aguri.captionlive.DTO.RequestRequest;
 import com.aguri.captionlive.common.exception.EntityNotFoundException;
 import com.aguri.captionlive.common.exception.OperationNotAllowException;
 import com.aguri.captionlive.model.Request;
@@ -24,8 +25,16 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public Request createRequest(Request newRequest) {
-        return requestRepository.save(newRequest);
+    public Request createRequest(RequestRequest newRequest) {
+        Request request = new Request();
+        request.setBody(newRequest.getBody());
+        request.setRecipient(newRequest.getRecipient());
+        request.setRecipientRead(newRequest.isRecipientRead());
+        request.setSender(newRequest.getSender());
+        request.setSenderRead(newRequest.isSenderRead());
+        request.setStatus(newRequest.getStatus());
+        request.setType(newRequest.getType());
+        return requestRepository.save(request);
     }
 
     @Override
@@ -40,7 +49,7 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public Request updateRequest(Long id, Request newRequest) {
+    public Request updateRequest(Long id, RequestRequest newRequest) {
         Request existingRequest = getRequestById(id);
         //Need to confirm what attributes should be update
         existingRequest.setStatus(newRequest.getStatus());

@@ -19,7 +19,7 @@ public class Message {
     private Long messageId;
 
     @JsonIgnore
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY,cascade=CascadeType.MERGE)
     @JoinColumn(name = "request_id")
     private Request request;
 
