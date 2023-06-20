@@ -44,6 +44,23 @@ export const organizationApi = createApi({
       }),
       invalidatesTags: ['Organizations']
     }),
+
+    deleteSegment: builder.mutation({
+      query: (segmentId) => ({
+        url: `/segments/${segmentId}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Organizations']
+    }),
+
+    createSegment: builder.mutation({
+      query: (segmentInfo) => ({
+        url: `/segments`,
+        method: 'POST',
+        body: segmentInfo,
+      }),
+      invalidatesTags: ['Organizations']
+    }),
   }),
 })
 
@@ -54,4 +71,6 @@ export const {
   useAssignTaskMutation, 
   useAssignFileToTaskMutation, 
   useWithdrawTaskMutation, 
+  useDeleteSegmentMutation, 
+  useCreateSegmentMutation,
 } = organizationApi

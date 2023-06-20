@@ -103,15 +103,43 @@ export function parseScope(scope) {
 }
 
 function parseTime(time) {
+  if (/^\d+$/.test(time) === false) {
+    return time;
+  }
+
   const intTime = parseInt(time);
   let parsed = (time % 60).toString();
+  if (time % 60 < 10) {
+    parsed = '0' + parsed;
+  }
 
-  if (intTime > 60) {
-    parsed = (time / 60).toString() + ':' + parsed;
+  if (intTime < 60) {
+    parsed = '00:' + parsed;
+  } else if (intTime >= 60) {
+    parsed = (Math.floor(time / 60)).toString() + ':' + parsed;
+    if (Math.floor(time / 60) < 10) {
+      parsed = '0' + parsed;
+    }
   }
 
   if (intTime > 3600) {
-    parsed = (time / 3600).toString() + ':' + parsed;
+    parsed = (Math.floor(time / 3600)).toString() + ':' + parsed;
+    if (Math.floor(time / 3600) < 10) {
+      parsed = '0' + parsed;
+    }
   }
+  
   return parsed;
+}
+
+export function parseWorkflowCode(code, workflow) {
+  let taskList = [];
+  
+  for (let i = 0; i < workflow.length; i++) {
+    if ((code >> workflow[i].key) % 2 === 1) {
+      taskList.push(workflow[i].taskCode);
+    }
+  }
+
+  return taskList;
 }

@@ -1,21 +1,31 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
 import { FaCircle } from 'react-icons/fa';
 import Segment from './Segment';
 import Avatar from '../InfoCard/Avatar';
+import AddSegment from '../../components/Project/AddSegment';
 import FileUploader from '../Layout/Modal/FileUploader';
 import { openUploaderWindow, updateCurrentIdToUpload, updateCurrentUploadType } from '../../redux/fileSlice';
+import { openAddSegment } from '../../redux/layoutSlice';
 
 function Worksheet({data}) {
   const dispatch = useDispatch();
 
   const segments = data.segmentInfos;
+  const [currentProjectId, setCurrentProjectId] = useState(-1);
+
   const isOpenUploaderWindow = useSelector((state) => state.file.openUploaderWindow);
+  const isOpenAddSegment = useSelector((state) => state.layout.inAddSegment);
 
   function handleUpload(myProjectId) {
     dispatch(updateCurrentIdToUpload(myProjectId));
     dispatch(updateCurrentUploadType(2));
     dispatch(openUploaderWindow());
+  }
+
+  function handleOpenAddSegment(myProjectId) {
+    setCurrentProjectId(myProjectId);
+    dispatch(openAddSegment());
   }
 
   function parseStatusColor(status) {
@@ -39,6 +49,10 @@ function Worksheet({data}) {
 
       { isOpenUploaderWindow === 1 &&
         <FileUploader />
+      }
+
+      { isOpenAddSegment &&
+        <AddSegment projectId={currentProjectId}/>
       }
 
       <div className='worksheet-info-container'>
@@ -69,10 +83,14 @@ function Worksheet({data}) {
           </div>
         )}
       </div>
+
+      <div className='worksheet-buttons-container'>
+        <button className='general-button-grey'>分享项目</button>
+        <div style={{ marginTop: '10px' }}></div>
+        <button className='general-button-grey' onClick={() => handleOpenAddSegment(data.projectId)}>新建段落</button>
+      </div>
       
     </div>
-
-    
   );
 }
 

@@ -406,14 +406,44 @@
   left: 13%;
 }
 
+.worksheet-buttons-container {
+  position: relative;
+  left: 8%;
+}
+
 .general-row-align {
   display: flex;
   flex-direction: row;
   align-items: center;
 }
 
+.general-flex-wrap {
+  display: flex;
+  flex-wrap: wrap;
+}
+
 .general-column-align {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.general-checkbox {
+  width: 16px;
+  height: 16px;
+}
+
+.add-segment-container {
+  position: fixed;
+  z-index: 2;
+  top: 30%;
+  left: 30%;
+  
+  height: 350px;
+  width: 600px;
+  border-radius: 8px;
+  border: 0px solid #b0acad;
+  background-color: #ffffff;
+  padding: 20px;
+  box-shadow: 0px 0px 30px;
 }

@@ -8,6 +8,7 @@ const initialState = {
   openSignInOnWindow: false,
   inSignIn: false,
   inEditUser: false,
+  inAddSegment: false,
   selectedOrgId: sessionSelectedOrgId,
   selectedLvl2Id: sessionSelectedLvl2Id,
   openedSegmentIds: sessionOpenedSegmentIds,
@@ -51,6 +52,14 @@ export const layoutSlice = createSlice({
       }
       sessionStorage.setItem("clOpenedSegmentIds", JSON.stringify(state.openedSegmentIds));
     },
+
+    openAddSegment: (state) => {
+      state.inAddSegment = true;
+    },
+
+    closeAddSegment: (state) => {
+      state.inAddSegment = false;
+    },
   },
 })
 
@@ -62,6 +71,8 @@ export const {
   updateSelectedLvl2Id, 
   openSegment,
   closeSegment, 
+  openAddSegment, 
+  closeAddSegment, 
 } = layoutSlice.actions
 
 export default layoutSlice.reducer
