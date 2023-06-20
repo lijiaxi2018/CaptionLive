@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.aguri.captionlive.DTO.RequestRequest;
 import com.aguri.captionlive.common.resp.Resp;
 import com.aguri.captionlive.model.Request;
 import com.aguri.captionlive.service.RequestService;
@@ -21,7 +22,7 @@ public class RequestController {
     }
 
     @PostMapping
-    public ResponseEntity<Resp> createRequest(@RequestBody Request newRequest) {
+    public ResponseEntity<Resp> createRequest(@RequestBody RequestRequest newRequest) {
         return ResponseEntity.ok(Resp.ok(requestService.createRequest(newRequest)));
     }
 
@@ -38,7 +39,7 @@ public class RequestController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Resp> updateRequest(@PathVariable("id") Long id, @RequestBody Request newRequest) {
+    public ResponseEntity<Resp> updateRequest(@PathVariable("id") Long id, @RequestBody RequestRequest newRequest) {
         return ResponseEntity.ok(Resp.ok(requestService.updateRequest(id, newRequest)));
     }
 
