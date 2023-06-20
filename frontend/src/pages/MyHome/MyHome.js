@@ -1,5 +1,5 @@
 import React from 'react';
-import { useSelector } from 'react-redux'
+import { useSelector } from 'react-redux';
 import Header from '../../components/Layout/Header/Header';
 import SignInUpContainer from '../../components/User/SignInUpContainer';
 import EntityInfo from '../../components/InfoCard/EntityInfo';

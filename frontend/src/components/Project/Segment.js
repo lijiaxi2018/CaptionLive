@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useSelector, useDispatch } from 'react-redux'
 
 import TaskStatusIcon from '../InfoCard/TaskStatusIcon';
 import { openUploaderWindow, updateCurrentIdToUpload, updateCurrentUploadType } from '../../redux/fileSlice';
 import { openSegment, closeSegment } from '../../redux/layoutSlice';
-import { useAssignTaskMutation, useWithdrawTaskMutation, useAssignFileToTaskMutation } from '../../services/organization';
+import { useAssignTaskMutation, useWithdrawTaskMutation, useAssignFileToTaskMutation, useDeleteSegmentMutation } from '../../services/organization';
 import { parseTaskType, parseScope } from '../../utils/segment';
 import { Icon } from '@rsuite/icons';
-import { FaAngleUp, FaAngleDown } from 'react-icons/fa';
+import { FaAngleUp, FaAngleDown, FaTrash } from 'react-icons/fa';
 import FileUploader from '../Layout/Modal/FileUploader';
 
 function parseTaskText(task) {
@@ -28,6 +28,7 @@ function Segment({data}) {
   const [assignTaskMutation] = useAssignTaskMutation();
   const [withdrawTaskMutation] = useWithdrawTaskMutation();
   const [assignFileToTaskMutation] = useAssignFileToTaskMutation();
+  const [deleteSegmentMutation] = useDeleteSegmentMutation();
   
   function assignTask(userId, taskId) {
     assignTaskMutation({
@@ -52,11 +53,18 @@ function Segment({data}) {
     dispatch(openUploaderWindow());
   }
 
-  function handleDelete(myTaskId) {
+  function handleDeleteTask(myTaskId) {
     assignFileToTaskMutation({
       taskId: myTaskId,
       fileRecordId: 0,
     })
+    .then((response) => {
+      // TODO: Deal with other return messages
+    })
+  }
+
+  function handleDeleteSegment(mySegmentId) {
+    deleteSegmentMutation(mySegmentId)
     .then((response) => {
       // TODO: Deal with other return messages
     })
@@ -79,12 +87,21 @@ function Segment({data}) {
         </div>
       );
     } else if (task.status === 'COMPLETED' && task.workerUser.userId !== myUserId) {
-      return <p></p>;
+      let downloadUrl = 'http://localhost:8080/api/files/' + task.fileId;
+      return (
+        <div>
+          <a
+            href={downloadUrl}
+          >
+            <button className='general-button-grey'>下载</button>
+          </a>
+        </div>
+      );
     } else if (task.status === 'COMPLETED' && task.workerUser.userId === myUserId) {
       let downloadUrl = 'http://localhost:8080/api/files/' + task.fileId;
       return (
         <div>
-          <button className='general-button-grey' onClick={() => handleDelete(task.taskId)}>删除</button>
+          <button className='general-button-grey' onClick={() => handleDeleteTask(task.taskId)}>删除</button>
           <a
             href={downloadUrl}
           >
@@ -122,6 +139,11 @@ function Segment({data}) {
           <button className='general-icon-button' onClick={() => handleMinimized()}><Icon as={FaAngleUp} size="2.5em" style={{ marginRight: '10px' }}/></button>
         }
         <label className='general-font-medium-small-bold'>{summary}</label>
+        
+        { !data.isGlobal && 
+          <button className='general-icon-button' onClick={() => handleDeleteSegment(data.segmentId)}><Icon as={FaTrash} size="1.75em" style={{ color : '#a0a0a0' }}/></button>
+        } 
+        
       </div>
 
       <div className='segment-status-icon-container'>
