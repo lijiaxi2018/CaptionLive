@@ -21,4 +21,11 @@ public class FileRecordUtil {
         }
         return f;
     }
+
+    public static Long generateFileRecordId(FileRecord fileRecord) {
+        if (fileRecord == null) {
+            return 0L;
+        }
+        return fileRecord.getFileRecordId();
+    }
 }

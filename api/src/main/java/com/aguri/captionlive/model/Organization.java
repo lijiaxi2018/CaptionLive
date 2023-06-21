@@ -54,12 +54,4 @@ public class Organization {
     @CreationTimestamp
     private LocalDateTime createdTime;
 
-    @Transient
-    private Long avatarId;
-
-    public Long getAvatarId() {
-        if (avatar == null) return null;
-        return avatar.getFileRecordId();
-    }
-
 }

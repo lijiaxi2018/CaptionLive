@@ -25,11 +25,25 @@ public class Membership {
 
     private Integer permission;
 
-    private Integer position;
+    private Position position;
 
     @UpdateTimestamp
     private LocalDateTime lastUpdatedTime;
 
     @CreationTimestamp
     private LocalDateTime createdTime;
+
+    public enum Position {
+        LEADER(0),
+        MEMBER(1);
+        private final int value;
+
+        Position(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+    }
 }

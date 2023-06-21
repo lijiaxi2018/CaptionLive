@@ -2,14 +2,19 @@ package com.aguri.captionlive.controller;
 
 
 import com.aguri.captionlive.DTO.OrganizationRequest;
+import com.aguri.captionlive.DTO.OrganizationResp;
 import com.aguri.captionlive.DTO.ProjectInfo;
 import com.aguri.captionlive.common.resp.Resp;
+import com.aguri.captionlive.common.util.FileRecordUtil;
+import com.aguri.captionlive.model.FileRecord;
 import com.aguri.captionlive.model.Organization;
 import com.aguri.captionlive.model.User;
+import com.aguri.captionlive.service.MembershipService;
 import com.aguri.captionlive.service.OrganizationService;
 import com.aguri.captionlive.service.UserService;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.BeanClassLoaderAware;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,14 +38,23 @@ public class OrganizationController {
 
     @PostMapping
     public ResponseEntity<Resp> createOrganization(@RequestBody OrganizationRequest organization) {
+        // TODO using token to get user id;
         Organization createdOrganization = organizationService.createOrganization(organization);
         return ResponseEntity.ok(Resp.ok(createdOrganization));
     }
 
+    @Autowired
+    MembershipService membershipService;
+
     @GetMapping("/{id}")
     public ResponseEntity<Resp> getOrganizationById(@PathVariable Long id) {
         Organization organization = organizationService.getOrganizationById(id);
-        return ResponseEntity.ok(Resp.ok(organization));
+        List<Long> leaderIds = membershipService.getOrganizationLeaders(id);
+        OrganizationResp organizationResp = new OrganizationResp();
+        BeanUtils.copyProperties(organization, organizationResp);
+        organizationResp.setAvatarId(FileRecordUtil.generateFileRecordId(organization.getAvatar()));
+        organizationResp.setLeaderIds(leaderIds);
+        return ResponseEntity.ok(Resp.ok(organizationResp));
     }
 
     @DeleteMapping("/{id}")
