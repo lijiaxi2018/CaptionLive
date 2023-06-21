@@ -1,6 +1,7 @@
 INSERT INTO users (permission, username, password, qq, email, description)
-VALUES (0, '上原步梦', 'password', 'qq1', 'email1', 'description1'),
-       (0, '高咲侑', 'password', 'qq2', 'email2', 'description2')
+VALUES (1, '天王寺璃奈', 'password', 'qq1', 'email1', 'description1'),
+       (0, '上原步梦', 'password', 'qq2', 'email2', 'description2'),
+       (0, '高咲侑', 'password', 'qq3', 'email3', 'description3')
 ON CONFLICT DO NOTHING;
 
 INSERT INTO organizations (name, description)
