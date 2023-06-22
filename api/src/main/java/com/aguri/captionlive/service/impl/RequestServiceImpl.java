@@ -73,8 +73,24 @@ public class RequestServiceImpl implements RequestService {
             existingRequest.setRecipientRead( true);
         }
         else{
-            //Need execpiton for not match.
-            System.out.println("UserId doesn't match request!");
+            throw new RuntimeException("UserId doesn't match request!");
+        }
+        return requestRepository.save(existingRequest);
+    }
+
+    @Override
+    public Request markRequestAsUnread(Long id, Long userId) {
+
+        Request existingRequest = getRequestById(id);
+
+        if(userId == existingRequest.getSender()){
+            existingRequest.setSenderRead(false);
+        }
+        else if(userId == existingRequest.getRecipient()){
+            existingRequest.setRecipientRead( false);
+        }
+        else{
+            throw new RuntimeException("UserId doesn't match request!");
         }
         return requestRepository.save(existingRequest);
     }
@@ -102,13 +118,15 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public List<Request> getAllRequestsForUser(Long userId) {
+    public List<Request> getAllRequestsForSenderUser(Long userId) {
         List<Request> requestsBySender = requestRepository.findAllBySender(userId);
+        return requestsBySender;
+    }
+
+    @Override
+    public List<Request> getAllRequestsForRecipientUser(Long userId) {
         List<Request> requestsByRecipient = requestRepository.findAllByRecipient(userId);
-        List<Request> mergedRequests = new ArrayList<>();
-        mergedRequests.addAll(requestsBySender);
-        mergedRequests.addAll(requestsByRecipient);
-        return mergedRequests;
+        return requestsByRecipient;
     }
 
 }
