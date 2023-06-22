@@ -16,6 +16,6 @@ public class MembershipServiceImpl implements MembershipService {
 
     @Override
     public List<Long> getOrganizationLeaders(Long id) {
-        return membershipRepository.findAllByOrganizationOrganizationIdAndPositionIn(id, List.of(Membership.Position.LEADER)).stream().map(Membership::getUser).map(User::getUserId).toList();
+        return membershipRepository.findAllByOrganizationOrganizationIdAndPermissionIn(id, List.of(Membership.Permission.LEADER)).stream().map(Membership::getUser).map(User::getUserId).toList();
     }
 }

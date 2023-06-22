@@ -10,5 +10,5 @@ import java.util.List;
 
 @Repository
 public interface MembershipRepository extends JpaRepository<Membership,Long> {
-    List<Membership> findAllByOrganizationOrganizationIdAndPositionIn(Long id, Collection<Membership.Position> position);
+    List<Membership> findAllByOrganizationOrganizationIdAndPermissionIn(Long id, Collection<Membership.Permission> permission);
 }
