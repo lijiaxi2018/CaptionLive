@@ -17,11 +17,17 @@ public interface RequestService {
     Request updateRequest(Long id, RequestRequest newRequest);
     
     Request markRequestAsRead(Long id, Long userId);
+
+    Request markRequestAsUnread(Long id, Long userId);
     
     Request approveRequest(Long id);
     
     Request rejectRequest(Long id);
     
+    List<Request> getAllRequestsForSenderUser(Long userId);
+
+    List<Request> getAllRequestsForRecipientUser(Long userId);
+
     List<Request> getAllRequestsForUser(Long userId);
 }
 

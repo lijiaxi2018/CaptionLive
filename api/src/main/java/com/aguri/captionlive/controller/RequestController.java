@@ -48,6 +48,11 @@ public class RequestController {
         return ResponseEntity.ok(Resp.ok(requestService.markRequestAsRead(id, userId)));
     }
 
+    @PutMapping("/unread/{id}/{userId}")
+    public ResponseEntity<Resp> markRequestAsUnread(@PathVariable("id") Long id, @PathVariable("userId") Long userId) {
+        return ResponseEntity.ok(Resp.ok(requestService.markRequestAsUnread(id, userId)));
+    }
+
     @PutMapping("/approve/{id}")
     public ResponseEntity<Resp> approveRequest(@PathVariable("id") Long id) {
         return ResponseEntity.ok(Resp.ok(requestService.approveRequest(id)));
@@ -56,6 +61,16 @@ public class RequestController {
     @PutMapping("/reject/{id}")
     public ResponseEntity<Resp> rejectRequest(@PathVariable("id") Long id) {
         return ResponseEntity.ok(Resp.ok(requestService.rejectRequest(id)));
+    }
+
+    @GetMapping("/getAllSenderRequests/{userId}")
+    public ResponseEntity<Resp> getAllRequestsForSenderUser(@PathVariable("userId") Long userId) {
+        return ResponseEntity.ok(Resp.ok(requestService.getAllRequestsForSenderUser(userId)));
+    }
+
+    @GetMapping("/getAllRecipientRequests/{userId}")
+    public ResponseEntity<Resp> getAllRequestsForRecipientUser(@PathVariable("userId") Long userId) {
+        return ResponseEntity.ok(Resp.ok(requestService.getAllRequestsForRecipientUser(userId)));
     }
 
     @GetMapping("/getAllRequests/{userId}")
