@@ -4,9 +4,9 @@ package com.aguri.captionlive.controller;
 import com.aguri.captionlive.DTO.OrganizationRequest;
 import com.aguri.captionlive.DTO.OrganizationResp;
 import com.aguri.captionlive.DTO.ProjectInfo;
+import com.aguri.captionlive.common.JwtTokenProvider;
 import com.aguri.captionlive.common.resp.Resp;
 import com.aguri.captionlive.common.util.FileRecordUtil;
-import com.aguri.captionlive.model.FileRecord;
 import com.aguri.captionlive.model.Organization;
 import com.aguri.captionlive.model.User;
 import com.aguri.captionlive.service.MembershipService;
@@ -17,8 +17,8 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.BeanClassLoaderAware;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -42,10 +42,25 @@ public class OrganizationController {
 //        return ResponseEntity.ok(Resp.ok(organizations));
 //    }
 
+    @Autowired
+    JwtTokenProvider jwtTokenProvider;
+
     @PostMapping
-    public ResponseEntity<Resp> createOrganization(@RequestBody OrganizationRequest organization) {
-        // TODO using token to get user id;
-        Organization createdOrganization = organizationService.createOrganization(organization);
+    public ResponseEntity<Resp> createOrganization(@RequestBody OrganizationRequest organization, HttpServletRequest request) {
+        String token = request.getHeader("Authorization");
+        if (null == token) {
+            throw new RuntimeException("jwt token is null");
+        }
+
+        if (!jwtTokenProvider.validateToken(token)) {
+            throw new RuntimeException("jwt token invalid");
+        }
+
+        String username = jwtTokenProvider.parseUserNameFromToken(token);
+
+        User user = userService.getUserByUsername(username);
+
+        Organization createdOrganization = organizationService.createOrganization(organization, user);
         return ResponseEntity.ok(Resp.ok(createdOrganization));
     }
 

@@ -5,9 +5,11 @@ import com.aguri.captionlive.DTO.ProjectInfo;
 import com.aguri.captionlive.common.exception.EntityNotFoundException;
 import com.aguri.captionlive.common.util.FileRecordUtil;
 import com.aguri.captionlive.model.*;
+import com.aguri.captionlive.repository.MembershipRepository;
 import com.aguri.captionlive.repository.OrganizationRepository;
 import com.aguri.captionlive.repository.ProjectRepository;
 import com.aguri.captionlive.service.OrganizationService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -37,12 +39,23 @@ public class OrganizationServiceImpl implements OrganizationService {
         return organizationRepository.findAll();
     }
 
+
+    @Autowired
+    MembershipRepository membershipRepository;
+
     @Override
-    public Organization createOrganization(OrganizationRequest organizationRequest) {
+    @Transactional
+    public Organization createOrganization(OrganizationRequest organizationRequest, User user) {
         Organization organization = new Organization();
         BeanUtils.copyProperties(organizationRequest, organization);
         organization.setAvatar(FileRecordUtil.generateFileRecord(organizationRequest.getAvatarId()));
-        return organizationRepository.save(organization);
+        Membership membership = new Membership();
+        membership.setOrganization(organization);
+        membership.setUser(user);
+        membership.setPermission(Membership.Permission.LEADER);
+        Organization save = organizationRepository.save(organization);
+        membershipRepository.save(membership);
+        return save;
     }
 
     @Override
