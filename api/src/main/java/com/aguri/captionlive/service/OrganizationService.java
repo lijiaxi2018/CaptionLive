@@ -21,4 +21,8 @@ public interface OrganizationService {
     void deleteOrganization(Long id);
 
     List<ProjectInfo> getPagedProjects(Long organizationId, String searchTxt, int page, int size, String sortBy, String sortOrder);
+
+    Organization updateDescription(Long organizationId, String description);
+
+    Organization updateAvatar(Long organizationId, Long avatarId);
 }

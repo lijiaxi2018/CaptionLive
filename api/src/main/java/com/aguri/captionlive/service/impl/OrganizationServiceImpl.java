@@ -69,4 +69,19 @@ public class OrganizationServiceImpl implements OrganizationService {
         return ProjectInfo.generateProjectInfos(projects);
     }
 
+    @Override
+    public Organization updateDescription(Long organizationId, String description) {
+        Organization referenceById = organizationRepository.getReferenceById(organizationId);
+        referenceById.setDescription(description);
+        return organizationRepository.save(referenceById);
+    }
+
+    @Override
+    public Organization updateAvatar(Long organizationId, Long avatarId) {
+        FileRecord fileRecord = FileRecordUtil.generateFileRecord(avatarId);
+        Organization referenceById = organizationRepository.getReferenceById(organizationId);
+        referenceById.setAvatar(fileRecord);
+        return organizationRepository.save(referenceById);
+    }
+
 }
