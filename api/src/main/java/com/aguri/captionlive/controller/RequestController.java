@@ -72,5 +72,10 @@ public class RequestController {
     public ResponseEntity<Resp> getAllRequestsForRecipientUser(@PathVariable("userId") Long userId) {
         return ResponseEntity.ok(Resp.ok(requestService.getAllRequestsForRecipientUser(userId)));
     }
+
+    @GetMapping("/getAllRequests/{userId}")
+    public ResponseEntity<Resp> getAllRequestsForUser(@PathVariable("userId") Long userId) {
+        return ResponseEntity.ok(Resp.ok(requestService.getAllRequestsForUser(userId)));
+    }
 }
 

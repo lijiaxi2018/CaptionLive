@@ -1,6 +1,7 @@
 package com.aguri.captionlive.service.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.aguri.captionlive.DTO.RequestRequest;
 import com.aguri.captionlive.common.exception.EntityNotFoundException;
-import com.aguri.captionlive.common.exception.OperationNotAllowException;
+import com.aguri.captionlive.common.util.TimeComparator;
 import com.aguri.captionlive.model.Request;
 import com.aguri.captionlive.repository.RequestRepository;
 import com.aguri.captionlive.service.RequestService;
@@ -99,10 +100,10 @@ public class RequestServiceImpl implements RequestService {
     public Request approveRequest(Long id) {
         Request existingRequest = getRequestById(id);
         //Need to confirm what attributes should be update
-        // 0 for approved
-        // 1 for submitted
-        // 2 for rejected
-        existingRequest.setStatus(0);
+        // pending  0
+        // Approved 1
+        // Rejected 2
+        existingRequest.setStatus(1);
         return requestRepository.save(existingRequest);
     }
 
@@ -110,9 +111,9 @@ public class RequestServiceImpl implements RequestService {
     public Request rejectRequest(Long id) {
         Request existingRequest = getRequestById(id);
         //Need to confirm what attributes should be update
-        // 0 for approved
-        // 1 for submitted
-        // 2 for rejected
+        // pending  0
+        // Approved 1
+        // Rejected 2
         existingRequest.setStatus(2);
         return requestRepository.save(existingRequest);
     }
@@ -127,6 +128,17 @@ public class RequestServiceImpl implements RequestService {
     public List<Request> getAllRequestsForRecipientUser(Long userId) {
         List<Request> requestsByRecipient = requestRepository.findAllByRecipient(userId);
         return requestsByRecipient;
+    }
+
+    @Override
+    public List<Request> getAllRequestsForUser(Long userId) {
+        List<Request> requestsBySender = requestRepository.findAllBySender(userId);
+        List<Request> requestsByRecipient = requestRepository.findAllByRecipient(userId);
+        List<Request> mergedRequests = new ArrayList<>();
+        mergedRequests.addAll(requestsBySender);
+        mergedRequests.addAll(requestsByRecipient);
+        Collections.sort(mergedRequests, new TimeComparator());
+        return mergedRequests;
     }
 
 }

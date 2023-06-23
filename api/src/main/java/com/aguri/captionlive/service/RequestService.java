@@ -27,5 +27,7 @@ public interface RequestService {
     List<Request> getAllRequestsForSenderUser(Long userId);
 
     List<Request> getAllRequestsForRecipientUser(Long userId);
+
+    List<Request> getAllRequestsForUser(Long userId);
 }
 
