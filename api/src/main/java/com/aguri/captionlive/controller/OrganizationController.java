@@ -12,12 +12,18 @@ import com.aguri.captionlive.model.User;
 import com.aguri.captionlive.service.MembershipService;
 import com.aguri.captionlive.service.OrganizationService;
 import com.aguri.captionlive.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -102,6 +108,37 @@ public class OrganizationController {
 
         List<ProjectInfo> projectsInfo = organizationService.getPagedProjects(organizationId, searchTxt, page, size, sortBy, sortOrder);
         return ResponseEntity.ok(Resp.ok(projectsInfo));
+    }
+
+    @PutMapping("/{organizationId}/description")
+    @Operation(summary = "Update organization description", description = "Update the description of a organization")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Organization description updated successfully",
+                    content = @Content(schema = @Schema(implementation = Resp.class)))
+    })
+    public ResponseEntity<Resp> updateDescription(
+            @RequestBody HashMap<String, String> body,
+            @PathVariable("organizationId") Long organizationId) {
+        String description = body.get("description");
+
+        return ResponseEntity.ok(Resp.ok(organizationService.updateDescription(organizationId, description)));
+    }
+
+    @PutMapping("/{organizationId}/avatar")
+    @Operation(summary = "Update organization avatar", description = "Update the avatar of a organization")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Organization avatar updated successfully",
+                    content = @Content(schema = @Schema(implementation = Resp.class)))
+    })
+    public ResponseEntity<Resp> updateAvatar(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Request body containing avatar information",
+                    required = true,
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = HashMap.class)))
+            @RequestBody HashMap<String, String> body,
+            @PathVariable("organizationId") Long organizationId) {
+        Long avatarId = Long.valueOf(body.get("avatarId"));
+        return ResponseEntity.ok(Resp.ok(organizationService.updateAvatar(organizationId, avatarId)));
     }
 
 }
