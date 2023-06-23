@@ -53,15 +53,15 @@ public class Task {
     public static final Workflow[] AUDIO_AND_VIDEO_DEFAULT_WORKFLOWS = new Workflow[]{Workflow.SOURCE, Workflow.F_CHECK, Workflow.RENDERING};
 
     public enum Workflow {
+        SOURCE(0),
         TIMELINE(1),
-        K_TIMELINE(3),
         S_TIMELINE(2),
+        K_TIMELINE(3),
         TRANSLATION(4),
         EFFECT(5),
+        CHECK(6),
         POLISHING(7),
         EMBEDDING(8),
-        CHECK(6),
-        SOURCE(0),
         F_CHECK(9),
         RENDERING(10);
 

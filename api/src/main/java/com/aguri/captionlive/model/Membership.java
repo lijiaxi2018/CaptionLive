@@ -34,8 +34,9 @@ public class Membership {
     private LocalDateTime createdTime;
 
     public enum Permission {
-        LEADER(1),
-        MEMBER(0);
+        MEMBER(0),
+        LEADER(1);
+
         private final int value;
 
         Permission(int value) {
