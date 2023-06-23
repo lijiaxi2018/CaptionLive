@@ -3,6 +3,7 @@ package com.aguri.captionlive.service;
 import com.aguri.captionlive.DTO.OrganizationRequest;
 import com.aguri.captionlive.DTO.ProjectInfo;
 import com.aguri.captionlive.model.Organization;
+import com.aguri.captionlive.model.User;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ public interface OrganizationService {
 
     List<Organization> getAllOrganizations();
 
-    Organization createOrganization(OrganizationRequest organizationRequest);
+    Organization createOrganization(OrganizationRequest organizationRequest, User user);
 
     Organization updateOrganization(Long id, OrganizationRequest organizationRequest);
 
