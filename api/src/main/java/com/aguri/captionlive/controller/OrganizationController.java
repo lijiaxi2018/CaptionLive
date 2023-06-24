@@ -14,6 +14,7 @@ import com.aguri.captionlive.service.OrganizationService;
 import com.aguri.captionlive.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -23,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -36,11 +38,11 @@ public class OrganizationController {
     @Autowired
     private UserService userService;
 
-//    @GetMapping
-//    public ResponseEntity<Resp> getAllOrganizations() {
-//        List<Organization> organizations = organizationService.getAllOrganizations();
-//        return ResponseEntity.ok(Resp.ok(organizations));
-//    }
+    @GetMapping
+    public ResponseEntity<Resp> getAllOrganizations() {
+        List<Organization> organizations = organizationService.getAllOrganizations();
+        return ResponseEntity.ok(Resp.ok(organizations.stream().sorted(Comparator.comparing(Organization::getOrganizationId)).map(this::getResp).toList()));
+    }
 
     @Autowired
     JwtTokenProvider jwtTokenProvider;
@@ -70,12 +72,18 @@ public class OrganizationController {
     @GetMapping("/{id}")
     public ResponseEntity<Resp> getOrganizationById(@PathVariable Long id) {
         Organization organization = organizationService.getOrganizationById(id);
-        List<Long> leaderIds = membershipService.getOrganizationLeaders(id);
+        OrganizationResp organizationResp = getResp(organization);
+        return ResponseEntity.ok(Resp.ok(organizationResp));
+    }
+
+    private OrganizationResp getResp(Organization organization) {
+        List<Long> leaderIds = membershipService.getOrganizationLeaders(organization.getOrganizationId());
         OrganizationResp organizationResp = new OrganizationResp();
         BeanUtils.copyProperties(organization, organizationResp);
         organizationResp.setAvatarId(FileRecordUtil.generateFileRecordId(organization.getAvatar()));
         organizationResp.setLeaderIds(leaderIds);
-        return ResponseEntity.ok(Resp.ok(organizationResp));
+        organizationResp.setMemberIds(organization.getUsers().stream().map(User::getUserId).toList());
+        return organizationResp;
     }
 
     @DeleteMapping("/{id}")
@@ -117,6 +125,11 @@ public class OrganizationController {
                     content = @Content(schema = @Schema(implementation = Resp.class)))
     })
     public ResponseEntity<Resp> updateDescription(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Request body containing description information",
+                    required = true,
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = HashMap.class),
+                            examples = @ExampleObject(value = "{\"description\": \"114514\"}")))
             @RequestBody HashMap<String, String> body,
             @PathVariable("organizationId") Long organizationId) {
         String description = body.get("description");
@@ -134,7 +147,8 @@ public class OrganizationController {
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Request body containing avatar information",
                     required = true,
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = HashMap.class)))
+                            schema = @Schema(implementation = HashMap.class),
+                            examples = @ExampleObject(value = "{\"avatarId\": 1}")))
             @RequestBody HashMap<String, String> body,
             @PathVariable("organizationId") Long organizationId) {
         Long avatarId = Long.valueOf(body.get("avatarId"));

@@ -16,10 +16,12 @@ public class OrganizationResp {
 
     private Long avatarId;
 
-    private List<Long> LeaderIds;
+    private List<Long> leaderIds;
 
     private LocalDateTime lastUpdatedTime;
 
     private LocalDateTime createdTime;
+
+    private List<Long> memberIds;
 
 }
