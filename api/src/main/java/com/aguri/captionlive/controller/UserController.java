@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -66,7 +67,7 @@ public class UserController {
 
     @GetMapping("/{userId}/organizations")
     public ResponseEntity<Resp> getMyOrganizations(@PathVariable Long userId) {
-        List<Organization> organizations = userService.getUserById(userId).getOrganizations();
+        List<Organization> organizations = userService.getUserById(userId).getOrganizations().stream().sorted(Comparator.comparing(Organization::getOrganizationId)).toList();
         return ResponseEntity.ok(Resp.ok(organizations));
     }
 

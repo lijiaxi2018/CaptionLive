@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -40,7 +41,7 @@ public class OrganizationController {
     @GetMapping
     public ResponseEntity<Resp> getAllOrganizations() {
         List<Organization> organizations = organizationService.getAllOrganizations();
-        return ResponseEntity.ok(Resp.ok(organizations));
+        return ResponseEntity.ok(Resp.ok(organizations.stream().sorted(Comparator.comparing(Organization::getOrganizationId)).map(this::getResp).toList()));
     }
 
     @Autowired
@@ -71,12 +72,18 @@ public class OrganizationController {
     @GetMapping("/{id}")
     public ResponseEntity<Resp> getOrganizationById(@PathVariable Long id) {
         Organization organization = organizationService.getOrganizationById(id);
-        List<Long> leaderIds = membershipService.getOrganizationLeaders(id);
+        OrganizationResp organizationResp = getResp(organization);
+        return ResponseEntity.ok(Resp.ok(organizationResp));
+    }
+
+    private OrganizationResp getResp(Organization organization) {
+        List<Long> leaderIds = membershipService.getOrganizationLeaders(organization.getOrganizationId());
         OrganizationResp organizationResp = new OrganizationResp();
         BeanUtils.copyProperties(organization, organizationResp);
         organizationResp.setAvatarId(FileRecordUtil.generateFileRecordId(organization.getAvatar()));
         organizationResp.setLeaderIds(leaderIds);
-        return ResponseEntity.ok(Resp.ok(organizationResp));
+        organizationResp.setMemberIds(organization.getUsers().stream().map(User::getUserId).toList());
+        return organizationResp;
     }
 
     @DeleteMapping("/{id}")
@@ -141,7 +148,7 @@ public class OrganizationController {
                     required = true,
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = HashMap.class),
-            examples = @ExampleObject(value = "{\"avatarId\": 1}")))
+                            examples = @ExampleObject(value = "{\"avatarId\": 1}")))
             @RequestBody HashMap<String, String> body,
             @PathVariable("organizationId") Long organizationId) {
         Long avatarId = Long.valueOf(body.get("avatarId"));
