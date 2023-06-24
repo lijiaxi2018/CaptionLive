@@ -1,9 +1,11 @@
 import React from 'react';
 import { useGetUserQuery } from '../../services/user';
 import { useGetProjectQuery } from '../../services/project';
+import { useGetOrganizationQuery } from '../../services/organization';
 
 function Avatar({userId, avatarSize, type}) {
   
+  // type === 1
   function parseUserData(fetchedData) {
     let styleSheet = { 'width': avatarSize, 'height': avatarSize, 'fontSize': avatarSize/1.7, 'borderRadius': '50%' };
 
@@ -27,6 +29,7 @@ function Avatar({userId, avatarSize, type}) {
     }
   }
 
+  // type === 2
   function parseProjectData(fetchedData) {
     let styleSheet = { 'width': avatarSize * 1.33, 'height': avatarSize, 'fontSize': avatarSize/1.7, 'borderRadius': '10%' };
     
@@ -50,12 +53,37 @@ function Avatar({userId, avatarSize, type}) {
     }
   }
 
+  // type === 3
+  function parseOrganizationData(fetchedData) {
+    let styleSheet = { 'width': avatarSize, 'height': avatarSize, 'fontSize': avatarSize/1.7, 'borderRadius': '10%' };
+    
+    let initial = fetchedData.data.data.name[0];
+
+    if (fetchedData.data.data.avatarId === 0) {
+      return (
+        <div style={styleSheet} className='general-avatar-text'>
+          <label>{initial}</label>
+        </div>
+      );
+    } else {
+      let avatarUrl = `url(http://localhost:8080/api/files/${fetchedData.data.data.avatarId})`;
+      styleSheet['backgroundImage'] = avatarUrl;
+
+      return (
+        <div>
+          <div style={styleSheet} className='general-avatar'></div>
+        </div>
+      );
+    }
+  }
+
   const fetchedData = useGetUserQuery(userId);
   const fetchedDataProject = useGetProjectQuery(userId);
+  const fetchedDataOrganization = useGetOrganizationQuery(userId);
   
   const fetched = 
     userId === -1 ? false : 
-    (fetchedData.isFetching || fetchedDataProject.isFetching) ? false : 
+    (fetchedData.isFetching || fetchedDataProject.isFetching || fetchedDataOrganization.isFetching) ? false : 
     true;
 
   return (
@@ -64,6 +92,7 @@ function Avatar({userId, avatarSize, type}) {
         <div>
           { (type === 1) && parseUserData(fetchedData) }
           { (type === 2) && parseProjectData(fetchedDataProject) }
+          { (type === 3) && parseOrganizationData(fetchedDataOrganization) }
         </div>
       }
     </div>

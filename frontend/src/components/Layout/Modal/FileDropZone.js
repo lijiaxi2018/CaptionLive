@@ -1,3 +1,5 @@
+// DEPRECATED
+
 import React, { useCallback } from "react";
 import { useDropzone } from 'react-dropzone'
 import { usePostFilesMutation } from "../../../services/file";

@@ -5,8 +5,9 @@ import { Icon } from '@rsuite/icons';
 import { AiOutlineUpload } from 'react-icons/ai';
 
 import { usePostFilesMutation } from "../../../services/file";
-import { useAssignFileToTaskMutation } from '../../../services/organization';
+import { useAssignFileToTaskMutation, usePutOrganizationAvatarIdMutation } from '../../../services/organization';
 import { usePutProjectCoverIdMutation } from '../../../services/project';
+import { usePutUserAvatarIdMutation } from '../../../services/user';
 import { closeUploaderWindow, updateCurrentIdToUpload, updateCurrentUploadType } from '../../../redux/fileSlice';
 
 // Reference: https://www.npmjs.com/package/react-dropzone
@@ -23,6 +24,8 @@ const FileUploader = () => {
     const [postFiles] = usePostFilesMutation();
     const [assignFileToTaskMutation] = useAssignFileToTaskMutation();
     const [putProjectCoverIdMutation] = usePutProjectCoverIdMutation();
+    const [putUserAvatarId] = usePutUserAvatarIdMutation();
+    const [putOrganizationAvatarIdMutation] = usePutOrganizationAvatarIdMutation();
 
     const onDrop = useCallback(acceptedFiles => {
         if (acceptedFiles.length > 0) {
@@ -32,7 +35,10 @@ const FileUploader = () => {
             formData.append('file', acceptedFile)
             postFiles(formData).then((response) => {
                 const myFileRecordId = response.data.data;
-                
+                // UploadType === 3 : Upload File to Task
+                // UploadType === 2 : Upload Project Cover
+                // UploadType === 1 : Upload User Avatar
+                // UploadType === 4 : Upload Organization Avatar
                 if (myCurrentUploadType === 3) {
                     assignFileToTaskMutation({
                         taskId: myCurrentIdToUpload,
@@ -45,18 +51,39 @@ const FileUploader = () => {
                     // TODO: Deal with other return messages
                     })
                 } else if (myCurrentUploadType === 2) {
-                  putProjectCoverIdMutation({
-                    projectId: myCurrentIdToUpload,
-                    coverId: myFileRecordId,
-                  })
-                  .then((response) => {
-                    dispatch(updateCurrentIdToUpload(-1));
-                    dispatch(updateCurrentUploadType(-1));
-                    dispatch(closeUploaderWindow());
-                  // TODO: Deal with other return messages
-                  })
-              }
-
+                    putProjectCoverIdMutation({
+                        projectId: myCurrentIdToUpload,
+                        coverId: myFileRecordId,
+                    })
+                    .then((response) => {
+                        dispatch(updateCurrentIdToUpload(-1));
+                        dispatch(updateCurrentUploadType(-1));
+                        dispatch(closeUploaderWindow());
+                    // TODO: Deal with other return messages
+                    })
+                } else if (myCurrentUploadType === 1) {
+                    putUserAvatarId({
+                        userId: myCurrentIdToUpload,
+                        avatarId: myFileRecordId,
+                    })
+                    .then((response) => {
+                        dispatch(updateCurrentIdToUpload(-1));
+                        dispatch(updateCurrentUploadType(-1));
+                        dispatch(closeUploaderWindow());
+                    // TODO: Deal with other return messages
+                    })
+                } else if (myCurrentUploadType === 4) {
+                    putOrganizationAvatarIdMutation({
+                        organizationId: myCurrentIdToUpload,
+                        avatarId: myFileRecordId,
+                    })
+                    .then((response) => {
+                        dispatch(updateCurrentIdToUpload(-1));
+                        dispatch(updateCurrentUploadType(-1));
+                        dispatch(closeUploaderWindow());
+                    // TODO: Deal with other return messages
+                    })
+                }
             }).catch(error => {
                 console.log(error);
             })

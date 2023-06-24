@@ -7,8 +7,10 @@ const sessionOpenedSegmentIds = sessionStorage.getItem("clOpenedSegmentIds") !==
 const initialState = {
   openSignInOnWindow: false,
   inSignIn: false,
-  inEditUser: false,
   inAddSegment: false,
+  inAddOrganization: false,
+  inMessage: false,
+  selectedRequestId: -1,
   selectedOrgId: sessionSelectedOrgId,
   selectedLvl2Id: sessionSelectedLvl2Id,
   openedSegmentIds: sessionOpenedSegmentIds,
@@ -24,10 +26,6 @@ export const layoutSlice = createSlice({
 
     toggleSignInOnPage: (state) => {
       state.inSignIn = !state.inSignIn;
-    },
-
-    toggleInEditUser: (state) => {
-      state.inEditUser = !state.inEditUser;
     },
 
     updateSelectedOrgId: (state, action) => {
@@ -60,19 +58,43 @@ export const layoutSlice = createSlice({
     closeAddSegment: (state) => {
       state.inAddSegment = false;
     },
+
+    openAddOrganization: (state) => {
+      state.inAddOrganization = true;
+    },
+
+    closeAddOrganization: (state) => {
+      state.inAddOrganization = false;
+    },
+
+    openMessage: (state) => {
+      state.inMessage = true;
+    },
+
+    closeMessage: (state) => {
+      state.inMessage = false;
+    },
+
+    updateSelectedRequestId: (state, action) => {
+      state.selectedRequestId = action.payload;
+    },
   },
 })
 
 export const { 
   toggleSignInOnWindow, 
   toggleSignInOnPage, 
-  toggleInEditUser, 
   updateSelectedOrgId,
   updateSelectedLvl2Id, 
   openSegment,
   closeSegment, 
   openAddSegment, 
   closeAddSegment, 
+  openAddOrganization,
+  closeAddOrganization,
+  openMessage,
+  closeMessage,
+  updateSelectedRequestId,
 } = layoutSlice.actions
 
 export default layoutSlice.reducer

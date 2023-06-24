@@ -61,6 +61,24 @@ export const organizationApi = createApi({
       }),
       invalidatesTags: ['Organizations']
     }),
+
+    putOrganizationDescription: builder.mutation({
+      query: (organization) => ({
+          url: `/organizations/${organization.organizationId}/description`,
+          method: 'PUT',
+          body: organization
+      }),
+      invalidatesTags: ['Organizations']
+    }),
+
+    putOrganizationAvatarId: builder.mutation({
+      query: (organization) => ({
+          url: `/organizations/${organization.organizationId}/avatar`,
+          method: 'PUT',
+          body: organization
+      }),
+      invalidatesTags: ['Organizations']
+    }),
   }),
 })
 
@@ -73,4 +91,6 @@ export const {
   useWithdrawTaskMutation, 
   useDeleteSegmentMutation, 
   useCreateSegmentMutation,
+  usePutOrganizationDescriptionMutation,
+  usePutOrganizationAvatarIdMutation,
 } = organizationApi
