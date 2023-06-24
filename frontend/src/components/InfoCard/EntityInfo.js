@@ -28,8 +28,6 @@ function EntityInfo({userId, type, access, apply, applicant}) {
   const orgData = useGetOrganizationQuery(userId);
   const applicantData = useGetUserQuery(applicant);
 
-  console.log(applicantData);
-
   const fetched = 
     (userData.isFetching || orgData.isFetching || applicantData.isFetching) ? false : true;
 

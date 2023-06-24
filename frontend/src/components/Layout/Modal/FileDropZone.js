@@ -27,7 +27,6 @@ const FileDropZone = ({id, type}) => {
                   // TODO: Deal with other return messages
                 })
             }).catch(error => {
-                console.log(error);
             })
         }
         

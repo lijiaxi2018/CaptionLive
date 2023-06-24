@@ -85,7 +85,6 @@ const FileUploader = () => {
                     })
                 }
             }).catch(error => {
-                console.log(error);
             })
         }
       }, [postFiles])

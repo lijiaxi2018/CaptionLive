@@ -44,7 +44,6 @@ function Messages({requestId, userId}) {
           requestId: myRequestId,
         })
         .then((response) => {
-          console.log(response);
         })
       })
     })
@@ -64,12 +63,10 @@ function Messages({requestId, userId}) {
         userId: otherUserId,
       })
       .then((response) => {
-        console.log(myRequestId);
         approveRequestMutation({
           requestId: myRequestId,
         })
         .then((response) => {
-          console.log(response);
         })
       })
     })
