@@ -3,7 +3,14 @@ package com.aguri.captionlive.service.impl;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
+import com.aguri.captionlive.model.Membership;
+import com.aguri.captionlive.repository.OrganizationRepository;
+import com.aguri.captionlive.repository.UserRepository;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -96,15 +103,51 @@ public class RequestServiceImpl implements RequestService {
         return requestRepository.save(existingRequest);
     }
 
+    @Autowired
+    OrganizationRepository organizationRepository;
+
+    @Autowired
+    UserRepository userRepository;
+
     @Override
     public Request approveRequest(Long id) {
-        Request existingRequest = getRequestById(id);
-        //Need to confirm what attributes should be update
-        // pending  0
-        // Approved 1
-        // Rejected 2
+//        Request existingRequest = getRequestById(id);
+//        //Need to confirm what attributes should be update
+//        // pending  0
+//        // Approved 1
+//        // Rejected 2
+//        existingRequest.setStatus(1);
+        Long requestId = id;
+        Request existingRequest = requestRepository.getReferenceById(requestId);
+        var type = existingRequest.getType();
+        if (type != Request.Type.ANNOUNCEMENT) {
+            String body = existingRequest.getBody();
+            String body1 = "{\"userId\":2,\"organizationId\":1}";
+            System.out.println(Objects.equals(body, body1));
+            body = body1;
+            Gson gson = new Gson();
+            JsonElement element = gson.fromJson(body, JsonElement.class);
+            JsonObject jsonObject = element.getAsJsonObject();
+            switch (type) {
+                case ADD_USER_TO_ORGANIZATION -> {
+                    long organizationId = jsonObject.get("organizationId").getAsLong();
+                    long userId = jsonObject.get("userId").getAsLong();
+                    Membership membership = new Membership();
+                    membership.setOrganization(organizationRepository.getReferenceById(organizationId));
+                    membership.setUser(userRepository.getReferenceById(userId));
+                    membership.setPermission(Membership.Permission.MEMBER);
+                }
+                case SHARE_PROJECT_TO_USER, SHARE_PROJECT_TO_ORGANIZATION -> {
+
+                }
+                default -> {
+
+                }
+            }
+        }
+        Request save = requestRepository.save(existingRequest);
         existingRequest.setStatus(1);
-        return requestRepository.save(existingRequest);
+        return save;
     }
 
     @Override
