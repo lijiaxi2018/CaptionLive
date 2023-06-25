@@ -8,6 +8,7 @@ import { fileApi } from '../services/file'
 import { organizationApi } from '../services/organization'
 import { projectApi } from '../services/project'
 import { segmentApi } from '../services/segment'
+import { requestApi } from '../services/request'
 
 export const store = configureStore({
   reducer: {
@@ -20,6 +21,7 @@ export const store = configureStore({
     [organizationApi.reducerPath]: organizationApi.reducer,
     [projectApi.reducerPath]: projectApi.reducer,
     [segmentApi.reducerPath]: segmentApi.reducer,
+    [requestApi.reducerPath]: requestApi.reducer,
   },
 
   middleware: (getDefaultMiddleware) =>
@@ -30,5 +32,6 @@ export const store = configureStore({
       organizationApi.middleware,
       projectApi.middleware,
       segmentApi.middleware,
+      requestApi.middleware,
     ]),
 })

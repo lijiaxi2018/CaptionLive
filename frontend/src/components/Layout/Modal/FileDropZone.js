@@ -1,3 +1,5 @@
+// DEPRECATED
+
 import React, { useCallback } from "react";
 import { useDropzone } from 'react-dropzone'
 import { usePostFilesMutation } from "../../../services/file";
@@ -25,7 +27,6 @@ const FileDropZone = ({id, type}) => {
                   // TODO: Deal with other return messages
                 })
             }).catch(error => {
-                console.log(error);
             })
         }
         

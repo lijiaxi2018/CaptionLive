@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux';
 import { FaCircle } from 'react-icons/fa';
 import Segment from './Segment';
 import Avatar from '../InfoCard/Avatar';
