@@ -16,8 +16,8 @@ spring:
     multipart:
       enabled: true
       file-size-threshold: 2KB
-      max-file-size: 200MB
-      max-request-size: 215MB
+      max-file-size: 1024MB
+      max-request-size: 1024MB
       location: /app/files
   security:
 
@@ -28,5 +28,12 @@ apiVersion: "0.1"
 
 # application.properties
 jwt:
-  secret: your-secret-key
+  secret: your-secret-key # Sensitive information, need to discuss when go-live
   expiration: 86400
+
+aws:
+  s3:
+    bucket-name: test-captionlive
+    region: us-east-1
+  accessKey: 
+  secretKey: 

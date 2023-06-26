@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.aguri.captionlive.DTO.UserRequest;
 import com.aguri.captionlive.common.resp.Resp;
-import com.aguri.captionlive.common.JwtTokenProvider;
+import com.aguri.captionlive.common.util.JwtTokenProvider;
 import com.aguri.captionlive.model.User;
 import com.aguri.captionlive.service.UserService;
 import com.google.gson.JsonObject;
@@ -105,5 +105,6 @@ public class AuthController {
             return ResponseEntity.ok(Resp.ok(e));
         }
     }
+
 }
 

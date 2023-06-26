@@ -27,4 +27,10 @@ public class FileController {
         return ResponseEntity.ok(Resp.ok(fileRecordId));
     }
 
+    @PostMapping("/large")
+    public ResponseEntity<Resp> uploadLargefile(@RequestParam("file") MultipartFile file) {
+        Long fileRecordId = fileRecordService.uploadLargeFile(file);
+        return ResponseEntity.ok(Resp.ok(fileRecordId));
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.aguri.captionlive.service.impl;
 
 import com.aguri.captionlive.common.exception.EntityNotFoundException;
+import com.aguri.captionlive.common.util.S3Handler;
 import com.aguri.captionlive.model.FileRecord;
 import com.aguri.captionlive.repository.FileRecordRepository;
 import com.aguri.captionlive.service.FileRecordService;
@@ -32,6 +33,9 @@ public class FileRecordServiceImpl implements FileRecordService {
 
     @Autowired
     private FileRecordRepository fileRecordRepository;
+
+    @Autowired
+    private S3Handler S3;
 
     @Value("${spring.servlet.multipart.location}")
     private String fileStorageDirectory;
@@ -114,6 +118,20 @@ public class FileRecordServiceImpl implements FileRecordService {
         fileRecord.setType(contentType);
         fileRecord.setPath(filePath);
 
+        return fileRecordRepository.save(fileRecord).getFileRecordId();
+    }
+
+    @Override
+    public Long uploadLargeFile(MultipartFile file) {
+        FileRecord fileRecord = new FileRecord();
+        String originalName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
+        String storedName = UUID.randomUUID().toString().replaceAll("-", "");
+        OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
+        String contentType = file.getContentType();
+        fileRecord.setOriginalName(originalName);
+        fileRecord.setStoredName(storedName);
+        fileRecord.setType(contentType);
+        fileRecord.setPath(S3.uploadFile(file));
         return fileRecordRepository.save(fileRecord).getFileRecordId();
     }
 

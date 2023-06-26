@@ -1,4 +1,4 @@
-package com.aguri.captionlive.common;
+package com.aguri.captionlive.common.util;
 
 import io.jsonwebtoken.*;
 
@@ -17,7 +17,7 @@ public class JwtTokenProvider {
     private int jwtExpiration;
 
     public String generateToken(String username) {
-      
+
         // Set the token expiration date
         Date expirationDate = new Date(System.currentTimeMillis() + jwtExpiration * 1000);
 
