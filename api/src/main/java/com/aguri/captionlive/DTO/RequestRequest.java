@@ -1,11 +1,12 @@
 package com.aguri.captionlive.DTO;
 
+import com.aguri.captionlive.model.Request;
 import lombok.Data;
 
 @Data
 public class RequestRequest {
 
-    private Long type;
+    private Request.Type type;
 
     private int status;
 
