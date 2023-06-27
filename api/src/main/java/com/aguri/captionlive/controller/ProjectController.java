@@ -81,12 +81,9 @@ public class ProjectController {
         return ResponseEntity.ok(Resp.ok(organizations));
     }
 
-    @Autowired
-    OwnershipService ownershipService;
-
     @PutMapping("/{projectId}/organizations/{organizationId}")
     public ResponseEntity<Resp> shareProject2Organization(@PathVariable Long organizationId, @PathVariable Long projectId) {
-        ownershipService.shareProject2Organization(projectId, organizationId);
+        projectService.shareProject2Organization(projectId, organizationId);
         return ResponseEntity.ok(Resp.ok());
     }
 

@@ -12,19 +12,18 @@ import org.springframework.stereotype.Service;
 
 public class OwnershipServiceImpl implements OwnershipService {
 
-
-    @Autowired
-    OwnershipRepository ownershipRepository;
-
-    @Override
-    public void shareProject2Organization(Long projectId, Long organizationId) {
-        Organization organization = new Organization();
-        organization.setOrganizationId(organizationId);
-        Ownership ownership = new Ownership();
-        ownership.setOrganization(organization);
-        Project project1 = new Project();
-        project1.setProjectId(projectId);
-        ownership.setProject(project1);
-        ownershipRepository.save(ownership);
-    }
+//    @Autowired
+//    OwnershipRepository ownershipRepository;
+//
+//    @Override
+//    public void shareProject2Organization(Long projectId, Long organizationId) {
+//        Organization organization = new Organization();
+//        organization.setOrganizationId(organizationId);
+//        Ownership ownership = new Ownership();
+//        ownership.setOrganization(organization);
+//        Project project1 = new Project();
+//        project1.setProjectId(projectId);
+//        ownership.setProject(project1);
+//        ownershipRepository.save(ownership);
+//    }
 }

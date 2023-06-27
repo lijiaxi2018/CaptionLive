@@ -195,17 +195,28 @@ public class ProjectServiceImpl implements ProjectService {
         accessRepository.save(access);
     }
 
-    private void shareProject2Organization(Long projectId, Long organizationId) {
-        Organization organization = new Organization();
-        organization.setOrganizationId(organizationId);
+    @Override
+    @Transactional
+    public void shareProject2Organization(Long projectId, Long organizationId) {
+        Organization organization = organizationRepository.getReferenceById(organizationId);
+
         Ownership ownership = new Ownership();
 
-        Project project1 = new Project();
-        project1.setProjectId(projectId);
+        Project project = projectRepository.getReferenceById(projectId);
 
-        ownership.setProject(project1);
+        ownership.setProject(project);
         ownership.setOrganization(organization);
         ownershipRepository.save(ownership);
+        List<Access> accessList = organization.getUsers().stream().map(user -> {
+            Access access = new Access();
+            access.setProject(project);
+            access.setCommitment(Access.Commitment.NONE);
+            access.setUser(user);
+            access.setPermission(Access.Permission.Editable);
+            return access;
+        }).toList();
+
+        accessRepository.saveAll(accessList);
     }
 
     @Override
