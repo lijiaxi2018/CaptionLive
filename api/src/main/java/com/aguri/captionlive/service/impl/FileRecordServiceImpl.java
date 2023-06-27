@@ -125,13 +125,10 @@ public class FileRecordServiceImpl implements FileRecordService {
     public Long uploadLargeFile(MultipartFile file) {
         FileRecord fileRecord = new FileRecord();
         String originalName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
-        String storedName = UUID.randomUUID().toString().replaceAll("-", "");
-        OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
         String contentType = file.getContentType();
         fileRecord.setOriginalName(originalName);
-        fileRecord.setStoredName(storedName);
+        fileRecord.setStoredName(S3.uploadFile(file));
         fileRecord.setType(contentType);
-        fileRecord.setPath(S3.uploadFile(file));
         return fileRecordRepository.save(fileRecord).getFileRecordId();
     }
 

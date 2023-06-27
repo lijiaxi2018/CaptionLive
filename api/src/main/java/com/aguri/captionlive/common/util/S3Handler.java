@@ -47,8 +47,8 @@ public class S3Handler {
             convertedFile.delete();
 
             // Return the S3 file URL
-            String fileUrl = "https://" + bucketName + ".s3." + region + ".amazonaws.com/" + fileName;
-            return fileUrl;
+            // String fileUrl = "https://" + bucketName + ".s3." + region + ".amazonaws.com/" + fileName;
+            return fileName;
         } catch (IOException e) {
             e.printStackTrace();
             //return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload the file.");
