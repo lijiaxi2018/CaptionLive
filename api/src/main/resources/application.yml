@@ -33,7 +33,7 @@ jwt:
 
 aws:
   s3:
-    bucket-name: test-captionlive
-    region: us-east-1
+    bucket-name: 
+    region: 
   accessKey: 
   secretKey: 
