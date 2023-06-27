@@ -6,7 +6,7 @@ import com.aguri.captionlive.model.Request;
 public class TimeComparator implements Comparator<Request> {
     @Override
     public int compare(Request request1, Request request2) {
-        return request1.getCreatedTime().compareTo(request2.getCreatedTime());
+        return request1.getLastUpdatedTime().compareTo(request2.getLastUpdatedTime());
     }
 }
 
