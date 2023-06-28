@@ -1,6 +1,6 @@
 import React, { useState, useReducer, useEffect } from 'react';
-import { useDispatch } from 'react-redux'
-import { usePostRequestMutation, usePostMessageMutation } from '../../services/request';
+import { useDispatch, useSelector } from 'react-redux'
+import { useAddOrganizationMutation } from '../../services/organization';
 import { closeAddOrganization } from '../../redux/layoutSlice';
 
 const formReducer = (state, event) => {
@@ -17,11 +17,12 @@ const formReducer = (state, event) => {
   }
 }
 
-function AddOrganization({projectId}) {
+function AddOrganization() {
   const dispatch = useDispatch() // Redux
 
-  const [postRequestMutation] = usePostRequestMutation();
-  const [postMessageMutation] = usePostMessageMutation();
+  const userToken = useSelector((state) => state.userAuth.accessToken);
+
+  const [addOrganizationMutation] = useAddOrganizationMutation();
 
   const [submitting, setSubmitting] = useState(false); // If is currently submitting the from
   
@@ -53,37 +54,22 @@ function AddOrganization({projectId}) {
     });
   }
 
-  const newAddOrganizationRequest = (myUserId, orgName, orgDescription) => {
-    const orgInfo = {
-      name: orgName,
-      description: orgDescription,
-    };
-
-    postRequestMutation({ 
-      type: 1,
-      status: 0,
-      sender: myUserId,
-      recipient: 1,
-      senderRead: true,
-      recipientRead: false,
-      body: JSON.stringify(orgInfo),
-    })
-    .then((firstResponse) => {
-      if (firstResponse.data.message === "success") {
-        let myRequestId = firstResponse.data.data.requestId;
-        postMessageMutation({ 
-          requestId: myRequestId,
-          isReply: false,
-          content: "用户希望成立 " + orgName + " 字幕组。"
-        })
-        .then((secondResponse) => {
-          let message = secondResponse.data.message;
-          if (message === "success") {
-            setPrompt("申请成功");
-          } else {
-            setPrompt("发生了未知错误");
-          }
-        })
+  const addOrganization = (myToken, orgName, orgDescription) => {
+    addOrganizationMutation(
+      {
+        token: myToken, 
+        info: { 
+          name: orgName,
+          description: orgDescription,
+          avatarId: 0,
+        }
+      }
+    )
+    .then((secondResponse) => {
+      console.log(secondResponse);
+      let message = secondResponse.data.message;
+      if (message === "success") {
+        setPrompt("新建成功");
       } else {
         setPrompt("发生了未知错误");
       }
@@ -95,7 +81,7 @@ function AddOrganization({projectId}) {
     if (filled) {
       setSubmitting(true);
 
-      // newAddOrganizationRequest(2, formData.name, formData.description);
+      addOrganization(userToken, formData.name, formData.description);
       
       setTimeout(() => {
         setSubmitting(false);
@@ -105,7 +91,7 @@ function AddOrganization({projectId}) {
         reset: true
       });
 
-      // dispatch(closeAddOrganization());
+      dispatch(closeAddOrganization());
     }
   }
 

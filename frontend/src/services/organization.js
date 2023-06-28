@@ -1,4 +1,4 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const organizationApi = createApi({
   reducerPath: 'organizationApi',
@@ -79,6 +79,19 @@ export const organizationApi = createApi({
       }),
       invalidatesTags: ['Organizations']
     }),
+
+    addOrganization: builder.mutation({
+      query: (request) => ({
+        url: `/organizations`,
+        method: 'POST',
+        body: request.info,
+        prepareHeaders: (headers) => {
+          headers.set("Authorization", `Bearer ${request.token}`);
+          return headers;
+        },
+      }),
+      invalidatesTags: ['Organizations']
+    }),
   }),
 })
 
@@ -93,4 +106,5 @@ export const {
   useCreateSegmentMutation,
   usePutOrganizationDescriptionMutation,
   usePutOrganizationAvatarIdMutation,
+  useAddOrganizationMutation,
 } = organizationApi

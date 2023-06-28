@@ -30,8 +30,8 @@ function AllOrganizations() {
       <div className='general-page-container-reduced'>
       { (myUserId !== -1 && !allOrganizationData.isFetching) &&
         <div>
-          <div>
-            {/* <button className='general-button-grey' onClick={() => dispatch(openAddOrganization())}>新建字幕组</button> */}
+          <div className='general-row-align'>
+            <button className='general-button-grey' style={{"marginLeft" : "auto"}} onClick={() => dispatch(openAddOrganization())}>新建字幕组</button>
           </div>
 
           <div>
