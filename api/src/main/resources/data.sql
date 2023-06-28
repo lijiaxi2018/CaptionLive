@@ -13,7 +13,7 @@ INSERT INTO memberships (permission, position, organization_id, user_id)
 VALUES (1, 0, 1, 1),
        (1, 0, 2, 1),
        (0, 0, 1, 2),
-       (0, 0, 2, 1)
+       (0, 0, 2, 3)
 ON CONFLICT DO NOTHING;
 
 INSERT INTO projects (is_public, name, type)
