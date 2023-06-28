@@ -2,7 +2,16 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const organizationApi = createApi({
   reducerPath: 'organizationApi',
-  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8080/api/' }),
+  baseQuery: fetchBaseQuery({
+    baseUrl: 'http://localhost:8080/api/',
+    prepareHeaders: (headers) => {
+      const userToken = JSON.parse(localStorage.getItem("clAccessToken"));
+      if (userToken) {
+        headers.set('Authorization', userToken);
+      }
+      return headers
+    },
+  }),
 
   tagTypes: ['Organizations'],
   endpoints: (builder) => ({
@@ -64,18 +73,18 @@ export const organizationApi = createApi({
 
     putOrganizationDescription: builder.mutation({
       query: (organization) => ({
-          url: `/organizations/${organization.organizationId}/description`,
-          method: 'PUT',
-          body: organization
+        url: `/organizations/${organization.organizationId}/description`,
+        method: 'PUT',
+        body: organization
       }),
       invalidatesTags: ['Organizations']
     }),
 
     putOrganizationAvatarId: builder.mutation({
       query: (organization) => ({
-          url: `/organizations/${organization.organizationId}/avatar`,
-          method: 'PUT',
-          body: organization
+        url: `/organizations/${organization.organizationId}/avatar`,
+        method: 'PUT',
+        body: organization
       }),
       invalidatesTags: ['Organizations']
     }),
@@ -84,9 +93,6 @@ export const organizationApi = createApi({
       query: (request) => ({
         url: `/organizations`,
         method: 'POST',
-        headers: {
-          "Authorization": request.token,
-        },
         body: request.info,
       }),
       invalidatesTags: ['Organizations']
