@@ -66,7 +66,6 @@ function AddOrganization() {
       }
     )
     .then((secondResponse) => {
-      console.log(secondResponse);
       let message = secondResponse.data.message;
       if (message === "success") {
         setPrompt("新建成功");
