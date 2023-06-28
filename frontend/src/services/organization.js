@@ -84,11 +84,10 @@ export const organizationApi = createApi({
       query: (request) => ({
         url: `/organizations`,
         method: 'POST',
-        body: request.info,
-        prepareHeaders: (headers) => {
-          headers.set("Authorization", `Bearer ${request.token}`);
-          return headers;
+        headers: {
+          "Authorization": request.token,
         },
+        body: request.info,
       }),
       invalidatesTags: ['Organizations']
     }),
