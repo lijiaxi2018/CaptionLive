@@ -1,5 +1,5 @@
 import React, { useState, useReducer, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { useAddOrganizationMutation } from '../../services/organization';
 import { closeAddOrganization } from '../../redux/layoutSlice';
 
@@ -19,8 +19,6 @@ const formReducer = (state, event) => {
 
 function AddOrganization() {
   const dispatch = useDispatch() // Redux
-
-  const userToken = useSelector((state) => state.userAuth.accessToken);
 
   const [addOrganizationMutation] = useAddOrganizationMutation();
 
@@ -54,17 +52,12 @@ function AddOrganization() {
     });
   }
 
-  const addOrganization = (myToken, orgName, orgDescription) => {
-    addOrganizationMutation(
-      {
-        token: myToken, 
-        info: { 
-          name: orgName,
-          description: orgDescription,
-          avatarId: 0,
-        }
-      }
-    )
+  const addOrganization = (orgName, orgDescription) => {
+    addOrganizationMutation({
+      name: orgName,
+      description: orgDescription,
+      avatarId: 0,
+    })
     .then((secondResponse) => {
       let message = secondResponse.data.message;
       if (message === "success") {
@@ -80,7 +73,7 @@ function AddOrganization() {
     if (filled) {
       setSubmitting(true);
 
-      addOrganization(userToken, formData.name, formData.description);
+      addOrganization(formData.name, formData.description);
       
       setTimeout(() => {
         setSubmitting(false);

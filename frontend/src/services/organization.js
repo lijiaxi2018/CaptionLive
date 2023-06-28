@@ -90,10 +90,10 @@ export const organizationApi = createApi({
     }),
 
     addOrganization: builder.mutation({
-      query: (request) => ({
+      query: (orgInfo) => ({
         url: `/organizations`,
         method: 'POST',
-        body: request.info,
+        body: orgInfo,
       }),
       invalidatesTags: ['Organizations']
     }),
