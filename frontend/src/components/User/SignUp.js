@@ -2,6 +2,7 @@ import React, { useState, useReducer, useEffect } from 'react';
 import { useDispatch } from 'react-redux'
 import { usePostUserMutation } from '../../services/user';
 import { toggleSignInOnWindow, toggleSignInOnPage } from '../../redux/layoutSlice'
+import { sha256 } from 'js-sha256';
 
 const formReducer = (state, event) => {
   if (event.reset) {
@@ -67,10 +68,12 @@ function SignUp() {
   }
 
   const userSignUp = () => {
+    const encrypted = sha256(formData.password);
+    console.log(encrypted);
     postUser({ 
       permission: 0,
       username: formData.username,
-      password: formData.password,
+      password: encrypted,
       qq: formData.qq,
       email: formData.email,
     })
@@ -120,9 +123,9 @@ function SignUp() {
       <label className="star-mark">*</label>
       <br/>
 
-      <input name="password" className="sign-in-up-input" placeholder="请输入密码" onChange={handleChange} value={formData.password}/>
+      <input type="password" name="password" className="sign-in-up-input" placeholder="请输入密码" onChange={handleChange} value={formData.password}/>
       <label className="star-mark">*</label>
-      <input name="confirm" className="sign-in-up-input" placeholder="请确认密码" onChange={handleChange} value={formData.confirm}/>
+      <input type="password" name="confirm" className="sign-in-up-input" placeholder="请确认密码" onChange={handleChange} value={formData.confirm}/>
       <label className="star-mark">*</label>
       <br/>
 

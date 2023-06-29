@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux'
 import { useLoginUserMutation } from '../../services/auth';
 import { updateUserId, updateAccessToken } from '../../redux/userSlice';
 import { toggleSignInOnWindow, toggleSignInOnPage } from '../../redux/layoutSlice'
+import { sha256 } from 'js-sha256';
 
 const formReducer = (state, event) => {
   if (event.reset) {
@@ -53,9 +54,10 @@ function SignIn() {
   }
 
   const userLogin = () => {
+    const encrypted = sha256(formData.password);
     loginUser({
       username: formData.username,
-      password: formData.password,
+      password: encrypted,
     })
     .then((response) => {
       let message = response.data.message;
@@ -106,7 +108,7 @@ function SignIn() {
       <label className="star-mark">*</label>
       <br/>
 
-      <input name="password" className="sign-in-up-input" placeholder="请输入密码" onChange={handleChange} value={formData.password}/>
+      <input type="password" name="password" className="sign-in-up-input" placeholder="请输入密码" onChange={handleChange} value={formData.password}/>
       <label className="star-mark">*</label>
       <br/>
 
