@@ -5,6 +5,7 @@ import com.aguri.captionlive.DTO.UserRequest;
 import com.aguri.captionlive.common.resp.Resp;
 import com.aguri.captionlive.model.Organization;
 import com.aguri.captionlive.model.Project;
+import com.aguri.captionlive.service.OrganizationService;
 import com.aguri.captionlive.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -26,7 +27,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-//    @GetMapping
+    //    @GetMapping
 //    public ResponseEntity<Resp> getAllUsers() {
 //        return ResponseEntity.ok(Resp.ok(userService.getAllUsers()));
 //    }
@@ -65,10 +66,13 @@ public class UserController {
         return ResponseEntity.ok(Resp.ok(allAccessibleProjects));
     }
 
+    @Autowired
+    OrganizationService organizationService;
+
     @GetMapping("/{userId}/organizations")
     public ResponseEntity<Resp> getMyOrganizations(@PathVariable Long userId) {
         List<Organization> organizations = userService.getUserById(userId).getOrganizations().stream().sorted(Comparator.comparing(Organization::getOrganizationId)).toList();
-        return ResponseEntity.ok(Resp.ok(organizations));
+        return ResponseEntity.ok(Resp.ok(organizations.stream().map(organization -> organizationService.getResp(organization)).toList()));
     }
 
 

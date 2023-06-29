@@ -1,12 +1,12 @@
 package com.aguri.captionlive.service;
 
 import com.aguri.captionlive.DTO.OrganizationRequest;
+import com.aguri.captionlive.DTO.OrganizationResp;
 import com.aguri.captionlive.DTO.ProjectInfo;
 import com.aguri.captionlive.model.Organization;
 import com.aguri.captionlive.model.User;
 
 import java.util.List;
-
 
 
 public interface OrganizationService {
@@ -26,4 +26,6 @@ public interface OrganizationService {
     Organization updateDescription(Long organizationId, String description);
 
     Organization updateAvatar(Long organizationId, Long avatarId);
+
+    OrganizationResp getResp(Organization organization);
 }

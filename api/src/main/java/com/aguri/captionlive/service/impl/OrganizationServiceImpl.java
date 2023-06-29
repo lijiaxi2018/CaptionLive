@@ -1,6 +1,7 @@
 package com.aguri.captionlive.service.impl;
 
 import com.aguri.captionlive.DTO.OrganizationRequest;
+import com.aguri.captionlive.DTO.OrganizationResp;
 import com.aguri.captionlive.DTO.ProjectInfo;
 import com.aguri.captionlive.common.exception.EntityNotFoundException;
 import com.aguri.captionlive.common.util.FileRecordUtil;
@@ -95,6 +96,16 @@ public class OrganizationServiceImpl implements OrganizationService {
         Organization referenceById = organizationRepository.getReferenceById(organizationId);
         referenceById.setAvatar(fileRecord);
         return organizationRepository.save(referenceById);
+    }
+
+    public OrganizationResp getResp(Organization organization) {
+        List<Long> leaderIds = membershipRepository.findAllByOrganizationOrganizationIdAndPermissionIn(organization.getOrganizationId(), List.of(Membership.Permission.LEADER)).stream().map(Membership::getUser).map(User::getUserId).toList();
+        OrganizationResp organizationResp = new OrganizationResp();
+        BeanUtils.copyProperties(organization, organizationResp);
+        organizationResp.setAvatarId(FileRecordUtil.generateFileRecordId(organization.getAvatar()));
+        organizationResp.setLeaderIds(leaderIds);
+        organizationResp.setMemberIds(organization.getUsers().stream().map(User::getUserId).toList());
+        return organizationResp;
     }
 
 }
