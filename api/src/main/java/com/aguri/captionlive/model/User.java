@@ -47,8 +47,8 @@ public class User {
     @ManyToMany
     @JoinTable(
             name = "memberships",
-            joinColumns = @JoinColumn(name = "organization_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "organization_id")
     )
     private List<Organization> organizations;
 
