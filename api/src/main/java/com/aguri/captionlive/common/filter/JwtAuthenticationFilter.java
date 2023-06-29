@@ -44,8 +44,8 @@ public class JwtAuthenticationFilter implements Filter {
                 } else {
                     // 用户未登录或JWT验证失败
 //                    response.sendRedirect(LOGIN_PATH);
-                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                    return;
+//                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+//                    return;
                 }
             }
         }
