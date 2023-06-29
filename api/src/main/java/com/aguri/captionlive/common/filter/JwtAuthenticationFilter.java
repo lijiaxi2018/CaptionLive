@@ -15,7 +15,7 @@ import java.util.List;
 
 @Component
 @WebFilter(urlPatterns = "/*")
-@Order(1)
+@Order(2)
 public class JwtAuthenticationFilter implements Filter {
 
     @Autowired
@@ -48,7 +48,8 @@ public class JwtAuthenticationFilter implements Filter {
                     return;
                 }
             }
-        } else {
+        }
+        else {
             request.setAttribute("username", "this request dependence on Authorization Header, please open this filter: " + JwtTokenProvider.class.getName());
         }
 
