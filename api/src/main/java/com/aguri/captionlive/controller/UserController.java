@@ -78,16 +78,30 @@ public class UserController {
 
     @PutMapping("/{userId}/description")
     @Operation(summary = "Update user description", description = "Update the description of a user")
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "User description updated successfully", content = @Content(schema = @Schema(implementation = Resp.class)))})
-    public ResponseEntity<Resp> updateDescription(@RequestBody HashMap<String, String> body, @PathVariable("userId") Long userId) {
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User description updated successfully",
+                    content = @Content(schema = @Schema(implementation = Resp.class)))
+    })
+    public ResponseEntity<Resp> updateDescription(
+            @RequestBody HashMap<String, String> body,
+            @PathVariable("userId") Long userId) {
         String description = body.get("description");
         return ResponseEntity.ok(Resp.ok(userService.updateDescription(userId, description)));
     }
 
     @PutMapping("/{userId}/avatar")
     @Operation(summary = "Update user avatar", description = "Update the avatar of a user")
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "User avatar updated successfully", content = @Content(schema = @Schema(implementation = Resp.class)))})
-    public ResponseEntity<Resp> updateAvatar(@io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Request body containing avatar information", required = true, content = @Content(mediaType = "application/json", schema = @Schema(implementation = HashMap.class))) @RequestBody HashMap<String, String> body, @PathVariable("userId") Long userId) {
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User avatar updated successfully",
+                    content = @Content(schema = @Schema(implementation = Resp.class)))
+    })
+    public ResponseEntity<Resp> updateAvatar(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Request body containing avatar information",
+                    required = true,
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = HashMap.class)))
+            @RequestBody HashMap<String, String> body,
+            @PathVariable("userId") Long userId) {
         Long avatarId = Long.valueOf(body.get("avatarId"));
         return ResponseEntity.ok(Resp.ok(userService.updateAvatar(userId, avatarId)));
     }
