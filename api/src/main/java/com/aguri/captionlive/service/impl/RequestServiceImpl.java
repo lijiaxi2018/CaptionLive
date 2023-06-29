@@ -5,19 +5,20 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import com.aguri.captionlive.model.Membership;
+import com.aguri.captionlive.model.*;
+import com.aguri.captionlive.repository.AccessRepository;
 import com.aguri.captionlive.repository.OrganizationRepository;
 import com.aguri.captionlive.repository.UserRepository;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.aguri.captionlive.DTO.RequestRequest;
 import com.aguri.captionlive.common.exception.EntityNotFoundException;
 import com.aguri.captionlive.common.util.TimeComparator;
-import com.aguri.captionlive.model.Request;
 import com.aguri.captionlive.repository.RequestRepository;
 import com.aguri.captionlive.service.RequestService;
 
@@ -109,7 +110,11 @@ public class RequestServiceImpl implements RequestService {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    AccessRepository accessRepository;
+
     @Override
+    @Transactional
     public Request approveRequest(Long id) {
 //        Request existingRequest = getRequestById(id);
 //        //Need to confirm what attributes should be update
@@ -132,22 +137,35 @@ public class RequestServiceImpl implements RequestService {
                 case ADD_USER_TO_ORGANIZATION -> {
                     long organizationId = jsonObject.get("organizationId").getAsLong();
                     long userId = jsonObject.get("userId").getAsLong();
-                    Membership membership = new Membership();
-                    membership.setOrganization(organizationRepository.getReferenceById(organizationId));
-                    membership.setUser(userRepository.getReferenceById(userId));
-                    membership.setPermission(Membership.Permission.MEMBER);
+                    addUser2Organization(organizationId, userId);
                 }
                 case SHARE_PROJECT_TO_USER, SHARE_PROJECT_TO_ORGANIZATION -> {
-
+                    throw new RuntimeException("do not support this request type: " + type.name());
                 }
-                default -> {
-
-                }
+                default -> throw new RuntimeException("mis-match any request types: " + type.name());
             }
         }
-        Request save = requestRepository.save(existingRequest);
         existingRequest.setStatus(1);
-        return save;
+        return requestRepository.save(existingRequest);
+    }
+
+    private void addUser2Organization(long organizationId, long userId) {
+        Membership membership = new Membership();
+        Organization organization = organizationRepository.getReferenceById(organizationId);
+        membership.setOrganization(organization);
+        User user = userRepository.getReferenceById(userId);
+        membership.setUser(user);
+        membership.setPermission(Membership.Permission.MEMBER);
+        List<Project> projects = organization.getProjects();
+        List<Access> accessList = projects.stream().map(project -> {
+            Access access = new Access();
+            access.setProject(project);
+            access.setCommitment(Access.Commitment.NONE);
+            access.setUser(user);
+            access.setPermission(Access.Permission.Editable);
+            return access;
+        }).toList();
+        accessRepository.saveAll(accessList);
     }
 
     @Override

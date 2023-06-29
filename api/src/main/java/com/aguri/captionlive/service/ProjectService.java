@@ -29,4 +29,7 @@ public interface ProjectService {
     Project updateCover(Long projectId, Long coverId);
 
     void shareProject2User(Long projectId, Long userId);
+
+    void shareProject2Organization(Long projectId, Long organizationId);
+
 }
