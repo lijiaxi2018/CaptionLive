@@ -24,7 +24,7 @@ public class JwtAuthenticationFilter implements Filter {
     private static final List<String> EXCLUDED_URLS = Arrays.asList("/api/login", "/api/signUp");
     private static final String LOGIN_PATH = "/login";
 
-    private static final Boolean OPEN = Boolean.FALSE;
+    private static final Boolean OPEN = Boolean.TRUE;
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
