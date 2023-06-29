@@ -1,8 +1,17 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const organizationApi = createApi({
   reducerPath: 'organizationApi',
-  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8080/api/' }),
+  baseQuery: fetchBaseQuery({
+    baseUrl: 'http://localhost:8080/api/',
+    prepareHeaders: (headers) => {
+      const userToken = JSON.parse(localStorage.getItem("clAccessToken"));
+      if (userToken) {
+        headers.set('Authorization', userToken);
+      }
+      return headers
+    },
+  }),
 
   tagTypes: ['Organizations'],
   endpoints: (builder) => ({
@@ -64,18 +73,41 @@ export const organizationApi = createApi({
 
     putOrganizationDescription: builder.mutation({
       query: (organization) => ({
-          url: `/organizations/${organization.organizationId}/description`,
-          method: 'PUT',
-          body: organization
+        url: `/organizations/${organization.organizationId}/description`,
+        method: 'PUT',
+        body: organization
       }),
       invalidatesTags: ['Organizations']
     }),
 
     putOrganizationAvatarId: builder.mutation({
       query: (organization) => ({
-          url: `/organizations/${organization.organizationId}/avatar`,
-          method: 'PUT',
-          body: organization
+        url: `/organizations/${organization.organizationId}/avatar`,
+        method: 'PUT',
+        body: organization
+      }),
+      invalidatesTags: ['Organizations']
+    }),
+
+    addOrganization: builder.mutation({
+      query: (orgInfo) => ({
+        url: `/organizations`,
+        method: 'POST',
+        body: orgInfo,
+      }),
+      invalidatesTags: ['Organizations']
+    }),
+
+    getAccessibleProjects: builder.query({
+      query: (id) => `/users/${id}/accessibleProjects`,
+      providesTags: ['Organizations']
+    }),
+
+    addProject: builder.mutation({
+      query: (projectInfo) => ({
+        url: `/projects`,
+        method: 'POST',
+        body: projectInfo,
       }),
       invalidatesTags: ['Organizations']
     }),
@@ -93,4 +125,7 @@ export const {
   useCreateSegmentMutation,
   usePutOrganizationDescriptionMutation,
   usePutOrganizationAvatarIdMutation,
+  useAddOrganizationMutation,
+  useGetAccessibleProjectsQuery, 
+  useAddProjectMutation,
 } = organizationApi
