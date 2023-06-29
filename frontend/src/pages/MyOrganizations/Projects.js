@@ -9,33 +9,32 @@ import { useParams } from 'react-router';
 
 function Projects() {
   const organizationId = useParams().id;
-  const organizationData = useGetOrganizationQuery(organizationId);
-  const organizationName = organizationData.isFetching ? "获取中..." 
-    : organizationData.data.message.startsWith("Organization not") ? "" 
-    : organizationData.data.data.name;
-  
   const myUserId = useSelector((state) => state.userAuth.userId);
 
-  
-  const orgId = 1;
-  const orgProjectsResults = useGetOrganizationProjectsQuery(orgId);
-  const projectData = orgProjectsResults.isFetching ? null : orgProjectsResults.data.data[0];
+  const organizationData = useGetOrganizationQuery(organizationId);
+  const orgProjectsResults = useGetOrganizationProjectsQuery(organizationId);
+
+  const fetched = (orgProjectsResults.isFetching || organizationData.isFetching) ? false : true;
 
   return (
     <div>
-      <div className='general-page-container'>
-        <Header title={organizationName} icon = {VscOrganization} />
-        <Sidebarlvl2 />
-        
-        { myUserId !== -1 &&
-          <div className='general-page-container-reduced'>
-            { !orgProjectsResults.isFetching &&
-              <Worksheet data={projectData}/>
-            }
-          </div>
-        }
-      
-      </div>
+      { fetched &&
+        <div className='general-page-container'>
+          <Header title={organizationData.data.data.name} icon = {VscOrganization} />
+          <Sidebarlvl2 />
+          
+          { myUserId !== -1 &&
+            <div className='general-page-container-reduced'>
+              {orgProjectsResults.data.data.map((project) =>
+                <div key={project.projectId}>
+                  <Worksheet data={project}/>
+                </div>
+              )}
+            </div>
+          }
+
+        </div>
+      }
     </div>  
   );
 }

@@ -97,6 +97,20 @@ export const organizationApi = createApi({
       }),
       invalidatesTags: ['Organizations']
     }),
+
+    getAccessibleProjects: builder.query({
+      query: (id) => `/users/${id}/accessibleProjects`,
+      providesTags: ['Organizations']
+    }),
+
+    addProject: builder.mutation({
+      query: (projectInfo) => ({
+        url: `/projects`,
+        method: 'POST',
+        body: projectInfo,
+      }),
+      invalidatesTags: ['Organizations']
+    }),
   }),
 })
 
@@ -112,4 +126,6 @@ export const {
   usePutOrganizationDescriptionMutation,
   usePutOrganizationAvatarIdMutation,
   useAddOrganizationMutation,
+  useGetAccessibleProjectsQuery, 
+  useAddProjectMutation,
 } = organizationApi
