@@ -8,3 +8,9 @@ export const generalWorkflow = [
   {key: 7, taskName:"润色", taskCode:"POLISHING"},
   {key: 8, taskName:"嵌字", taskCode:"EMBEDDING"},
 ]
+
+export const globalWorkflow = [
+  {key: 0, taskName:"源", taskCode:"SOURCE"},
+  {key: 9, taskName:"终校", taskCode:"F_CHECK"},
+  {key: 10, taskName:"压制", taskCode:"RENDERING"},
+]
