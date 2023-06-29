@@ -41,7 +41,7 @@ public class OrganizationController {
     @GetMapping
     public ResponseEntity<Resp> getAllOrganizations() {
         List<Organization> organizations = organizationService.getAllOrganizations();
-        return ResponseEntity.ok(Resp.ok(organizations.stream().sorted(Comparator.comparing(Organization::getOrganizationId)).map(this::getResp).toList()));
+        return ResponseEntity.ok(Resp.ok(organizations.stream().sorted(Comparator.comparing(Organization::getOrganizationId)).map(organization -> organizationService.getResp(organization)).toList()));
     }
 
     @Autowired
@@ -72,18 +72,8 @@ public class OrganizationController {
     @GetMapping("/{id}")
     public ResponseEntity<Resp> getOrganizationById(@PathVariable Long id) {
         Organization organization = organizationService.getOrganizationById(id);
-        OrganizationResp organizationResp = getResp(organization);
+        OrganizationResp organizationResp = organizationService.getResp(organization);
         return ResponseEntity.ok(Resp.ok(organizationResp));
-    }
-
-    private OrganizationResp getResp(Organization organization) {
-        List<Long> leaderIds = membershipService.getOrganizationLeaders(organization.getOrganizationId());
-        OrganizationResp organizationResp = new OrganizationResp();
-        BeanUtils.copyProperties(organization, organizationResp);
-        organizationResp.setAvatarId(FileRecordUtil.generateFileRecordId(organization.getAvatar()));
-        organizationResp.setLeaderIds(leaderIds);
-        organizationResp.setMemberIds(organization.getUsers().stream().map(User::getUserId).toList());
-        return organizationResp;
     }
 
     @DeleteMapping("/{id}")
@@ -106,13 +96,7 @@ public class OrganizationController {
     }
 
     @GetMapping("/{organizationId}/projects")
-    public ResponseEntity<Resp> getPagedProjects(
-            @PathVariable Long organizationId,
-            @RequestParam(value = "searchTxt", defaultValue = "") String searchTxt,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "createdTime") String sortBy,
-            @RequestParam(defaultValue = "asc") String sortOrder) {
+    public ResponseEntity<Resp> getPagedProjects(@PathVariable Long organizationId, @RequestParam(value = "searchTxt", defaultValue = "") String searchTxt, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size, @RequestParam(defaultValue = "createdTime") String sortBy, @RequestParam(defaultValue = "asc") String sortOrder) {
 
         List<ProjectInfo> projectsInfo = organizationService.getPagedProjects(organizationId, searchTxt, page, size, sortBy, sortOrder);
         return ResponseEntity.ok(Resp.ok(projectsInfo));
@@ -120,18 +104,8 @@ public class OrganizationController {
 
     @PutMapping("/{organizationId}/description")
     @Operation(summary = "Update organization description", description = "Update the description of a organization")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Organization description updated successfully",
-                    content = @Content(schema = @Schema(implementation = Resp.class)))
-    })
-    public ResponseEntity<Resp> updateDescription(
-            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Request body containing description information",
-                    required = true,
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = HashMap.class),
-                            examples = @ExampleObject(value = "{\"description\": \"114514\"}")))
-            @RequestBody HashMap<String, String> body,
-            @PathVariable("organizationId") Long organizationId) {
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Organization description updated successfully", content = @Content(schema = @Schema(implementation = Resp.class)))})
+    public ResponseEntity<Resp> updateDescription(@io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Request body containing description information", required = true, content = @Content(mediaType = "application/json", schema = @Schema(implementation = HashMap.class), examples = @ExampleObject(value = "{\"description\": \"114514\"}"))) @RequestBody HashMap<String, String> body, @PathVariable("organizationId") Long organizationId) {
         String description = body.get("description");
 
         return ResponseEntity.ok(Resp.ok(organizationService.updateDescription(organizationId, description)));
@@ -139,18 +113,8 @@ public class OrganizationController {
 
     @PutMapping("/{organizationId}/avatar")
     @Operation(summary = "Update organization avatar", description = "Update the avatar of a organization")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Organization avatar updated successfully",
-                    content = @Content(schema = @Schema(implementation = Resp.class)))
-    })
-    public ResponseEntity<Resp> updateAvatar(
-            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Request body containing avatar information",
-                    required = true,
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = HashMap.class),
-                            examples = @ExampleObject(value = "{\"avatarId\": 1}")))
-            @RequestBody HashMap<String, String> body,
-            @PathVariable("organizationId") Long organizationId) {
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Organization avatar updated successfully", content = @Content(schema = @Schema(implementation = Resp.class)))})
+    public ResponseEntity<Resp> updateAvatar(@io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Request body containing avatar information", required = true, content = @Content(mediaType = "application/json", schema = @Schema(implementation = HashMap.class), examples = @ExampleObject(value = "{\"avatarId\": 1}"))) @RequestBody HashMap<String, String> body, @PathVariable("organizationId") Long organizationId) {
         Long avatarId = Long.valueOf(body.get("avatarId"));
         return ResponseEntity.ok(Resp.ok(organizationService.updateAvatar(organizationId, avatarId)));
     }
