@@ -27,11 +27,11 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    //    @GetMapping
-//    public ResponseEntity<Resp> getAllUsers() {
-//        return ResponseEntity.ok(Resp.ok(userService.getAllUsers()));
-//    }
-//
+    @GetMapping
+    public ResponseEntity<Resp> getAllUsers() {
+        return ResponseEntity.ok(Resp.ok(userService.getAllUsers()));
+    }
+
     @PostMapping
     public ResponseEntity<Resp> createUser(@RequestBody UserRequest userRequest) {
         return ResponseEntity.ok(Resp.ok(userService.createUser(userRequest)));
