@@ -16,8 +16,3 @@
 //                .maxAge(3600);
 //    }
 //}
-
-
-/*
-* this config was covered by @WebFilter
-* */

@@ -15,7 +15,7 @@ import java.util.List;
 
 @Component
 @WebFilter(urlPatterns = "/*")
-@Order(1)
+@Order(2)
 public class JwtAuthenticationFilter implements Filter {
 
     @Autowired
@@ -30,11 +30,6 @@ public class JwtAuthenticationFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
-        response.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
-        response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-        response.setHeader("Access-Control-Allow-Headers", "*");
-        response.setHeader("Access-Control-Allow-Credentials", "true");
-        response.setHeader("Access-Control-Max-Age", "3600");
 
         if (OPEN) {
 
@@ -48,12 +43,13 @@ public class JwtAuthenticationFilter implements Filter {
                     request.setAttribute("username", jwtTokenProvider.parseUserNameFromToken(token));
                 } else {
                     // 用户未登录或JWT验证失败
-                    response.sendRedirect(LOGIN_PATH);
-//                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+//                    response.sendRedirect(LOGIN_PATH);
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                     return;
                 }
             }
-        } else {
+        }
+        else {
             request.setAttribute("username", "this request dependence on Authorization Header, please open this filter: " + JwtTokenProvider.class.getName());
         }
 
