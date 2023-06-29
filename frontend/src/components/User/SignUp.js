@@ -69,7 +69,6 @@ function SignUp() {
 
   const userSignUp = () => {
     const encrypted = sha256(formData.password);
-    console.log(encrypted);
     postUser({ 
       permission: 0,
       username: formData.username,
