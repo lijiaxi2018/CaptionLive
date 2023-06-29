@@ -49,16 +49,7 @@ public class OrganizationController {
 
     @PostMapping
     public ResponseEntity<Resp> createOrganization(@RequestBody OrganizationRequest organization, HttpServletRequest request) {
-        String token = request.getHeader("Authorization");
-        if (null == token) {
-            throw new RuntimeException("jwt token is null");
-        }
-
-        if (!jwtTokenProvider.validateToken(token)) {
-            throw new RuntimeException("jwt token invalid");
-        }
-
-        String username = jwtTokenProvider.parseUserNameFromToken(token);
+        String username = (String) request.getAttribute("username");
 
         User user = userService.getUserByUsername(username);
 
