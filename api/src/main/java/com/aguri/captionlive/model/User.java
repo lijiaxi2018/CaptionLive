@@ -57,8 +57,8 @@ public class User {
     @ManyToMany
     @JoinTable(
             name = "accesses",
-            joinColumns = @JoinColumn(name = "project_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "project_id")
     )
     private List<Project> accessibleProjects;
 
