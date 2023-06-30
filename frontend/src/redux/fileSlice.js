@@ -5,6 +5,7 @@ const sessionCurrentUploadType = sessionStorage.getItem("clCurrentUploadType") !
 
 const initialState = {
   openUploaderWindow: 0,
+  currentProjectIdToAddSegment: -1,
   currentIdToUpload: sessionCurrentIdToUpload,
   currentUploadType: sessionCurrentUploadType,
 }
@@ -30,6 +31,10 @@ export const fileSlice = createSlice({
       state.currentUploadType = action.payload;
       sessionStorage.setItem("clCurrentUploadType", JSON.stringify(state.currentUploadType));
     },
+
+    updateCurrentProjectIdToAddSegment: (state, action) => {
+      state.currentProjectIdToAddSegment = action.payload;
+    },
   },
 })
 
@@ -37,7 +42,8 @@ export const {
   openUploaderWindow,
   closeUploaderWindow,
   updateCurrentIdToUpload,
-  updateCurrentUploadType, 
+  updateCurrentUploadType,
+  updateCurrentProjectIdToAddSegment,
 } = fileSlice.actions
 
 export default fileSlice.reducer

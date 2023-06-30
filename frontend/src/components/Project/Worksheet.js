@@ -4,18 +4,21 @@ import { FaCircle } from 'react-icons/fa';
 import Segment from './Segment';
 import Avatar from '../InfoCard/Avatar';
 import AddSegment from '../../components/Project/AddSegment';
+import ShareProject from '../../components/Project/ShareProject';
 import FileUploader from '../Layout/Modal/FileUploader';
-import { openUploaderWindow, updateCurrentIdToUpload, updateCurrentUploadType } from '../../redux/fileSlice';
-import { openAddSegment } from '../../redux/layoutSlice';
+import { openUploaderWindow, updateCurrentIdToUpload, updateCurrentUploadType, updateCurrentProjectIdToAddSegment } from '../../redux/fileSlice';
+import { openAddSegment, openShareProject } from '../../redux/layoutSlice';
 
 function Worksheet({data}) {
   const dispatch = useDispatch();
 
   const segments = data.segmentInfos;
-  const [currentProjectId, setCurrentProjectId] = useState(-1);
+
+  const projectIdToAddSegment = useSelector((state) => state.file.currentProjectIdToAddSegment);
 
   const isOpenUploaderWindow = useSelector((state) => state.file.openUploaderWindow);
   const isOpenAddSegment = useSelector((state) => state.layout.inAddSegment);
+  const isOpenShareProject = useSelector((state) => state.layout.inShareProject);
 
   function handleUpload(myProjectId) {
     dispatch(updateCurrentIdToUpload(myProjectId));
@@ -24,8 +27,12 @@ function Worksheet({data}) {
   }
 
   function handleOpenAddSegment(myProjectId) {
-    setCurrentProjectId(myProjectId);
     dispatch(openAddSegment());
+    dispatch(updateCurrentProjectIdToAddSegment(myProjectId));
+  }
+
+  function handleOpenShareProject() {
+    dispatch(openShareProject());
   }
 
   function parseStatusColor(status) {
@@ -52,7 +59,11 @@ function Worksheet({data}) {
       }
 
       { isOpenAddSegment &&
-        <AddSegment projectId={currentProjectId}/>
+        <AddSegment projectId={projectIdToAddSegment}/>
+      }
+
+      { isOpenShareProject &&
+        <ShareProject/>
       }
 
       <div className='worksheet-info-container'>
@@ -85,7 +96,7 @@ function Worksheet({data}) {
       </div>
 
       <div className='worksheet-buttons-container'>
-        <button className='general-button-grey'>分享项目</button>
+        <button className='general-button-grey' onClick={() => handleOpenShareProject()}>分享项目</button>
         <div style={{ marginTop: '10px' }}></div>
         <button className='general-button-grey' onClick={() => handleOpenAddSegment(data.projectId)}>新建段落</button>
       </div>

@@ -11,6 +11,7 @@ const initialState = {
   inAddOrganization: false,
   inMessage: false,
   inAddProject: false,
+  inShareProject: false,
   selectedRequestId: -1,
   selectedOrgId: sessionSelectedOrgId,
   selectedLvl2Id: sessionSelectedLvl2Id,
@@ -87,6 +88,14 @@ export const layoutSlice = createSlice({
     closeAddProject: (state) => {
       state.inAddProject = false;
     },
+
+    openShareProject: (state) => {
+      state.inShareProject = true;
+    },
+
+    closeShareProject: (state) => {
+      state.inShareProject = false;
+    },
   },
 })
 
@@ -106,6 +115,8 @@ export const {
   updateSelectedRequestId,
   openAddProject,
   closeAddProject,
+  openShareProject,
+  closeShareProject,
 } = layoutSlice.actions
 
 export default layoutSlice.reducer
