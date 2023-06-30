@@ -3,6 +3,7 @@ FROM openjdk:17-jdk-alpine
 RUN apk add --no-cache curl tar bash procps
 
 ARG MAVEN_VERSION=3.9.3
+ENV CL_DDL_AUTO=create-drop
 
 RUN mkdir -p /app/files
 WORKDIR /app
