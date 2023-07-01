@@ -11,4 +11,5 @@ public interface AccessRepository extends JpaRepository<Access, Long> {
 
     List<Access> findAllByUserUserIdAndCommitment(Long userId, Access.Commitment commitment);
 
+    List<Access> findAllByProjectProjectId(Long project_projectId);
 }
