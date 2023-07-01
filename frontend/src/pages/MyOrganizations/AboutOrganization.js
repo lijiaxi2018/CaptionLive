@@ -6,6 +6,7 @@ import EntityInfo from '../../components/InfoCard/EntityInfo';
 import { VscOrganization } from 'react-icons/vsc';
 import { useGetOrganizationQuery } from '../../services/organization';
 import { useParams } from 'react-router';
+import { myorgnizationSideBar } from '../../assets/sidebar';
 
 function AboutOrganization() {
   const currentUserId = useSelector((state) => state.userAuth.userId);
@@ -17,12 +18,17 @@ function AboutOrganization() {
     : organizationData.data.data.name;
   
   const myUserId = useSelector((state) => state.userAuth.userId);
-
+  console.log('myorg')
+  // console.log(myorgnizationSideBar);
   return (
     <div>
       <div className='general-page-container'>
         <Header title={organizationName} icon = {VscOrganization} />
-        <Sidebarlvl2 />
+        <Sidebarlvl2 
+          prefix={`/myorganizations/${organizationId}/`}
+          data={myorgnizationSideBar}
+          type='myorgnization'
+        />
 
         { (myUserId !== -1 && !organizationData.isFetching) &&
           <div className='general-page-container-reduced'>

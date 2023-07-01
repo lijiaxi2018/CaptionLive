@@ -6,6 +6,7 @@ import Worksheet from '../../components/Project/Worksheet';
 import { VscOrganization } from 'react-icons/vsc';
 import { useGetOrganizationQuery, useGetOrganizationProjectsQuery } from '../../services/organization';
 import { useParams } from 'react-router';
+import { myorgnizationSideBar } from '../../assets/sidebar';
 
 function Projects() {
   const organizationId = useParams().id;
@@ -21,7 +22,11 @@ function Projects() {
       { fetched &&
         <div className='general-page-container'>
           <Header title={organizationData.data.data.name} icon = {VscOrganization} />
-          <Sidebarlvl2 />
+          <Sidebarlvl2 
+            prefix={`/myorganizations/${organizationId}/`}
+            data={myorgnizationSideBar}
+            type='myorgnization'
+          />
           
           { myUserId !== -1 &&
             <div className='general-page-container-reduced'>
