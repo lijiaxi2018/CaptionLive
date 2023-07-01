@@ -17,7 +17,7 @@ const Sidebarlvl2 = ({
     const dispatch = useDispatch()
     const selectedOrgId = useSelector((state) => state.layout.selectedOrgId);
     const selectedLvl2Id = useSelector((state) => state.layout.selectedLvl2Id);
-    console.log(data);
+    // console.log(data);
     // const data = [
     //     {path:'projects', name:'工作表'},
     //     {path:'glossaries', name:'词汇表'},
