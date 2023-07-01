@@ -9,24 +9,24 @@ import { updateSelectedLvl2Id } from '../../../redux/layoutSlice';
 import "rsuite/dist/rsuite.css"
 import './Sidebarlvl2.css';
 
-const Sidebarlvl2 = () => {  
+const Sidebarlvl2 = ({
+    prefix,
+    type,
+    data=[]
+}) => {  
     const dispatch = useDispatch()
     const selectedOrgId = useSelector((state) => state.layout.selectedOrgId);
     const selectedLvl2Id = useSelector((state) => state.layout.selectedLvl2Id);
-    
-    const data = [
-        {path:'projects', name:'工作表'},
-        {path:'glossaries', name:'词汇表'},
-        {path:'aboutorganization', name:'关于'}
-    ]
+    console.log(data);
+    // const data = [
+    //     {path:'projects', name:'工作表'},
+    //     {path:'glossaries', name:'词汇表'},
+    //     {path:'aboutorganization', name:'关于'}
+    // ]
 
     const handleSelectLvl2 = (newId) => {
         dispatch(updateSelectedLvl2Id(newId));
     }
-
-    // useEffect(() => {
-    //     console.log(`changed to ${selectedLvl2Id}`);
-    // }, [selectedLvl2Id]);
 
     return (
       <div className='sidebar-lvl-2' >
@@ -42,7 +42,7 @@ const Sidebarlvl2 = () => {
                                     return (
                                         <Nav.Item 
                                             key={key} 
-                                            href={`/myorganizations/${selectedOrgId}/${obj.path}`} 
+                                            href={`${prefix}${obj.path}`} 
                                             eventKey={`${key}`}
                                             id='sidebar-item-lvl2'
                                             className='selected-lvl2'
@@ -56,7 +56,7 @@ const Sidebarlvl2 = () => {
                                     return (
                                         <Nav.Item
                                             key={key} 
-                                            href={`/myorganizations/${selectedOrgId}/${obj.path}`} 
+                                            href={`${prefix}${obj.path}`} 
                                             eventKey={`${key}`}
                                             id='sidebar-item-lvl2'
                                             // className='sidebar-item-lvl2'

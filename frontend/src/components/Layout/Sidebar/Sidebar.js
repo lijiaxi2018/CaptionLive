@@ -83,21 +83,30 @@ function Sidebar() {
                   )
                 })}
               </Nav.Menu>
-
-              <Nav.Menu eventKey="3" title="我的项目" icon={<Icon as={AiOutlineProject} size="1em"/>}>
+              
+              <Nav.Item href='/myprojects/accessibleprojects' eventKey="3" icon={<Icon as={AiOutlineProject} size="1em"/>}>
+                我的项目
+              </Nav.Item>
+              
+              {/* <Nav.Menu eventKey="3" title="我的项目" icon={<Icon as={AiOutlineProject} size="1em"/>}>
                 <Nav.Item href='/myprojects/accessibleprojects' eventKey="3-1">
                   <a href='/myprojects/accessibleprojects'>可访问的项目</a>
                 </Nav.Item>
                 <Nav.Item href='/myprojects/committedprojects' eventKey="3-2">
                   <a href='/myprojects/committedprojects'>参与的项目</a>
                 </Nav.Item>
-              </Nav.Menu>
+              </Nav.Menu> */}
 
               <Nav.Item href='/allorganizations' eventKey="4" icon={<Icon as={ImSphere} size="1em"/>}>
                 所有字幕组
               </Nav.Item>
+              
+              <Nav.Item href='/mail/allmails' eventKey="5" icon={<Icon as={AiOutlineMail} size="1em"/>}>
+                信箱
+              </Nav.Item>
 
-              <Nav.Menu eventKey="5" title="信箱" icon={<Icon as={AiOutlineMail} size="1em"/>}>
+
+              {/* <Nav.Menu eventKey="5" title="信箱" icon={<Icon as={AiOutlineMail} size="1em"/>}>
                 <Nav.Item href='/mail/allmails' eventKey="5-1">
                   <a href='/mail/allmails'>所有</a>
                 </Nav.Item>
@@ -107,7 +116,7 @@ function Sidebar() {
                 <Nav.Item href='/mail/sentmails' eventKey="5-3">
                   <a href='/mail/sentmails'>已发送</a>
                 </Nav.Item>
-              </Nav.Menu>
+              </Nav.Menu> */}
 
             </Nav>
           </Sidenav.Body>

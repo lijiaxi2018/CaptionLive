@@ -7,6 +7,9 @@ import AddProject from '../../components/Project/AddProject';
 import { AiOutlineProject } from 'react-icons/ai';
 import { useGetAccessibleProjectsQuery } from '../../services/organization';
 import { openAddProject } from '../../redux/layoutSlice';
+import { myprojectSideBar } from '../../assets/sidebar';
+import Sidebarlvl2 from '../../components/Layout/Sidebar/Sidebarlvl2';
+
 
 function AccessibleProjects() {
   const dispatch = useDispatch();
@@ -22,12 +25,17 @@ function AccessibleProjects() {
   return (
     <div className='general-page-container'>
       <Header title="可访问的项目" icon = {AiOutlineProject} />
+      
       <SignInUpContainer />
 
       { isOpenAddProject &&
         <AddProject />
       }
-
+      <Sidebarlvl2 
+        prefix={`/myprojects/`}
+        data={myprojectSideBar}
+        type='myproject'
+      />
       { fetched && myUserId !== -1 &&
         <div className='general-page-container-reduced'>
 
