@@ -20,7 +20,7 @@ services:
     volumes:
       - "../docker-data/pga4-data:/var/lib/pgadmin"
     ports:
-      - "80:80"
+      - "8088:8088"
     environment:
       - PGADMIN_DEFAULT_EMAIL=pgadmin4@pgadmin.org
       - PGADMIN_DEFAULT_PASSWORD=admin
@@ -39,4 +39,4 @@ services:
     image: lijiaxi2018/cl_frontend
     container_name: captionlive_frontend
     ports:
-      - "3000:3000"
+      - "80:80"
