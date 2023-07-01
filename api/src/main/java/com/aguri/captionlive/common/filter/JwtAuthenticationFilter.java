@@ -1,70 +1,70 @@
-package com.aguri.captionlive.common.filter;
+// package com.aguri.captionlive.common.filter;
 
-import com.aguri.captionlive.common.JwtTokenProvider;
-import jakarta.servlet.*;
-import jakarta.servlet.annotation.WebFilter;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Component;
+// import com.aguri.captionlive.common.JwtTokenProvider;
+// import jakarta.servlet.*;
+// import jakarta.servlet.annotation.WebFilter;
+// import jakarta.servlet.http.HttpServletRequest;
+// import jakarta.servlet.http.HttpServletResponse;
+// import org.springframework.beans.factory.annotation.Autowired;
+// import org.springframework.core.annotation.Order;
+// import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
+// import java.io.IOException;
+// import java.util.Arrays;
+// import java.util.List;
 
-@Component
-@WebFilter(urlPatterns = "/*")
-@Order(2)
-public class JwtAuthenticationFilter implements Filter {
+// @Component
+// @WebFilter(urlPatterns = "/*")
+// @Order(2)
+// public class JwtAuthenticationFilter implements Filter {
 
-    @Autowired
-    private JwtTokenProvider jwtTokenProvider;
+//     @Autowired
+//     private JwtTokenProvider jwtTokenProvider;
 
-    private static final List<String> EXCLUDED_URLS = Arrays.asList("/api/login", "/api/signUp");
-    private static final String LOGIN_PATH = "/myhome";
+//     private static final List<String> EXCLUDED_URLS = Arrays.asList("/api/login", "/api/signUp");
+//     private static final String LOGIN_PATH = "/myhome";
 
-    private static final Boolean OPEN = Boolean.TRUE;
+//     private static final Boolean OPEN = Boolean.TRUE;
 
-    @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        HttpServletRequest request = (HttpServletRequest) servletRequest;
-        HttpServletResponse response = (HttpServletResponse) servletResponse;
+//     @Override
+//     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+//         HttpServletRequest request = (HttpServletRequest) servletRequest;
+//         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
-        if (OPEN) {
+//         if (OPEN) {
 
-            String requestURI = request.getRequestURI();
-            if (!isExcludedUrl(requestURI)) {
-                // 获取请求中的JWT
-                String token = request.getHeader("Authorization");
+//             String requestURI = request.getRequestURI();
+//             if (!isExcludedUrl(requestURI)) {
+//                 // 获取请求中的JWT
+//                 String token = request.getHeader("Authorization");
 
-                if (token != null && jwtTokenProvider.validateToken(token)) {
-                    // 用户已登录，验证JWT通过
-                    request.setAttribute("username", jwtTokenProvider.parseUserNameFromToken(token));
-                } else {
-                    // 用户未登录或JWT验证失败
-//                    response.sendRedirect(LOGIN_PATH);
-//                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-//                    return;
-                }
-            }
-        }
-        else {
-            request.setAttribute("username", "this request dependence on Authorization Header, please open this filter: " + JwtTokenProvider.class.getName());
-        }
+//                 if (token != null && jwtTokenProvider.validateToken(token)) {
+//                     // 用户已登录，验证JWT通过
+//                     request.setAttribute("username", jwtTokenProvider.parseUserNameFromToken(token));
+//                 } else {
+//                     // 用户未登录或JWT验证失败
+// //                    response.sendRedirect(LOGIN_PATH);
+// //                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+// //                    return;
+//                 }
+//             }
+//         }
+//         else {
+//             request.setAttribute("username", "this request dependence on Authorization Header, please open this filter: " + JwtTokenProvider.class.getName());
+//         }
 
 
-        // 将请求传递给下一个过滤器或目标资源
-        filterChain.doFilter(request, response);
-    }
+//         // 将请求传递给下一个过滤器或目标资源
+//         filterChain.doFilter(request, response);
+//     }
 
-    private boolean isExcludedUrl(String requestURI) {
-        for (String excludedUrl : EXCLUDED_URLS) {
-            if (requestURI.startsWith(excludedUrl)) {
-                return true;
-            }
-        }
-        return false;
-    }
-}
+//     private boolean isExcludedUrl(String requestURI) {
+//         for (String excludedUrl : EXCLUDED_URLS) {
+//             if (requestURI.startsWith(excludedUrl)) {
+//                 return true;
+//             }
+//         }
+//         return false;
+//     }
+// }
 
