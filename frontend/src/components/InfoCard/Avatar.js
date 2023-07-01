@@ -2,6 +2,7 @@ import React from 'react';
 import { useGetUserQuery } from '../../services/user';
 import { useGetProjectQuery } from '../../services/project';
 import { useGetOrganizationQuery } from '../../services/organization';
+import { configuration } from '../../config/config';
 
 function Avatar({userId, avatarSize, type}) {
   
@@ -18,7 +19,7 @@ function Avatar({userId, avatarSize, type}) {
         </div>
       );
     } else {
-      let avatarUrl = `url(http://localhost:8080/api/files/${fetchedData.data.data.avatarId})`;
+      let avatarUrl = `url(http://${configuration.HOSTNAME}:8080/api/files/${fetchedData.data.data.avatarId})`;
       styleSheet['backgroundImage'] = avatarUrl;
 
       return (
@@ -42,7 +43,7 @@ function Avatar({userId, avatarSize, type}) {
         </div>
       );
     } else {
-      let avatarUrl = `url(http://localhost:8080/api/files/${fetchedData.data.data.coverFileRecordId})`;
+      let avatarUrl = `url(http://${configuration.HOSTNAME}:8080/api/files/${fetchedData.data.data.coverFileRecordId})`;
       styleSheet['backgroundImage'] = avatarUrl;
 
       return (
@@ -66,7 +67,7 @@ function Avatar({userId, avatarSize, type}) {
         </div>
       );
     } else {
-      let avatarUrl = `url(http://localhost:8080/api/files/${fetchedData.data.data.avatarId})`;
+      let avatarUrl = `url(http://${configuration.HOSTNAME}:8080/api/files/${fetchedData.data.data.avatarId})`;
       styleSheet['backgroundImage'] = avatarUrl;
 
       return (

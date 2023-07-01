@@ -9,6 +9,7 @@ import { parseTaskType, parseScope } from '../../utils/segment';
 import { Icon } from '@rsuite/icons';
 import { FaAngleUp, FaAngleDown, FaTrash } from 'react-icons/fa';
 import FileUploader from '../Layout/Modal/FileUploader';
+import { configuration } from '../../config/config';
 
 function parseTaskText(task) {
   if (task.workerUser === null) {
@@ -87,7 +88,7 @@ function Segment({data}) {
         </div>
       );
     } else if (task.status === 'COMPLETED' && task.workerUser.userId !== myUserId) {
-      let downloadUrl = 'http://localhost:8080/api/files/' + task.fileId;
+      let downloadUrl = `http://${configuration.HOSTNAME}:8080/api/files/` + task.fileId;
       return (
         <div>
           <a
@@ -98,7 +99,7 @@ function Segment({data}) {
         </div>
       );
     } else if (task.status === 'COMPLETED' && task.workerUser.userId === myUserId) {
-      let downloadUrl = 'http://localhost:8080/api/files/' + task.fileId;
+      let downloadUrl = `http://${configuration.HOSTNAME}:8080/api/files/` + task.fileId;
       return (
         <div>
           <button className='general-button-grey' onClick={() => handleDeleteTask(task.taskId)}>删除</button>
