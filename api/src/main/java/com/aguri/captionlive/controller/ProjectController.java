@@ -2,6 +2,8 @@ package com.aguri.captionlive.controller;
 
 import com.aguri.captionlive.DTO.ProjectInfo;
 import com.aguri.captionlive.DTO.ProjectRequest;
+import com.aguri.captionlive.DTO.Re4Orgs;
+import com.aguri.captionlive.DTO.Re4Users;
 import com.aguri.captionlive.common.resp.Resp;
 import com.aguri.captionlive.model.*;
 import com.aguri.captionlive.repository.AccessRepository;
@@ -166,6 +168,7 @@ public class ProjectController {
     @Autowired
     AccessRepository accessRepository;
 
+
     @GetMapping("/{projectId}/shareInfo/users")
     public Resp getAllUserPermissionByProject(@PathVariable Long projectId) {
         List<User> allUsers = userService.getAllUsers();
@@ -173,11 +176,8 @@ public class ProjectController {
         List<User> hasPermissionUserList = accessList.stream().map(Access::getUser).toList();
         Set<Long> hasPermissionSet = hasPermissionUserList.stream().map(User::getUserId).collect(Collectors.toSet());
         List<User> hasNoPermissionUserList = allUsers.stream().filter(user -> !hasPermissionSet.contains(user.getUserId())).toList();
-        class Re {
-            List<User> noSharedUserList;
-            List<User> sharedUserList;
-        }
-        Re re = new Re();
+
+        Re4Users re = new Re4Users();
         re.noSharedUserList = hasNoPermissionUserList;
         re.sharedUserList = hasPermissionUserList;
 
@@ -200,11 +200,8 @@ public class ProjectController {
         Set<Long> sharedOrgSet = sharedOrganizationList.stream().map(Organization::getOrganizationId).collect(Collectors.toSet());
         List<Organization> noSharedOrganizationList = allOrganizations.stream().filter(organization -> !sharedOrgSet.contains(organization.getOrganizationId())).toList();
 
-        class Re {
-            List<Organization> noSharedOrganizationList;
-            List<Organization> sharedOrganizationList;
-        }
-        Re re = new Re();
+
+        Re4Orgs re = new Re4Orgs();
         re.noSharedOrganizationList = noSharedOrganizationList;
         re.sharedOrganizationList = sharedOrganizationList;
 
