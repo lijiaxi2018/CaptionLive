@@ -1,9 +1,10 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { configuration } from '../config/config';
 
 export const fileApi = createApi({
   reducerPath: 'fileApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'http://13.59.233.173:8080/api/',
+    baseUrl: `http://${configuration.HOSTNAME}:8080/api/`,
     prepareHeaders: (headers) => {
       const userToken = JSON.parse(localStorage.getItem("clAccessToken"));
       if (userToken) {
