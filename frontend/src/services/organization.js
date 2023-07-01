@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 export const organizationApi = createApi({
   reducerPath: 'organizationApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'http://localhost:8080/api/',
+    baseUrl: 'http://13.59.233.173:8080/api/',
     prepareHeaders: (headers) => {
       const userToken = JSON.parse(localStorage.getItem("clAccessToken"));
       if (userToken) {
