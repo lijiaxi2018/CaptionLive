@@ -2,7 +2,7 @@ name: Build API Image
 
 on:
   pull_request:
-    branches: [ "main" ]
+    branches: [ "staging" ]
 
 jobs:
   build_images:
