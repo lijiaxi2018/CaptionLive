@@ -15,7 +15,7 @@ function MyHome() {
 
       { myUserId !== -1 &&
         <div className='entity-info-container-my-home'>
-          <UserInfo userId = {myUserId} type={0} access={true}/>
+          <UserInfo userId = {myUserId} access={true}/>
         </div>
       }
         
