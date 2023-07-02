@@ -12,7 +12,7 @@ jobs:
       - name: Build Frontend Image
         working-directory: ./frontend
         run: |
-          docker build --no-cache -t cl_frontend -f DockerFile .
+          docker build --no-cache -t cl_frontend_dev -f DockerFile .
       
       - name: Login to DockerHub
         uses: docker/login-action@v2
@@ -23,6 +23,6 @@ jobs:
       - name: Push to DockerHub
         working-directory: ./frontend
         run: |
-          docker tag cl_frontend lijiaxi2018/cl_frontend_dev
+          docker tag cl_frontend_dev lijiaxi2018/cl_frontend_dev
           docker push lijiaxi2018/cl_frontend_dev
       

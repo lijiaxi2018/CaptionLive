@@ -12,7 +12,7 @@ jobs:
       - name: Build API Image
         working-directory: ./api
         run: |
-          docker build --no-cache -t cl_api -f production.DockerFile .
+          docker build --no-cache -t cl_api_prod -f production.DockerFile .
       
       - name: Login to DockerHub
         uses: docker/login-action@v2
@@ -23,6 +23,6 @@ jobs:
       - name: Push to DockerHub
         working-directory: ./api
         run: |
-          docker tag cl_api lijiaxi2018/cl_api_prod
+          docker tag cl_api_prod lijiaxi2018/cl_api_prod
           docker push lijiaxi2018/cl_api_prod
       
