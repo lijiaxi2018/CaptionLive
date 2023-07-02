@@ -52,7 +52,7 @@ function SignUp() {
     setMatching(formData.password === formData.confirm)
   }, [formData.password, formData.confirm]);
 
-  const [validUsername, setValidUsername] = useState(true);
+  const [validUsername, setValidUsername] = useState(false);
   useEffect(() => {
     setValidUsername(isValidPasswordChar(formData.username));
   }, [formData.username]);
