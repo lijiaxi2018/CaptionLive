@@ -35,6 +35,8 @@ public class User {
 
     private String email;
 
+    private String nickname;
+
     @Column(columnDefinition = "TEXT")
     private String description;
 

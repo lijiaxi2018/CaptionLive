@@ -86,7 +86,8 @@ public class UserController {
             @RequestBody HashMap<String, String> body,
             @PathVariable("userId") Long userId) {
         String description = body.get("description");
-        return ResponseEntity.ok(Resp.ok(userService.updateDescription(userId, description)));
+        String nickname = body.get("nickname");
+        return ResponseEntity.ok(Resp.ok(userService.updateDescription(userId, description, nickname)));
     }
 
     @PutMapping("/{userId}/avatar")

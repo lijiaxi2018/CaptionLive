@@ -27,7 +27,7 @@ public interface UserService {
 
     List<ProjectInfo> getAllCommittedProjects(Long id);
 
-    Object updateDescription(Long userId, String description);
+    Object updateDescription(Long userId, String description, String nickname);
 
     Object updateAvatar(Long userId, Long avatarId);
 }
