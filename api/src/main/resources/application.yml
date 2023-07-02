@@ -8,7 +8,7 @@ spring:
   
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: ${CL_DDL_AUTO}
     show-sql: true
     defer-datasource-initialization: true # Loading Initialization Data
 

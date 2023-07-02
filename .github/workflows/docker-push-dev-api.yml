@@ -1,4 +1,4 @@
-name: Push Frontend Image to DockerHub
+name: Push API Development Image to DockerHub
 
 on:
   push:
@@ -9,10 +9,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Build Frontend Image
-        working-directory: ./frontend
+      - name: Build API Image
+        working-directory: ./api
         run: |
-          docker build --no-cache -t cl_frontend -f DockerFile .
+          docker build --no-cache -t cl_api -f staging.DockerFile .
       
       - name: Login to DockerHub
         uses: docker/login-action@v2
@@ -21,8 +21,8 @@ jobs:
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
       
       - name: Push to DockerHub
-        working-directory: ./frontend
+        working-directory: ./api
         run: |
-          docker tag cl_frontend lijiaxi2018/cl_frontend
-          docker push lijiaxi2018/cl_frontend
+          docker tag cl_api lijiaxi2018/cl_api_prod
+          docker push lijiaxi2018/cl_api
       
