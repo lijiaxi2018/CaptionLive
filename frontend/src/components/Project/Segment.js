@@ -15,7 +15,7 @@ function parseTaskText(task) {
   if (task.workerUser === null) {
     return [parseTaskType(task.type) + ':', ''];
   } else {
-    return [parseTaskType(task.type) + ':', task.workerUser.username];
+    return [parseTaskType(task.type) + ':', task.workerUser.nickname];
   }
 }
 

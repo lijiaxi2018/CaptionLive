@@ -12,6 +12,7 @@ const formReducer = (state, event) => {
       confirm: "",
       qq: "",
       email: "",
+      nickname: "",
     }
   } else {
     return {
@@ -33,12 +34,13 @@ function SignUp() {
     confirm: "",
     qq: "",
     email: "",
+    nickname: "",
   });
 
   const [filled, setFilled] = useState(false); // If all required fields are fulfilled
   useEffect(() => {
-    setFilled(formData.username.length > 0 && formData.password.length > 0 && formData.confirm.length > 0)
-  }, [formData.username, formData.password, formData.confirm]);
+    setFilled(formData.username.length > 0 && formData.password.length > 0 && formData.confirm.length > 0 && formData.nickname.length > 0)
+  }, [formData.username, formData.password, formData.confirm, formData.nickname]);
 
   const [matching, setMatching] = useState(true); // If password matches with confirm
   useEffect(() => {
@@ -75,6 +77,7 @@ function SignUp() {
       password: encrypted,
       qq: formData.qq,
       email: formData.email,
+      nickname: formData.nickname,
     })
     .then((response) => {
       let message = response.data.message;
@@ -119,6 +122,8 @@ function SignUp() {
 
       <label style={{ color: '#ff6765' }}>{prompt}</label><br/>
       <input name="username" className="sign-in-up-input" placeholder="请输入用户名" onChange={handleChange} value={formData.username}/>
+      <label className="star-mark">*</label>
+      <input name="nickname" className="sign-in-up-input" placeholder="请输入昵称" onChange={handleChange} value={formData.nickname}/>
       <label className="star-mark">*</label>
       <br/>
 
