@@ -1,4 +1,4 @@
-name: Push API Image to DockerHub
+name: Push API Development Image to DockerHub
 
 on:
   push:
@@ -12,7 +12,7 @@ jobs:
       - name: Build API Image
         working-directory: ./api
         run: |
-          docker build --no-cache -t cl_api -f DockerFile .
+          docker build --no-cache -t cl_api_dev -f staging.DockerFile .
       
       - name: Login to DockerHub
         uses: docker/login-action@v2
@@ -23,6 +23,6 @@ jobs:
       - name: Push to DockerHub
         working-directory: ./api
         run: |
-          docker tag cl_api lijiaxi2018/cl_api
-          docker push lijiaxi2018/cl_api
+          docker tag cl_api_dev lijiaxi2018/cl_api_dev
+          docker push lijiaxi2018/cl_api_dev
       

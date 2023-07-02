@@ -1,0 +1,28 @@
+name: Push Frontend Development Image to DockerHub
+
+on:
+  push:
+    branches: [ "staging" ]
+
+jobs:
+  push_images:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build Frontend Image
+        working-directory: ./frontend
+        run: |
+          docker build --no-cache -t cl_frontend_dev -f DockerFile .
+      
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+      
+      - name: Push to DockerHub
+        working-directory: ./frontend
+        run: |
+          docker tag cl_frontend_dev lijiaxi2018/cl_frontend_dev
+          docker push lijiaxi2018/cl_frontend_dev
+      

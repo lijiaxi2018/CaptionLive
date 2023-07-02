@@ -1,5 +1,5 @@
 version: "3.7"
-name: captionlive-fe-dev
+name: captionlive
 
 services:
   db:
@@ -20,7 +20,7 @@ services:
   #   volumes:
   #     - "../docker-data/pga4-data:/var/lib/pgadmin"
   #   ports:
-  #     - "8088:8088"
+  #     - "80:80"
   #   environment:
   #     - PGADMIN_DEFAULT_EMAIL=pgadmin4@pgadmin.org
   #     - PGADMIN_DEFAULT_PASSWORD=admin
@@ -34,3 +34,9 @@ services:
     container_name: captionlive_api_dev
     ports:
       - "8080:8080"
+  
+  frontend:
+    image: lijiaxi2018/cl_frontend_dev
+    container_name: captionlive_frontend_dev
+    ports:
+      - "80:80"
