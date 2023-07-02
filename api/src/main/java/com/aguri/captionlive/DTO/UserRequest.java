@@ -19,4 +19,6 @@ public class UserRequest {
 
     private String description;
 
+    private String nickname;
+
 }
