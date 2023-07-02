@@ -165,7 +165,7 @@ function UserInfo({userId, access}) {
                   </div>
                 </div>
                 
-                <label style={{ 'color': '#b3afaf' }} className='general-font-tiny'>{userData.data.data.username}</label><br/>
+                <label style={{ 'color': '#b3afaf' }} className='general-font-tiny'>{"用户名" + userData.data.data.username}</label><br/>
                 <label style={{ 'color': '#b3afaf' }} className='general-font-tiny'>{"创建于" + parseDBTimeYMD(userCreatedTime)}</label><br/>
 
                 <textarea 

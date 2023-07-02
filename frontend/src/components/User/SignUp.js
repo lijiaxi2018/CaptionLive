@@ -4,6 +4,11 @@ import { usePostUserMutation } from '../../services/user';
 import { toggleSignInOnWindow, toggleSignInOnPage } from '../../redux/layoutSlice'
 import { sha256 } from 'js-sha256';
 
+const isValidPasswordChar = str => {
+  const regex = /^[~`!@#$%^&*()_+=[\]\{}|;':",.\/<>?a-zA-Z0-9-]+$/;
+  return regex.test(str)
+};
+
 const formReducer = (state, event) => {
   if (event.reset) {
     return {
@@ -47,20 +52,30 @@ function SignUp() {
     setMatching(formData.password === formData.confirm)
   }, [formData.password, formData.confirm]);
 
+  const [validUsername, setValidUsername] = useState(true);
+  useEffect(() => {
+    setValidUsername(isValidPasswordChar(formData.username));
+  }, [formData.username]);
+
   const [prompt, setPrompt] = useState(""); // Prompt message
   useEffect(() => {
     if (!submitting) {
-      if (!filled && !matching) {
-        setPrompt('请填写所有必填信息; 请输入相同密码')
-      } else if (!filled) {
-        setPrompt('请填写所有必填信息')
-      } else if (!matching) {
-        setPrompt('请输入相同密码')
-      } else {
-        setPrompt('')
+      let message = '';
+      if (!filled) {
+        message = message + '请填写所有必填信息; ';
+      } 
+      
+      if (!matching) {
+        message = message + '请输入相同密码; ';
       }
+
+      if (!validUsername) {
+        message = message + '用户名只能由英文字母与数字组成; ';
+      }
+
+      setPrompt(message);
     }
-  }, [filled, matching, submitting]);
+  }, [filled, matching, submitting, validUsername]);
 
   const handleChange = event => {
     setFormData({
@@ -93,7 +108,7 @@ function SignUp() {
   
   const handleSignUp = event => {
     event.preventDefault();
-    if (filled && matching) {
+    if (filled && matching && validUsername) {
       setSubmitting(true);
 
       userSignUp();
