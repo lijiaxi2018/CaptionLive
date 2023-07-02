@@ -2,55 +2,40 @@ import React, { useReducer, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { openUploaderWindow, updateCurrentIdToUpload, updateCurrentUploadType } from '../../redux/fileSlice';
 import { useGetUserQuery, usePutUserDescriptionMutation } from '../../services/user';
-import { useGetOrganizationQuery, usePutOrganizationDescriptionMutation } from '../../services/organization';
-import { usePostRequestMutation, usePostMessageMutation } from '../../services/request';
 import { parseDBTimeYMD } from '../../utils/time';
 
 import FileUploader from '../Layout/Modal/FileUploader';
 import Avatar from './Avatar';
 
-function EntityInfo({userId, type, access, apply, applicant}) {
+function UserInfo({userId, access}) {
   const [editing, setEditing] = useState(false);
 
   const dispatch = useDispatch();
 
   const [putUserDescription] = usePutUserDescriptionMutation();
-  const [putOrganizationDescription] = usePutOrganizationDescriptionMutation();
-
-  const [postRequestMutation] = usePostRequestMutation();
-  const [postMessageMutation] = usePostMessageMutation();
 
   const isOpenUploaderWindow = useSelector((state) => state.file.openUploaderWindow);
   
   var username;
   var userDescription;
   var userCreatedTime;
+  var userNickname;
 
   const userData = useGetUserQuery(userId);
-  const orgData = useGetOrganizationQuery(userId);
-  const applicantData = useGetUserQuery(applicant);
 
-  console.log(userData);
-
-  const fetched = 
-    (userData.isFetching || orgData.isFetching || applicantData.isFetching) ? false : true;
+  const fetched = userData.isFetching ? false : true;
 
   // type = 0: User Info
-  // type = 1: Organization Info
-  if (type === 0) {
-    username = userData.isFetching ? "获取中..." : userData.data.data.username;
-    userDescription = userData.isFetching ? "获取中..." : userData.data.data.description;
-    userCreatedTime = userData.isFetching ? "获取中..." : userData.data.data.createdTime;
-  } else if (type === 1) {
-    username = orgData.isFetching ? "获取中..." : orgData.data.data.name;
-    userDescription = orgData.isFetching ? "获取中..." : orgData.data.data.description;
-    userCreatedTime = orgData.isFetching ? "获取中..." : orgData.data.data.createdTime;
-  }
+  username = userData.isFetching ? "获取中..." : userData.data.data.username;
+  userDescription = userData.isFetching ? "获取中..." : userData.data.data.description;
+  userCreatedTime = userData.isFetching ? "获取中..." : userData.data.data.createdTime;
+  userNickname = userData.isFetching ? "获取中..." : userData.data.data.nickname;
 
   const editReducer = (state, event) => {
     if (event.reset) {
       return {
         description: userDescription,
+        nickname: userNickname,
       }
     } else {
       return {
@@ -67,10 +52,16 @@ function EntityInfo({userId, type, access, apply, applicant}) {
       name: "description",
       value: userDescription,
     });
+
+    setEditData({
+      name: "nickname",
+      value: userNickname,
+    });
   }
 
   const [editData, setEditData] = useReducer(editReducer, {
     description: userDescription,
+    nickname: userNickname,
   });
 
   const handleEditChange = event => {
@@ -84,16 +75,7 @@ function EntityInfo({userId, type, access, apply, applicant}) {
     putUserDescription({
       userId: userId,
       description: editData.description,
-    })
-    .then((response) => {
-      // TODO: Deal with other return messages
-    })
-  }
-
-  const editOrganization = () => {
-    putOrganizationDescription({
-      organizationId: userId,
-      description: editData.description,
+      nickname: editData.nickname,
     })
     .then((response) => {
       // TODO: Deal with other return messages
@@ -103,11 +85,7 @@ function EntityInfo({userId, type, access, apply, applicant}) {
   const handleSubmit = event => {
     event.preventDefault();
 
-    if (type === 0) {
-      editUser();
-    } else if (type === 1) {
-      editOrganization();
-    }
+    editUser();
     
     setEditData({
       reset: true
@@ -116,59 +94,10 @@ function EntityInfo({userId, type, access, apply, applicant}) {
     setEditing(!editing);
   }
 
-  const newMembershipRequest = (myUserId, myOrgData, applicantName) => {
-    const membershipInfo = {
-      userId: myUserId,
-      organizationId: myOrgData.organizationId,
-    };
-
-    postRequestMutation({ 
-      type: 1,
-      status: 0,
-      sender: myUserId,
-      recipient: myOrgData.leaderIds[0],
-      senderRead: true,
-      recipientRead: false,
-      body: JSON.stringify(membershipInfo),
-    })
-    .then((firstResponse) => {
-      if (firstResponse.data.message === "success") {
-        let myRequestId = firstResponse.data.data.requestId;
-        postMessageMutation({ 
-          requestId: myRequestId,
-          isReply: false,
-          content: "用户" + applicantName + "希望加入" + myOrgData.name + "。"
-        })
-        .then((secondResponse) => {
-          let message = secondResponse.data.message;
-        })
-      }
-    })
-  }
-
-  const handleApply = event => {
-    event.preventDefault();
-    newMembershipRequest(applicant, orgData.data.data, applicantData.data.data.username);
-  }
-
   function handleUpload(myUserId) {
-    if (type === 0) {
-      dispatch(updateCurrentIdToUpload(myUserId));
-      dispatch(updateCurrentUploadType(1));
-      dispatch(openUploaderWindow());
-    } else if (type === 1) {
-      dispatch(updateCurrentIdToUpload(myUserId));
-      dispatch(updateCurrentUploadType(4));
-      dispatch(openUploaderWindow());
-    }
-  }
-
-  function parseToAvatar(userId, type) {
-    if (type === 0) {
-      return (<Avatar userId={userId} avatarSize={200} type={1}></Avatar>);
-    } else if (type === 1) {
-      return (<Avatar userId={userId} avatarSize={200} type={3}></Avatar>);
-    }
+    dispatch(updateCurrentIdToUpload(myUserId));
+    dispatch(updateCurrentUploadType(1));
+    dispatch(openUploaderWindow());
   }
 
   return (
@@ -183,25 +112,23 @@ function EntityInfo({userId, type, access, apply, applicant}) {
             <div className='entity-info-window'>
               <div className='entity-info-avatar'>
                 <div style={{ 'marginTop': '25px' }}>
-                  {parseToAvatar(userId, type)}
+                  <Avatar userId={userId} avatarSize={200} type={1}></Avatar>
                 </div>
               </div>
 
               <div className='entity-info-info'>
                 <div className='general-row-align'>
-                  <label style={{ 'color': '#767171' }} className='general-font-medium'>{username}</label>
+                  <label style={{ 'color': '#767171' }} className='general-font-medium'>{userData.data.data.nickname}</label>
 
                   <div className='general-right-buttons'>
                     { access &&
                       <button className="general-button-grey" onClick={handleEdit}>编辑</button>
                     }
-                    { (type === 1 && apply) &&
-                      <button className="general-button-grey" onClick={handleApply}>申请加入</button>
-                    }
                   </div>
                   
                 </div>
                 
+                <label style={{ 'color': '#b3afaf' }} className='general-font-tiny'>{"用户名" + userData.data.data.username}</label><br/>
                 <label style={{ 'color': '#b3afaf' }} className='general-font-tiny'>{"创建于" + parseDBTimeYMD(userCreatedTime)}</label><br/>
 
                 <div className='entity-info-info-description'>
@@ -215,7 +142,7 @@ function EntityInfo({userId, type, access, apply, applicant}) {
             <div className='entity-info-window'>
               <div className='entity-info-avatar'>
                 <div style={{ 'marginTop': '25px' }}>
-                  {parseToAvatar(userId, type)}
+                  <Avatar userId={userId} avatarSize={200} type={1}></Avatar>
                 </div>
                 
                 <div style={{ 'marginTop': '25px' }}>
@@ -225,14 +152,20 @@ function EntityInfo({userId, type, access, apply, applicant}) {
 
               <div className='entity-info-info'>
                 <div className='general-row-align'>
-                  <label style={{ 'color': '#767171' }} className='general-font-medium'>{username}</label>
+                  <input 
+                    name="nickname" 
+                    className="edit-nickname-input" 
+                    onChange={handleEditChange} 
+                    defaultValue={userNickname}
+                  />
                   
                   <div className='general-right-buttons'>
                     <button className="general-button-green" onClick={handleSubmit}>完成</button>
                     <button className="general-button-grey" onClick={handleEdit}>取消</button>
                   </div>
                 </div>
-
+                
+                <label style={{ 'color': '#b3afaf' }} className='general-font-tiny'>{userData.data.data.username}</label><br/>
                 <label style={{ 'color': '#b3afaf' }} className='general-font-tiny'>{"创建于" + parseDBTimeYMD(userCreatedTime)}</label><br/>
 
                 <textarea 
@@ -252,4 +185,4 @@ function EntityInfo({userId, type, access, apply, applicant}) {
   );
 }
 
-export default EntityInfo;
+export default UserInfo;

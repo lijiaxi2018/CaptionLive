@@ -116,7 +116,7 @@ function parseTime(time) {
   if (intTime < 60) {
     parsed = '00:' + parsed;
   } else if (intTime >= 60) {
-    parsed = (Math.floor(time / 60)).toString() + ':' + parsed;
+    parsed = ((Math.floor(time / 60)) % 60).toString() + ':' + parsed;
     if (Math.floor(time / 60) < 10) {
       parsed = '0' + parsed;
     }
