@@ -23,6 +23,6 @@ jobs:
       - name: Push to DockerHub
         working-directory: ./api
         run: |
-          docker tag cl_api lijiaxi2018/cl_api_prod
-          docker push lijiaxi2018/cl_api
+          docker tag cl_api lijiaxi2018/cl_api_dev
+          docker push lijiaxi2018/cl_api_dev
       

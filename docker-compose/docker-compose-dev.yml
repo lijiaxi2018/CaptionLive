@@ -6,7 +6,7 @@ services:
     image: postgres:14.7
     volumes:
       - "../docker-data/psql-data:/var/lib/postgresql/data"
-    container_name: captionlive_db
+    container_name: captionlive_db_dev
     ports:
       - "5432:5432"
     environment:
@@ -27,16 +27,16 @@ services:
   #   container_name: "captionlive_pgadmin"
 
   api:
-    image: lijiaxi2018/cl_api
+    image: lijiaxi2018/cl_api_dev
     restart: unless-stopped
     depends_on:
       - db
-    container_name: captionlive_api
+    container_name: captionlive_api_dev
     ports:
       - "8080:8080"
   
   frontend:
-    image: lijiaxi2018/cl_frontend
-    container_name: captionlive_frontend
+    image: lijiaxi2018/cl_frontend_dev
+    container_name: captionlive_frontend_dev
     ports:
       - "80:80"

@@ -23,6 +23,6 @@ jobs:
       - name: Push to DockerHub
         working-directory: ./frontend
         run: |
-          docker tag cl_frontend lijiaxi2018/cl_frontend
-          docker push lijiaxi2018/cl_frontend
+          docker tag cl_frontend lijiaxi2018/cl_frontend_dev
+          docker push lijiaxi2018/cl_frontend_dev
       
