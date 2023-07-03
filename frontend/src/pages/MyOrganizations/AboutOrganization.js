@@ -18,8 +18,6 @@ function AboutOrganization() {
     : organizationData.data.data.name;
   
   const myUserId = useSelector((state) => state.userAuth.userId);
-  console.log('myorg')
-  // console.log(myorgnizationSideBar);
   return (
     <div>
       <div className='general-page-container'>
