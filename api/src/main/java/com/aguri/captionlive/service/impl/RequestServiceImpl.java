@@ -6,9 +6,7 @@ import java.util.List;
 import java.util.Objects;
 
 import com.aguri.captionlive.model.*;
-import com.aguri.captionlive.repository.AccessRepository;
-import com.aguri.captionlive.repository.OrganizationRepository;
-import com.aguri.captionlive.repository.UserRepository;
+import com.aguri.captionlive.repository.*;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -19,7 +17,6 @@ import org.springframework.stereotype.Service;
 import com.aguri.captionlive.DTO.RequestRequest;
 import com.aguri.captionlive.common.exception.EntityNotFoundException;
 import com.aguri.captionlive.common.util.TimeComparator;
-import com.aguri.captionlive.repository.RequestRepository;
 import com.aguri.captionlive.service.RequestService;
 
 @Service
@@ -75,13 +72,11 @@ public class RequestServiceImpl implements RequestService {
 
         Request existingRequest = getRequestById(id);
 
-        if(userId == existingRequest.getSender()){
+        if (userId == existingRequest.getSender()) {
             existingRequest.setSenderRead(true);
-        }
-        else if(userId == existingRequest.getRecipient()){
-            existingRequest.setRecipientRead( true);
-        }
-        else{
+        } else if (userId == existingRequest.getRecipient()) {
+            existingRequest.setRecipientRead(true);
+        } else {
             throw new RuntimeException("UserId doesn't match request!");
         }
         return requestRepository.save(existingRequest);
@@ -92,13 +87,11 @@ public class RequestServiceImpl implements RequestService {
 
         Request existingRequest = getRequestById(id);
 
-        if(userId == existingRequest.getSender()){
+        if (userId == existingRequest.getSender()) {
             existingRequest.setSenderRead(false);
-        }
-        else if(userId == existingRequest.getRecipient()){
-            existingRequest.setRecipientRead( false);
-        }
-        else{
+        } else if (userId == existingRequest.getRecipient()) {
+            existingRequest.setRecipientRead(false);
+        } else {
             throw new RuntimeException("UserId doesn't match request!");
         }
         return requestRepository.save(existingRequest);
@@ -146,6 +139,9 @@ public class RequestServiceImpl implements RequestService {
         return requestRepository.save(existingRequest);
     }
 
+    @Autowired
+    MembershipRepository membershipRepository;
+
     private void addUser2Organization(long organizationId, long userId) {
         Membership membership = new Membership();
         Organization organization = organizationRepository.getReferenceById(organizationId);
@@ -153,6 +149,7 @@ public class RequestServiceImpl implements RequestService {
         User user = userRepository.getReferenceById(userId);
         membership.setUser(user);
         membership.setPermission(Membership.Permission.MEMBER);
+        membershipRepository.save(membership);
         List<Project> projects = organization.getProjects();
         List<Access> accessList = projects.stream().map(project -> {
             Access access = new Access();
