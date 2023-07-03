@@ -127,9 +127,6 @@ public class RequestServiceImpl implements RequestService {
         var type = existingRequest.getType();
         if (type != Request.Type.ANNOUNCEMENT) {
             String body = existingRequest.getBody();
-            String body1 = "{\"userId\":2,\"organizationId\":1}";
-            System.out.println(Objects.equals(body, body1));
-            body = body1;
             Gson gson = new Gson();
             JsonElement element = gson.fromJson(body, JsonElement.class);
             JsonObject jsonObject = element.getAsJsonObject();
