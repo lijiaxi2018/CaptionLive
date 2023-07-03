@@ -31,19 +31,19 @@ function Avatar({userId, avatarSize, type}) {
   }
 
   // type === 2
-  function parseProjectData(fetchedData) {
+  function parseProjectData(fetchedDataProject) {
     let styleSheet = { 'width': avatarSize * 1.33, 'height': avatarSize, 'fontSize': avatarSize/1.7, 'borderRadius': '10%' };
     
-    let initial = fetchedData.data.data.name[0];
+    let initial = fetchedDataProject.data.data.name[0];
 
-    if (fetchedData.data.data.coverFileRecordId === 0) {
+    if (fetchedDataProject.data.data.coverFileRecordId === 0) {
       return (
         <div style={styleSheet} className='general-avatar-text'>
           <label>{initial}</label>
         </div>
       );
     } else {
-      let avatarUrl = `url(http://${configuration.HOSTNAME}:8080/api/files/${fetchedData.data.data.coverFileRecordId})`;
+      let avatarUrl = `url(http://${configuration.HOSTNAME}:8080/api/files/${fetchedDataProject.data.data.coverFileRecordId})`;
       styleSheet['backgroundImage'] = avatarUrl;
 
       return (
@@ -55,19 +55,19 @@ function Avatar({userId, avatarSize, type}) {
   }
 
   // type === 3
-  function parseOrganizationData(fetchedData) {
+  function parseOrganizationData(fetchedDataOrganization) {
     let styleSheet = { 'width': avatarSize, 'height': avatarSize, 'fontSize': avatarSize/1.7, 'borderRadius': '10%' };
     
-    let initial = fetchedData.data.data.name[0];
+    let initial = fetchedDataOrganization.data.data.name[0];
 
-    if (fetchedData.data.data.avatarId === 0) {
+    if (fetchedDataOrganization.data.data.avatarId === 0) {
       return (
         <div style={styleSheet} className='general-avatar-text'>
           <label>{initial}</label>
         </div>
       );
     } else {
-      let avatarUrl = `url(http://${configuration.HOSTNAME}:8080/api/files/${fetchedData.data.data.avatarId})`;
+      let avatarUrl = `url(http://${configuration.HOSTNAME}:8080/api/files/${fetchedDataOrganization.data.data.avatarId})`;
       styleSheet['backgroundImage'] = avatarUrl;
 
       return (
