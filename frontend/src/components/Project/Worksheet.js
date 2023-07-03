@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { FaCircle } from 'react-icons/fa';
 import Segment from './Segment';
@@ -6,16 +6,16 @@ import Avatar from '../InfoCard/Avatar';
 import AddSegment from '../../components/Project/AddSegment';
 import FileUploader from '../Layout/Modal/FileUploader';
 import { openUploaderWindow, updateCurrentIdToUpload, updateCurrentUploadType } from '../../redux/fileSlice';
-import { openAddSegment } from '../../redux/layoutSlice';
+import { openAddSegment, updateSelectedProjectId } from '../../redux/layoutSlice';
 
 function Worksheet({data}) {
   const dispatch = useDispatch();
 
   const segments = data.segmentInfos;
-  const [currentProjectId, setCurrentProjectId] = useState(-1);
 
   const isOpenUploaderWindow = useSelector((state) => state.file.openUploaderWindow);
   const isOpenAddSegment = useSelector((state) => state.layout.inAddSegment);
+  const currentSelectedProjectId = useSelector((state) => state.layout.selectedProjectId);
 
   function handleUpload(myProjectId) {
     dispatch(updateCurrentIdToUpload(myProjectId));
@@ -24,7 +24,7 @@ function Worksheet({data}) {
   }
 
   function handleOpenAddSegment(myProjectId) {
-    setCurrentProjectId(myProjectId);
+    dispatch(updateSelectedProjectId(myProjectId));
     dispatch(openAddSegment());
   }
 
@@ -52,7 +52,7 @@ function Worksheet({data}) {
       }
 
       { isOpenAddSegment &&
-        <AddSegment projectId={currentProjectId}/>
+        <AddSegment projectId={currentSelectedProjectId}/>
       }
 
       <div className='worksheet-info-container'>
@@ -66,7 +66,7 @@ function Worksheet({data}) {
 
         <div className='general-column-align'>
           <div>
-            <Avatar userId={1} avatarSize={175} type={2}></Avatar>
+            <Avatar userId={data.projectId} avatarSize={175} type={2}></Avatar>
           </div>
 
           <div>
