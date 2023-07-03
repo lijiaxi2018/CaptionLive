@@ -12,22 +12,10 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=114514
-  
-  # pgadmin:
-  #   image: dpage/pgadmin4:latest
-  #   depends_on:
-  #     - db
-  #   volumes:
-  #     - "../docker-data/pga4-data:/var/lib/pgadmin"
-  #   ports:
-  #     - "80:80"
-  #   environment:
-  #     - PGADMIN_DEFAULT_EMAIL=pgadmin4@pgadmin.org
-  #     - PGADMIN_DEFAULT_PASSWORD=admin
-  #   container_name: "captionlive_pgadmin"
-
   api:
-    image: lijiaxi2018/cl_api_dev
+    build:
+      context: ../api
+      dockerfile: production.DockerFile
     restart: unless-stopped
     depends_on:
       - db
@@ -36,7 +24,9 @@ services:
       - "8080:8080"
   
   frontend:
-    image: lijiaxi2018/cl_frontend_dev
+    build:
+      context: ../frontend
+      dockerfile: DockerFile
     container_name: captionlive_frontend_dev
     ports:
       - "80:80"
