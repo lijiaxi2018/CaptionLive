@@ -1,4 +1,5 @@
 package com.aguri.captionlive.repository;
+
 import com.aguri.captionlive.model.Request;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,7 +11,11 @@ import java.util.List;
 @Repository
 public interface RequestRepository extends JpaRepository<Request, Long> {
     Request findByRequestId(Long requestId);
+
     List<Request> findAllBySender(Long UserId);
+
+    List<Request> findAllBySenderAndRecipient(Long SenderId, Long recipientId);
+
     List<Request> findAllByRecipient(Long UserId);
 }
 

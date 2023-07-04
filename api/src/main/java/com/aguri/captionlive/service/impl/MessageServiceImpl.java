@@ -1,4 +1,5 @@
 package com.aguri.captionlive.service.impl;
+
 import com.aguri.captionlive.model.Message;
 import com.aguri.captionlive.model.Request;
 import com.aguri.captionlive.DTO.MessageRequest;
@@ -29,12 +30,23 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public Message createMessage(MessageRequest newMessage) {
+        Boolean isReply = newMessage.getIsReply();
+        if (!isReply) {
+            // the first message for this request
+            List<Message> messagesByRequestId = getMessagesByRequestId(newMessage.getRequestId());
+            int size = messagesByRequestId.size();
+            if (size != 0) {
+                // it already has message existed.
+                return messagesByRequestId.get(0);
+            }
+        }
         Message message = new Message();
-        Request request = new Request();
+        Request request;
         request = requestService.getRequestById(newMessage.getRequestId());
         message.setRequest(request);
         message.setContent(newMessage.getContent());
-        message.setIsReply(newMessage.getIsReply());
+        message.setIsReply(isReply);
+
         return messageRepository.save(message);
     }
 
@@ -47,7 +59,7 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public void deleteMessageById(Long id) {
-            messageRepository.deleteById(id);
+        messageRepository.deleteById(id);
     }
 
     @Override
