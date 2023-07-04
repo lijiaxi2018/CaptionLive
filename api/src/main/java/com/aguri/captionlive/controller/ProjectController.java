@@ -2,8 +2,12 @@ package com.aguri.captionlive.controller;
 
 import com.aguri.captionlive.DTO.ProjectInfo;
 import com.aguri.captionlive.DTO.ProjectRequest;
+import com.aguri.captionlive.DTO.Re4Orgs;
+import com.aguri.captionlive.DTO.Re4Users;
 import com.aguri.captionlive.common.resp.Resp;
 import com.aguri.captionlive.model.*;
+import com.aguri.captionlive.repository.AccessRepository;
+import com.aguri.captionlive.repository.OwnershipRepository;
 import com.aguri.captionlive.service.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -18,6 +22,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/projects")
@@ -159,4 +165,48 @@ public class ProjectController {
         return Resp.ok(project);
     }
 
+    @Autowired
+    AccessRepository accessRepository;
+
+
+    @GetMapping("/{projectId}/shareInfo/users")
+    public Resp getAllUserPermissionByProject(@PathVariable Long projectId) {
+        List<User> allUsers = userService.getAllUsers();
+        List<Access> accessList = accessRepository.findAllByProjectProjectId(projectId);
+        List<User> hasPermissionUserList = accessList.stream().map(Access::getUser).toList();
+        Set<Long> hasPermissionSet = hasPermissionUserList.stream().map(User::getUserId).collect(Collectors.toSet());
+        List<User> hasNoPermissionUserList = allUsers.stream().filter(user -> !hasPermissionSet.contains(user.getUserId())).toList();
+
+        Re4Users re = new Re4Users();
+        re.noSharedUserList = hasNoPermissionUserList;
+        re.sharedUserList = hasPermissionUserList;
+
+        return Resp.ok(re);
+    }
+
+
+    @Autowired
+    OrganizationService organizationService;
+
+    @Autowired
+    OwnershipRepository ownershipRepository;
+
+    @GetMapping("/{projectId}/shareInfo/organizations")
+    public Resp getAllOrgPermissionByProject(@PathVariable Long projectId) {
+
+        List<Organization> allOrganizations = organizationService.getAllOrganizations();
+        List<Ownership> ownershipList = ownershipRepository.findAllByProjectProjectId(projectId);
+        List<Organization> sharedOrganizationList = ownershipList.stream().map(Ownership::getOrganization).toList();
+        Set<Long> sharedOrgSet = sharedOrganizationList.stream().map(Organization::getOrganizationId).collect(Collectors.toSet());
+        List<Organization> noSharedOrganizationList = allOrganizations.stream().filter(organization -> !sharedOrgSet.contains(organization.getOrganizationId())).toList();
+
+
+        Re4Orgs re = new Re4Orgs();
+        re.noSharedOrganizationList = noSharedOrganizationList;
+        re.sharedOrganizationList = sharedOrganizationList;
+
+        return Resp.ok(re);
+    }
+
 }
+
