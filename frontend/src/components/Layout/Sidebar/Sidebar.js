@@ -36,8 +36,8 @@ function Sidebar() {
       setMyorganizations([]);
     } else if (!organizations.isSuccess) {
       /** has error */
-      console.log(`error: ${organizations.isError}`);
-      console.log(organizations.error);
+      // console.log(`error: ${organizations.isError}`);
+      // console.log(organizations.error);
       // console.log(organizations);
       setMyorganizations([]);
     } else {

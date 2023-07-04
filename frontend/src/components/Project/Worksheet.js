@@ -4,9 +4,10 @@ import { FaCircle } from 'react-icons/fa';
 import Segment from './Segment';
 import Avatar from '../InfoCard/Avatar';
 import AddSegment from '../../components/Project/AddSegment';
+import ShareProject from '../../components/Project/ShareProject';
 import FileUploader from '../Layout/Modal/FileUploader';
 import { openUploaderWindow, updateCurrentIdToUpload, updateCurrentUploadType } from '../../redux/fileSlice';
-import { openAddSegment, updateSelectedProjectId } from '../../redux/layoutSlice';
+import { openAddSegment, updateSelectedProjectId, openShareProject } from '../../redux/layoutSlice';
 
 function Worksheet({data}) {
   const dispatch = useDispatch();
@@ -15,6 +16,7 @@ function Worksheet({data}) {
 
   const isOpenUploaderWindow = useSelector((state) => state.file.openUploaderWindow);
   const isOpenAddSegment = useSelector((state) => state.layout.inAddSegment);
+  const isOpenShareProject = useSelector((state) => state.layout.inShareProject);
   const currentSelectedProjectId = useSelector((state) => state.layout.selectedProjectId);
 
   function handleUpload(myProjectId) {
@@ -26,6 +28,11 @@ function Worksheet({data}) {
   function handleOpenAddSegment(myProjectId) {
     dispatch(updateSelectedProjectId(myProjectId));
     dispatch(openAddSegment());
+  }
+
+  function handleOpenShareProject(myProjectId) {
+    dispatch(updateSelectedProjectId(myProjectId));
+    dispatch(openShareProject());
   }
 
   function parseStatusColor(status) {
@@ -53,6 +60,10 @@ function Worksheet({data}) {
 
       { isOpenAddSegment &&
         <AddSegment projectId={currentSelectedProjectId}/>
+      }
+
+      { isOpenShareProject &&
+        <ShareProject projectId={currentSelectedProjectId}/>
       }
 
       <div className='worksheet-info-container'>
@@ -85,7 +96,7 @@ function Worksheet({data}) {
       </div>
 
       <div className='worksheet-buttons-container'>
-        <button className='general-button-grey'>分享项目</button>
+        <button className='general-button-grey' onClick={() => handleOpenShareProject(data.projectId)}>分享项目</button>
         <div style={{ marginTop: '10px' }}></div>
         <button className='general-button-grey' onClick={() => handleOpenAddSegment(data.projectId)}>新建段落</button>
       </div>
