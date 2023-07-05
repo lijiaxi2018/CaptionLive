@@ -28,7 +28,8 @@ public class JwtAuthenticationFilter implements Filter {
     @Autowired
     private UserRepository userRepository;
 
-    private static final List<String> EXCLUDED_URLS = Arrays.asList("/api/login", "/api/signUp");
+    private static final List<String> EXCLUDED_URLS = Arrays.asList("/api/login", "/api/signUp", "/swagger-ui", "/v3");
+
     private static final String LOGIN_PATH = "/myhome";
 
     private static final Boolean OPEN = Boolean.TRUE;
