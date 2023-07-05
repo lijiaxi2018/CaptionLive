@@ -4,7 +4,7 @@ import Sidebarlvl2 from '../../components/Layout/Sidebar/Sidebarlvl2';
 import Header from '../../components/Layout/Header/Header';
 import Worksheet from '../../components/Project/Worksheet';
 import { VscOrganization } from 'react-icons/vsc';
-import { useGetOrganizationQuery, useGetOrganizationProjectsQuery } from '../../services/organization';
+import { useGetOrganization, useGetOrganizationProjects } from '../../api/organization';
 import { useParams } from 'react-router';
 import { myorgnizationSideBar } from '../../assets/sidebar';
 
@@ -12,16 +12,16 @@ function Projects() {
   const organizationId = useParams().id;
   const myUserId = useSelector((state) => state.userAuth.userId);
 
-  const organizationData = useGetOrganizationQuery(organizationId);
-  const orgProjectsResults = useGetOrganizationProjectsQuery(organizationId);
+  const [organizationFetched, organizationData] = useGetOrganization(organizationId);
+  const [projectsFetched, orgProjectsResults] = useGetOrganizationProjects(organizationId);
 
-  const fetched = (orgProjectsResults.isFetching || organizationData.isFetching) ? false : true;
+  const fetched = (organizationFetched && projectsFetched) ? true : false;
 
   return (
     <div>
       { fetched &&
         <div className='general-page-container'>
-          <Header title={organizationData.data.data.name} icon = {VscOrganization} />
+          <Header title={organizationData.name} icon = {VscOrganization} />
           <Sidebarlvl2 
             prefix={`/myorganizations/${organizationId}/`}
             data={myorgnizationSideBar}
@@ -30,7 +30,7 @@ function Projects() {
           
           { myUserId !== -1 &&
             <div className='general-page-container-reduced'>
-              {orgProjectsResults.data.data.map((project) =>
+              {orgProjectsResults.map((project) =>
                 <div key={project.projectId}>
                   <Worksheet data={project}/>
                 </div>

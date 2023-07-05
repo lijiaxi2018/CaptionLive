@@ -5,7 +5,7 @@ import SignInUpContainer from '../../components/User/SignInUpContainer';
 import Worksheet from '../../components/Project/Worksheet';
 import AddProject from '../../components/Project/AddProject';
 import { AiOutlineProject } from 'react-icons/ai';
-import { useGetAccessibleProjectsQuery } from '../../services/organization';
+import { useGetAccessibleProjects } from '../../api/organization';
 import { openAddProject } from '../../redux/layoutSlice';
 import { myprojectSideBar } from '../../assets/sidebar';
 import Sidebarlvl2 from '../../components/Layout/Sidebar/Sidebarlvl2';
@@ -18,9 +18,7 @@ function AccessibleProjects() {
 
   const isOpenAddProject = useSelector((state) => state.layout.inAddProject);
 
-  const myAccessibleProjects = useGetAccessibleProjectsQuery(myUserId);
-
-  const fetched = (myAccessibleProjects.isFetching) ? false : true;
+  const [fetched, myAccessibleProjects] = useGetAccessibleProjects(myUserId);
 
   return (
     <div className='general-page-container'>
@@ -45,7 +43,7 @@ function AccessibleProjects() {
 
           <div style={{'marginTop' : '40px'}}></div>
 
-          {myAccessibleProjects.data.data.map((project) =>
+          {myAccessibleProjects.map((project) =>
             <div key={project.projectId}>
               <Worksheet data={project}/>
             </div>

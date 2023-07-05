@@ -6,6 +6,7 @@ import Request from '../../components/Mail/Request';
 import Messages from '../../components/Mail/Messages';
 import Sidebarlvl2 from '../../components/Layout/Sidebar/Sidebarlvl2';
 import { useGetRequestsForUserQuery } from '../../services/request';
+import { useGetRequestsForUser } from '../../api/request';
 import { closeMessage } from '../../redux/layoutSlice';
 
 import { Icon } from '@rsuite/icons';
@@ -17,7 +18,7 @@ function AllMail() {
   const dispatch = useDispatch();
 
   const myUserId = useSelector((state) => state.userAuth.userId);
-  const userRequestsResults = useGetRequestsForUserQuery(myUserId);
+  const [fetched, userRequestsResults] = useGetRequestsForUser(myUserId);
 
   const currentSelectedRequestId = useSelector((state) => state.layout.selectedRequestId);
   const isInMessage = useSelector((state) => state.layout.inMessage);
@@ -35,11 +36,11 @@ function AllMail() {
       />
       { myUserId !== -1 &&
           <div className='general-page-container-reduced'>
-            { !userRequestsResults.isFetching &&
+            { fetched &&
             <div>
               { !isInMessage &&
                 <div>
-                  {userRequestsResults.data.data.map((request) =>
+                  {userRequestsResults.map((request) =>
                     <div key={request.requestId}>
                       <Request request={request} myUserId={myUserId}/>
                     </div>

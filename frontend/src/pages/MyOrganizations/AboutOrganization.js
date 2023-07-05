@@ -4,7 +4,7 @@ import Sidebarlvl2 from '../../components/Layout/Sidebar/Sidebarlvl2';
 import Header from '../../components/Layout/Header/Header';
 import EntityInfo from '../../components/InfoCard/EntityInfo';
 import { VscOrganization } from 'react-icons/vsc';
-import { useGetOrganizationQuery } from '../../services/organization';
+import { useGetOrganization } from '../../api/organization';
 import { useParams } from 'react-router';
 import { myorgnizationSideBar } from '../../assets/sidebar';
 
@@ -12,10 +12,10 @@ function AboutOrganization() {
   const currentUserId = useSelector((state) => state.userAuth.userId);
 
   const organizationId = useParams().id;
-  const organizationData = useGetOrganizationQuery(organizationId);
-  const organizationName = organizationData.isFetching ? "获取中..." 
-    : organizationData.data.message.startsWith("Organization not") ? "" 
-    : organizationData.data.data.name;
+
+  const [fetched, organizationData] = useGetOrganization(organizationId);
+
+  const organizationName = fetched ? organizationData.name : "获取中...";
   
   const myUserId = useSelector((state) => state.userAuth.userId);
   return (
@@ -28,9 +28,9 @@ function AboutOrganization() {
           type='myorgnization'
         />
 
-        { (myUserId !== -1 && !organizationData.isFetching) &&
+        { (myUserId !== -1 && fetched) &&
           <div className='general-page-container-reduced'>
-            <EntityInfo userId = {organizationId} type={1} access={organizationData.data.data.leaderIds.includes(currentUserId)}/>
+            <EntityInfo userId = {organizationId} type={1} access={organizationData.leaderIds.includes(currentUserId)}/>
           </div>
         }
       </div>
