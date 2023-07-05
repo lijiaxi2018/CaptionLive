@@ -112,6 +112,32 @@ export const organizationApi = createApi({
       }),
       invalidatesTags: ['Organizations']
     }),
+
+    getSharedUsers: builder.query({
+      query: (id) => `/projects/${id}/shareInfo/users`,
+      providesTags: ['Organizations']
+    }),
+
+    getSharedOrgs: builder.query({
+      query: (id) => `/projects/${id}/shareInfo/organizations`,
+      providesTags: ['Organizations']
+    }),
+
+    shareProjectToUser: builder.mutation({
+      query: (share) => ({
+        url: `/projects/${share.projectId}/users/${share.userId}`,
+        method: 'PUT',
+      }),
+      invalidatesTags: ['Organizations']
+    }),
+
+    shareProjectToOrg: builder.mutation({
+      query: (share) => ({
+        url: `/projects/${share.projectId}/organizations/${share.organizationId}`,
+        method: 'PUT',
+      }),
+      invalidatesTags: ['Organizations']
+    }),
   }),
 })
 
@@ -129,4 +155,8 @@ export const {
   useAddOrganizationMutation,
   useGetAccessibleProjectsQuery, 
   useAddProjectMutation,
+  useGetSharedUsersQuery, 
+  useGetSharedOrgsQuery, 
+  useShareProjectToUserMutation,
+  useShareProjectToOrgMutation,
 } = organizationApi

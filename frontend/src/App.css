@@ -585,3 +585,31 @@
   margin-top: 5px;
   margin-bottom: 5px;
 }
+
+.share-project-container {
+  position: fixed;
+  z-index: 2;
+  top: 25%;
+  left: 30%;
+  
+  width: 600px;
+  border-radius: 8px;
+  border: 0px solid #b0acad;
+  background-color: #ffffff;
+  padding: 20px;
+  box-shadow: 0px 0px 30px;
+}
+
+.prompt-container {
+  position: fixed;
+  z-index: 2;
+  top: 25%;
+  left: 30%;
+  
+  width: 600px;
+  border-radius: 8px;
+  border: 0px solid #b0acad;
+  background-color: #ffffff;
+  padding: 20px;
+  box-shadow: 0px 0px 30px;
+}
