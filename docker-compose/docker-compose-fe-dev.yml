@@ -28,6 +28,8 @@ services:
 
   api:
     image: lijiaxi2018/cl_api_dev
+    volumes:
+      - "../docker-data/files:/app/files"
     restart: unless-stopped
     depends_on:
       - db
