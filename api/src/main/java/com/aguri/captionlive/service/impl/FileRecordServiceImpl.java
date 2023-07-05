@@ -4,6 +4,8 @@ import com.aguri.captionlive.common.exception.EntityNotFoundException;
 import com.aguri.captionlive.model.FileRecord;
 import com.aguri.captionlive.repository.FileRecordRepository;
 import com.aguri.captionlive.service.FileRecordService;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
@@ -54,6 +56,7 @@ public class FileRecordServiceImpl implements FileRecordService {
 
     @Override
     public void deleteFileRecord(Long id) {
+        deleteFile(fileRecordRepository.getReferenceById(id));
         fileRecordRepository.deleteById(id);
     }
 
@@ -115,6 +118,41 @@ public class FileRecordServiceImpl implements FileRecordService {
         fileRecord.setPath(filePath);
 
         return fileRecordRepository.save(fileRecord).getFileRecordId();
+    }
+
+    @Autowired
+    EntityManager entityManager;
+
+    @Override
+    @Transactional
+    public void deleteFileRecordInBatch(List<FileRecord> fileRecords) {
+        fileRecords.forEach(this::deleteFile);
+        entityManager.flush();
+        fileRecordRepository.deleteAllInBatch(fileRecords);
+    }
+
+
+    private void deleteFile(String filePath, String storedName) {
+        deleteFile(filePath + File.separator + storedName);
+    }
+
+    private void deleteFile(FileRecord fileRecord) {
+        deleteFile(fileRecord.getPath(), fileRecord.getStoredName());
+    }
+
+    private void deleteFile(String filePath) {
+        File file = new File(filePath);
+
+        if (file.exists()) {
+            boolean deleted = file.delete();
+            if (deleted) {
+                System.out.println("文件删除成功。");
+            } else {
+                throw new RuntimeException("文件删除失败。");
+            }
+        } else {
+            throw new RuntimeException("文件不存在。");
+        }
     }
 
 }

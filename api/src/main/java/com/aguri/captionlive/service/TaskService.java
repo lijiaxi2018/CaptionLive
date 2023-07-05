@@ -26,4 +26,6 @@ public interface TaskService {
     Task uploadFileAndTaskStatusChange(Long taskId, Long fileRecordId);
 
     List<Task> saveTasks(List<Task> taskList);
+
+    void deleteAllInBatch(List<Task> tasks);
 }

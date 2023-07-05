@@ -1,13 +1,14 @@
 package com.aguri.captionlive.controller;
 
 import com.aguri.captionlive.DTO.ProjectInfo;
-import com.aguri.captionlive.DTO.ProjectRequest;
 import com.aguri.captionlive.DTO.Re4Orgs;
 import com.aguri.captionlive.DTO.Re4Users;
 import com.aguri.captionlive.common.resp.Resp;
 import com.aguri.captionlive.model.*;
 import com.aguri.captionlive.repository.AccessRepository;
 import com.aguri.captionlive.repository.OwnershipRepository;
+import com.aguri.captionlive.repository.ProjectRepository;
+import com.aguri.captionlive.repository.TaskRepository;
 import com.aguri.captionlive.service.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -49,12 +50,6 @@ public class ProjectController {
         return ResponseEntity.ok(Resp.ok(projects));
     }
 
-//    @PostMapping
-//    public ResponseEntity<Resp> createProject(@RequestBody ProjectRequest projectRequest) {
-//        Project createdProject = projectService.createProject(projectRequest);
-//        return ResponseEntity.ok(Resp.ok(createdProject));
-//    }
-
     @GetMapping("/{id}")
     public ResponseEntity<Resp> getProjectById(@PathVariable Long id) {
         ProjectInfo projectInfo = ProjectInfo.generateProjectInfo(projectService.getProjectById(id));
@@ -65,12 +60,6 @@ public class ProjectController {
     public ResponseEntity<Resp> deleteProject(@PathVariable Long id) {
         projectService.deleteProject(id);
         return ResponseEntity.ok(Resp.ok());
-    }
-
-    @PutMapping
-    public ResponseEntity<Resp> updateProject(@RequestBody ProjectRequest projectRequest) {
-        ProjectInfo updatedProject = ProjectInfo.generateProjectInfo(projectService.updateProject(projectRequest));
-        return ResponseEntity.ok(Resp.ok(updatedProject));
     }
 
     @GetMapping("/{projectIid}/users")
@@ -164,6 +153,69 @@ public class ProjectController {
         // 返回响应
         return Resp.ok(project);
     }
+
+    @Autowired
+    ProjectRepository projectRepository;
+
+    @Autowired
+    TaskRepository taskRepository;
+
+
+    /**
+     * 更新项目和全局片段
+     *
+     * @param projectId 项目ID
+     * @param body      包含请求参数的Map，包括name、type和workflows
+     * @return Resp对象表示响应结果
+     */
+    @PutMapping("/{projectId}")
+    @Operation(summary = "Update project and global segment", description = "Update an existing project and its global segment")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Project and segment updated successfully",
+                    content = @Content(schema = @Schema(implementation = Resp.class))),
+            @ApiResponse(responseCode = "404", description = "Project not found",
+                    content = @Content(schema = @Schema(implementation = Resp.class)))
+    })
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "Request body containing name, type, and workflows",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = Map.class, requiredProperties = {"name", "type", "workflows"}),
+                    examples = @ExampleObject(value = "{\"name\": \"UPDATED_PROJECT\", \"type\": \"AUDIO_AND_VIDEO\", \"workflows\":[\"TIMELINE\", \"SOURCE\"]}")
+            )
+    )
+    public Resp updateSegment(@PathVariable("projectId") Long projectId, @RequestBody Map<String, Object> body, HttpServletRequest request) {
+        // 检查项目是否存在
+        Project existingProject = projectRepository.getReferenceById(projectId);
+
+        // 更新项目属性
+        String name = (String) body.get("name");
+        String type = (String) body.get("type");
+        List<String> workflows = (List<String>) body.get("workflows");
+
+        existingProject.setName(name);
+        existingProject.setType(Project.Type.valueOf(type));
+        existingProject = projectRepository.save(existingProject);
+
+        // 更新全局片段
+        Segment globalSegment = existingProject.getSegments().get(0);
+        var segmentId = globalSegment.getSegmentId();
+        List<Task> tasks = globalSegment.getTasks();
+
+        // 更新任务
+        taskService.deleteAllInBatch(tasks);// 删除旧任务
+        List<Task> updatedTasks = workflows.stream().map(workflow -> {
+            Task task = new Task();
+            task.setSegment(globalSegment);
+            task.setStatus(Task.Status.NOT_ASSIGNED);
+            task.setType(Task.Workflow.valueOf(workflow));
+            return task;
+        }).toList();
+        taskService.saveTasks(updatedTasks); // 保存更新后的任务
+
+        // 返回响应
+        return Resp.ok(existingProject);
+    }
+
 
     @Autowired
     AccessRepository accessRepository;

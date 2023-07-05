@@ -66,7 +66,6 @@ public class AuthController {
     @PostMapping("api/signUp")
     public ResponseEntity<?> registerUser(@RequestBody HashMap<String, String> body) {
 
-
         String password = body.get("password");
         String username = body.get("username");
 
