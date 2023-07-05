@@ -182,13 +182,17 @@ public class ProjectServiceImpl implements ProjectService {
         segments.add(segment);
     }
 
-    private void shareProject2UserWithPermission(Long createBy, Long projectId, Access.Permission permission) {
+    private void shareProject2UserWithPermission(Long userId, Long projectId, Access.Permission permission) {
+        Access access1 = accessRepository.findAccessByProjectProjectIdAndUserUserId(projectId, userId);
+        if (access1 != null) {
+            return;
+        }
         Access access = new Access();
         Project p2 = new Project();
         p2.setProjectId(projectId);
         access.setProject(p2);
         User user = new User();
-        user.setUserId(createBy);
+        user.setUserId(userId);
         access.setUser(user);
         access.setCommitment(Access.Commitment.NONE);
         access.setPermission(permission);
@@ -198,16 +202,15 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     @Transactional
     public void shareProject2Organization(Long projectId, Long organizationId) {
-        Organization organization = organizationRepository.getReferenceById(organizationId);
-
         Ownership ownership = new Ownership();
-
+        Organization organization = organizationRepository.getReferenceById(organizationId);
         Project project = projectRepository.getReferenceById(projectId);
-
         ownership.setProject(project);
         ownership.setOrganization(organization);
         ownershipRepository.save(ownership);
-        List<Access> accessList = organization.getUsers().stream().map(user -> {
+
+        Set<Long> existingUserSet = new HashSet<>(accessRepository.findExistingUserIdsByProjectProjectId(projectId));
+        List<Access> accessList = organization.getUsers().stream().filter(user -> !existingUserSet.contains(user.getUserId())).map(user -> {
             Access access = new Access();
             access.setProject(project);
             access.setCommitment(Access.Commitment.NONE);

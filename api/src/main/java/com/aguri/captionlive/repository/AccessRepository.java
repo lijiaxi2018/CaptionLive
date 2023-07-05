@@ -12,4 +12,10 @@ public interface AccessRepository extends JpaRepository<Access, Long> {
     List<Access> findAllByUserUserIdAndCommitment(Long userId, Access.Commitment commitment);
 
     List<Access> findAllByProjectProjectId(Long project_projectId);
+
+    Access findAccessByProjectProjectIdAndUserUserId(Long project_projectId, Long user_userId);
+
+    List<Access> findAccessByProjectProjectId(Long projectId);
+
+    List<Long> findExistingUserIdsByProjectProjectId(Long projectId);
 }
