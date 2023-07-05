@@ -16,6 +16,4 @@ public interface AccessRepository extends JpaRepository<Access, Long> {
     Access findAccessByProjectProjectIdAndUserUserId(Long project_projectId, Long user_userId);
 
     List<Access> findAccessByProjectProjectId(Long projectId);
-
-    List<Long> findExistingUserIdsByProjectProjectId(Long projectId);
 }

@@ -209,7 +209,8 @@ public class ProjectServiceImpl implements ProjectService {
         ownership.setOrganization(organization);
         ownershipRepository.save(ownership);
 
-        Set<Long> existingUserSet = new HashSet<>(accessRepository.findExistingUserIdsByProjectProjectId(projectId));
+        List<Access> existingAccessList = accessRepository.findAccessByProjectProjectId(projectId);
+        Set<Long> existingUserSet = existingAccessList.stream().map(Access::getUser).map(User::getUserId).collect(Collectors.toSet());
         List<Access> accessList = organization.getUsers().stream().filter(user -> !existingUserSet.contains(user.getUserId())).map(user -> {
             Access access = new Access();
             access.setProject(project);
