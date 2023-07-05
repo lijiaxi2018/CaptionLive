@@ -12,6 +12,8 @@ const initialState = {
   inMessage: false,
   inAddProject: false,
   inShareProject: false,
+  inPrompt: false,
+  promptMessage: '',
   selectedRequestId: -1,
   selectedProjectId: -1,
   selectedOrgId: sessionSelectedOrgId,
@@ -101,6 +103,18 @@ export const layoutSlice = createSlice({
     closeShareProject: (state) => {
       state.inShareProject = false;
     },
+
+    openPrompt: (state) => {
+      state.inPrompt = true;
+    },
+
+    closePrompt: (state) => {
+      state.inPrompt = false;
+    },
+
+    updatePromptMessage: (state, action) => {
+      state.promptMessage = action.payload;
+    },
   },
 })
 
@@ -123,6 +137,9 @@ export const {
   updateSelectedProjectId,
   openShareProject,
   closeShareProject,
+  openPrompt,
+  closePrompt,
+  updatePromptMessage,
 } = layoutSlice.actions
 
 export default layoutSlice.reducer
