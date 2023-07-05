@@ -1,6 +1,7 @@
 import React, { useReducer, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { openUploaderWindow, updateCurrentIdToUpload, updateCurrentUploadType } from '../../redux/fileSlice';
+import { openPrompt, updatePromptMessage } from '../../redux/layoutSlice';
 import { useGetUserQuery, usePutUserDescriptionMutation } from '../../services/user';
 import { useGetOrganizationQuery, usePutOrganizationDescriptionMutation } from '../../services/organization';
 import { usePostRequestMutation, usePostMessageMutation } from '../../services/request';
@@ -125,7 +126,7 @@ function EntityInfo({userId, type, access, apply, applicant}) {
       status: 0,
       sender: myUserId,
       recipient: myOrgData.leaderIds[0],
-      senderRead: true,
+      senderRead: false,
       recipientRead: false,
       body: JSON.stringify(membershipInfo),
     })
@@ -139,6 +140,10 @@ function EntityInfo({userId, type, access, apply, applicant}) {
         })
         .then((secondResponse) => {
           let message = secondResponse.data.message;
+          if (message === "success") {
+            dispatch(updatePromptMessage("申请成功，请在信箱中查看申请状态。"));
+            dispatch(openPrompt());
+          }
         })
       }
     })

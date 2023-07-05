@@ -4,6 +4,7 @@ import Header from '../../components/Layout/Header/Header';
 import SignInUpContainer from '../../components/User/SignInUpContainer';
 import AddOrganization from '../../components/Organization/AddOrganization';
 import EntityInfo from '../../components/InfoCard/EntityInfo';
+import Prompt from '../../components/InfoCard/Prompt';
 import { openAddOrganization } from '../../redux/layoutSlice';
 import { useGetAllOrganizationsQuery } from '../../services/organization';
 import { ImSphere } from 'react-icons/im';
@@ -22,6 +23,8 @@ function AllOrganizations() {
       <Header title="所有字幕组" icon = {ImSphere} />
 
       <SignInUpContainer />
+
+      <Prompt />
 
       { isOpenAddOrganization &&
         <AddOrganization />
