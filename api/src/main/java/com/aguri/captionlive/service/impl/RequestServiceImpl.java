@@ -32,6 +32,14 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     public Request createRequest(RequestRequest newRequest) {
+        //avoid duplicate request
+        List<Request> allBySenderAndRecipient = requestRepository.findAllBySenderAndRecipient(newRequest.getSender(), newRequest.getRecipient());
+        for (Request existingRequest : allBySenderAndRecipient) {
+            if (Objects.equals(existingRequest.getType(), newRequest.getType()) &&
+                    Objects.equals(existingRequest.getBody(), newRequest.getBody())) {
+                return existingRequest;
+            }
+        }
         Request request = new Request();
         request.setBody(newRequest.getBody());
         request.setRecipient(newRequest.getRecipient());
