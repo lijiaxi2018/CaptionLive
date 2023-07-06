@@ -183,10 +183,10 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     private void shareProject2UserWithPermission(Long userId, Long projectId, Access.Permission permission) {
-        Access access1 = accessRepository.findAccessByProjectProjectIdAndUserUserId(projectId, userId);
-        if (access1 != null) {
-            return;
-        }
+//        Access access1 = accessRepository.findAccessByProjectProjectIdAndUserUserId(projectId, userId);
+//        if (access1 != null) {
+//            return;
+//        }
         Access access = new Access();
         Project p2 = new Project();
         p2.setProjectId(projectId);
@@ -209,18 +209,17 @@ public class ProjectServiceImpl implements ProjectService {
         ownership.setOrganization(organization);
         ownershipRepository.save(ownership);
 
-        List<Access> existingAccessList = accessRepository.findAccessByProjectProjectId(projectId);
-        Set<Long> existingUserSet = existingAccessList.stream().map(Access::getUser).map(User::getUserId).collect(Collectors.toSet());
-        List<Access> accessList = organization.getUsers().stream().filter(user -> !existingUserSet.contains(user.getUserId())).map(user -> {
-            Access access = new Access();
-            access.setProject(project);
-            access.setCommitment(Access.Commitment.NONE);
-            access.setUser(user);
-            access.setPermission(Access.Permission.Editable);
-            return access;
-        }).toList();
-
-        accessRepository.saveAll(accessList);
+//        List<Access> existingAccessList = accessRepository.findAccessByProjectProjectId(projectId);
+//        Set<Long> existingUserSet = existingAccessList.stream().map(Access::getUser).map(User::getUserId).collect(Collectors.toSet());
+//        List<Access> accessList = organization.getUsers().stream().filter(user -> !existingUserSet.contains(user.getUserId())).map(user -> {
+//            Access access = new Access();
+//            access.setProject(project);
+//            access.setCommitment(Access.Commitment.NONE);
+//            access.setUser(user);
+//            access.setPermission(Access.Permission.Editable);
+//            return access;
+//        }).toList();
+//        accessRepository.saveAll(accessList);
     }
 
     @Override
@@ -333,8 +332,27 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public List<User> getAllAccessibleUsers(Long projectId) {
-        return getProjectById(projectId).getAccessibleUsers();
+        Set<User> userSet = new HashSet<>();
+
+        // 获取项目可访问的用户
+        List<User> accessibleUsers = projectRepository.getReferenceById(projectId).getAccessibleUsers();
+        userSet.addAll(accessibleUsers);
+
+        // 获取所有组织的用户
+        List<Organization> organizations = ownershipRepository.findAllByProjectProjectId(projectId)
+                .stream()
+                .map(Ownership::getOrganization)
+                .toList();
+
+        // 遍历每个组织，将用户添加到 userSet
+        for (Organization organization : organizations) {
+            List<User> users = organization.getUsers();
+            userSet.addAll(users);
+        }
+
+        return new ArrayList<>(userSet);
     }
+
 
     @Override
     public List<Organization> getAllAccessibleOrganizations(Long projectId) {
