@@ -30,4 +30,6 @@ public interface TaskService {
     void deleteAllInBatch(List<Task> tasks);
 
     List<Task> findAllInSegmentSegmentId(List<Long> segmentIds);
+
+    List<Task> findAllBySegmentSegmentId(Long segmentId);
 }

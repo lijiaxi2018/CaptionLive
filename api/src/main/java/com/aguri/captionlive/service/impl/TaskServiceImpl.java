@@ -157,7 +157,12 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public List<Task> findAllInSegmentSegmentId(List<Long> segmentIds) {
-        return taskRepository.findAllInSegmentSegmentId(segmentIds);
+        return taskRepository.findAllBySegmentSegmentIdIn(segmentIds);
+    }
+
+    @Override
+    public List<Task> findAllBySegmentSegmentId(Long segmentId) {
+        return taskRepository.findAllBySegmentSegmentId(segmentId);
     }
 
 }

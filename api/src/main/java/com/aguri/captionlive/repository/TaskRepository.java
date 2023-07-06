@@ -8,5 +8,7 @@ import java.util.List;
 
 @Repository
 public interface TaskRepository extends JpaRepository<Task,Long> {
-    List<Task> findAllInSegmentSegmentId(List<Long> segmentIds);
+    List<Task> findAllBySegmentSegmentIdIn(List<Long> segmentIds);
+
+    List<Task> findAllBySegmentSegmentId(Long segmentId);
 }
