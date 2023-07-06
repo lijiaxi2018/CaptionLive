@@ -60,6 +60,9 @@ public class SegmentServiceImpl implements SegmentService {
 
     @Override
     public void deleteSegment(Long segmentId) {
+        List<Task> tasks = taskService.findAllBySegmentSegmentId(segmentId);
+        entityManager.flush();
+        taskService.deleteAllInBatch(tasks);
         segmentRepository.deleteById(segmentId);
     }
 

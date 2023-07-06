@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -121,7 +122,7 @@ public class ProjectController {
                     examples = @ExampleObject(value = "{\"name\": \"TEST_PROJECT\", \"type\": \"AUDIO_AND_VIDEO\", \"workflows\":[\"TIMELINE\", \"SOURCE\"]}")
             )
     )
-    public Resp createSegment(@RequestBody Map<String, Object> body, HttpServletRequest request) {
+    public Resp createProject(@RequestBody Map<String, Object> body, HttpServletRequest request) {
         // 从请求参数中获取name、type和workflows
         String name = (String) body.get("name");
         String type = (String) body.get("type");
@@ -183,7 +184,7 @@ public class ProjectController {
                     examples = @ExampleObject(value = "{\"name\": \"UPDATED_PROJECT\", \"type\": \"AUDIO_AND_VIDEO\", \"workflows\":[\"TIMELINE\", \"SOURCE\"]}")
             )
     )
-    public Resp updateSegment(@PathVariable("projectId") Long projectId, @RequestBody Map<String, Object> body, HttpServletRequest request) {
+    public Resp updateProject(@PathVariable("projectId") Long projectId, @RequestBody Map<String, Object> body, HttpServletRequest request) {
         // 检查项目是否存在
         Project existingProject = projectRepository.getReferenceById(projectId);
 
@@ -196,18 +197,24 @@ public class ProjectController {
         existingProject.setType(Project.Type.valueOf(type));
         existingProject = projectRepository.save(existingProject);
 
-        // 更新全局片段
+        // 全局片段
         Segment globalSegment = existingProject.getSegments().get(0);
-        var segmentId = globalSegment.getSegmentId();
         List<Task> tasks = globalSegment.getTasks();
-
+        Set<Task.Workflow> newWorkFlowSet = workflows.stream().map(Task.Workflow::valueOf).collect(Collectors.toSet());
         // 更新任务
-        taskService.deleteAllInBatch(tasks);// 删除旧任务
-        List<Task> updatedTasks = workflows.stream().map(workflow -> {
+        // 删除任务
+        List<Task> delTaskList = tasks.stream().filter(task -> !newWorkFlowSet.contains(task.getType())).toList();
+        taskService.deleteAllInBatch(delTaskList);
+
+        //新增任务
+        Set<Task.Workflow> existingWorkflowSet = tasks.stream().map(Task::getType).collect(Collectors.toSet());
+        List<Task> updatedTasks = workflows.stream().map(Task.Workflow::valueOf)
+                .filter(workflow -> !existingWorkflowSet.contains(workflow))
+                .map(workflow -> {
             Task task = new Task();
             task.setSegment(globalSegment);
             task.setStatus(Task.Status.NOT_ASSIGNED);
-            task.setType(Task.Workflow.valueOf(workflow));
+            task.setType(workflow);
             return task;
         }).toList();
         taskService.saveTasks(updatedTasks); // 保存更新后的任务
@@ -216,10 +223,8 @@ public class ProjectController {
         return Resp.ok(existingProject);
     }
 
-
     @Autowired
     AccessRepository accessRepository;
-
 
     @GetMapping("/{projectId}/shareInfo/users")
     public Resp getAllUserPermissionByProject(@PathVariable Long projectId) {
@@ -251,7 +256,6 @@ public class ProjectController {
         List<Organization> sharedOrganizationList = ownershipList.stream().map(Ownership::getOrganization).toList();
         Set<Long> sharedOrgSet = sharedOrganizationList.stream().map(Organization::getOrganizationId).collect(Collectors.toSet());
         List<Organization> noSharedOrganizationList = allOrganizations.stream().filter(organization -> !sharedOrgSet.contains(organization.getOrganizationId())).toList();
-
 
         Re4Orgs re = new Re4Orgs();
         re.noSharedOrganizationList = noSharedOrganizationList;
