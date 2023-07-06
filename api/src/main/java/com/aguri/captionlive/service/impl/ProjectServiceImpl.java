@@ -182,7 +182,7 @@ public class ProjectServiceImpl implements ProjectService {
         segments.add(segment);
     }
 
-    private void shareProject2UserWithPermission(Long userId, Long projectId, Access.Permission permission) {
+    public void shareProject2UserWithPermission(Long userId, Long projectId, Access.Permission permission) {
 //        Access access1 = accessRepository.findAccessByProjectProjectIdAndUserUserId(projectId, userId);
 //        if (access1 != null) {
 //            return;
