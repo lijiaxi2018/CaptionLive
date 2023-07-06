@@ -66,7 +66,6 @@ public class AuthController {
     @PostMapping("api/signUp")
     public ResponseEntity<?> registerUser(@RequestBody HashMap<String, String> body) {
 
-
         String password = body.get("password");
         String username = body.get("username");
 
@@ -74,7 +73,7 @@ public class AuthController {
         if (existingUser.isPresent()) {
             return ResponseEntity.ok(Resp.failed("User already exists"));
         }
-
+        String nickname = body.get("nickname");
         String email = body.get("email");
         String qq = body.get("qq");
         UserRequest userRequest = new UserRequest();
@@ -82,6 +81,7 @@ public class AuthController {
         userRequest.setPassword(password);
         userRequest.setEmail(email);
         userRequest.setQq(qq);
+        userRequest.setNickname(nickname);
         userService.createUser(userRequest);
 
         User user = userService.getUserByUsername(username);
