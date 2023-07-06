@@ -165,9 +165,4 @@ public class TaskServiceImpl implements TaskService {
         return taskRepository.findAllBySegmentSegmentId(segmentId);
     }
 
-    @Override
-    public List<Task> findAllBySegmentSegmentId(Long segmentId) {
-        return taskRepository.findAllBySegmentSegmentId(segmentId);
-    }
-
 }
