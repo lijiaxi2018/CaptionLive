@@ -6,15 +6,12 @@ import com.aguri.captionlive.common.exception.EntityNotFoundException;
 import com.aguri.captionlive.common.util.FileRecordUtil;
 import com.aguri.captionlive.model.*;
 import com.aguri.captionlive.repository.*;
-import com.aguri.captionlive.service.FileRecordService;
-import com.aguri.captionlive.service.OrganizationService;
-import com.aguri.captionlive.service.ProjectService;
+import com.aguri.captionlive.service.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.aguri.captionlive.model.Task.AUDIO_AND_VIDEO_DEFAULT_WORKFLOWS;
@@ -223,112 +220,26 @@ public class ProjectServiceImpl implements ProjectService {
         accessRepository.saveAll(accessList);
     }
 
+    @Autowired
+    TaskService taskService;
+
+    @Autowired
+    SegmentService segmentService;
+
     @Override
+    @Transactional
     public void deleteProject(Long id) {
+        List<Access> accessList = accessRepository.findAllByProjectProjectId(id);
+        accessRepository.deleteAll(accessList);
+        Project project = projectRepository.getReferenceById(id);
+        List<Segment> segments = project.getSegments();
+        segmentService.deleteAllInBatch(segments);
         projectRepository.deleteById(id);
     }
 
     @Override
-    @Transactional
-    public Project updateProject(ProjectRequest projectRequest) {
-        Long projectId = projectRequest.getProjectId();
-        Project existingProject = getProjectById(projectId);
-        String desiredFileName = projectRequest.getFileName();
-
-//        FileRecord fileRecord = FileRecordUtil.generateFileRecord(projectRequest.getSourceFileRecordId());
-//        existingProject.setSourceFileRecord(fileRecord);
-
-        existingProject.setName(projectRequest.getName());
-
-        existingProject.setIsPublic(projectRequest.getIsPublic());
-
-        boolean isTypeUpdate = existingProject.getType() != projectRequest.getType();
-        existingProject.setType(projectRequest.getType());
-
-
-        List<Segment> updateSegments = new ArrayList<>();
-        List<Segment> deleteSegments = new ArrayList<>();
-        List<Segment> createSegments = new ArrayList<>();
-        List<Task> deleteTasks = new ArrayList<>();
-        List<Task> createTasks = new ArrayList<>();
-        List<Remark> updateRemarks = new ArrayList<>();
-        List<Remark> createRemarks = new ArrayList<>();
-        Long createBy = projectRequest.getOperatorId();
-        List<Segment> existingSegments = existingProject.getSegments();
-        Map<Long, ProjectRequest.SegmentRequest> segmentRequestMap =
-                projectRequest.getSegmentRequests().stream()
-                        .filter(segmentRequest -> segmentRequest.getSegmentId() != null).collect(Collectors.toMap(ProjectRequest.SegmentRequest::getSegmentId, Function.identity()));
-
-        existingSegments.forEach(existingSegment -> {
-            Remark existingRemark = existingSegment.getRemarks().get(0);
-            if (existingSegment.getIsGlobal()) {
-                ProjectRequest.RemarkRequest remarkRequest = projectRequest.getRemarkRequest();
-
-                if (!Objects.equals(remarkRequest.getContent(), existingRemark.getContent())) {
-                    existingRemark.setContent(remarkRequest.getContent());
-                    existingRemark.setUser(userRepository.getReferenceById(createBy));
-                    updateRemarks.add(existingRemark);
-                }
-
-                if (isTypeUpdate) {
-                    List<Task> newTasks = generateTasksForGlobalSegmentByProjectType(existingSegment, projectRequest.getType());
-                    deleteTasks.addAll(existingSegment.getTasks());
-                    createTasks.addAll(newTasks);
-                }
-                FileRecord fileRecord = fileRecordRepository.getReferenceById(projectRequest.getSourceFileRecordId());
-                updateDesiredFileNameIfDesiredFileNameNotNull(fileRecord, desiredFileName);
-                existingSegment.getTasks().forEach(task -> {
-                    if (task.getType() == Task.Workflow.SOURCE) {
-                        task.setFile(fileRecord);
-                        taskRepository.save(task);
-                    }
-                });
-
-            } else if (!segmentRequestMap.containsKey(existingSegment.getSegmentId())) {
-                deleteSegments.add(existingSegment);
-            } else {
-
-                ProjectRequest.SegmentRequest segmentRequest = segmentRequestMap.get(existingSegment.getSegmentId());
-                ProjectRequest.RemarkRequest remarkRequest = segmentRequest.getRemarkRequest();
-
-                existingSegment.setSummary(segmentRequest.getSummary());
-
-                existingSegment.setScope(segmentRequest.getScope());
-
-                if (!Objects.equals(remarkRequest.getContent(), existingRemark.getContent())) {
-                    existingRemark.setContent(remarkRequest.getContent());
-                    existingRemark.setUser(userRepository.getReferenceById(createBy));
-                    updateRemarks.add(existingRemark);
-                }
-                Set<Task.Workflow> requestWorkflowSet = new HashSet<>(segmentRequest.getWorkflows());
-
-                existingSegment.getTasks().forEach(existingTask -> {
-                    if (!requestWorkflowSet.contains(existingTask.getType())) {
-                        deleteTasks.add(existingTask);
-                    }
-                });
-
-                updateSegments.add(existingSegment);
-            }
-        });
-
-        projectRequest.getSegmentRequests().stream()
-                .filter(segmentRequest -> segmentRequest.getSegmentId() == null).forEach(createSegmentRequests -> {
-                    generateCreateSubSegmentBySegmentRequest(existingProject, createTasks, createRemarks, createSegments, createBy, createSegmentRequests);
-                });
-
-        createSegments.addAll(updateSegments);
-        segmentRepository.saveAll(createSegments);
-        segmentRepository.deleteAll(deleteSegments);
-
-        updateRemarks.addAll(createRemarks);
-        remarkRepository.saveAll(updateRemarks);
-
-        taskRepository.saveAll(createTasks);
-        taskRepository.deleteAllInBatch(deleteTasks);
-
-        existingProject.setSegments(null);
-        return projectRepository.save(existingProject);
+    public Project updateProject(Project project) {
+        throw new RuntimeException("not impl this function");
     }
 
     @Override
@@ -418,4 +329,6 @@ public class ProjectServiceImpl implements ProjectService {
 
         return remark;
     }
+
+
 }
