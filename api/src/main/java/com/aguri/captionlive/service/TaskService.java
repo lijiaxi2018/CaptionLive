@@ -28,4 +28,6 @@ public interface TaskService {
     List<Task> saveTasks(List<Task> taskList);
 
     void deleteAllInBatch(List<Task> tasks);
+
+    List<Task> findAllInSegmentSegmentId(List<Long> segmentIds);
 }

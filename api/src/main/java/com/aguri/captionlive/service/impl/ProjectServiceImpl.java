@@ -6,9 +6,7 @@ import com.aguri.captionlive.common.exception.EntityNotFoundException;
 import com.aguri.captionlive.common.util.FileRecordUtil;
 import com.aguri.captionlive.model.*;
 import com.aguri.captionlive.repository.*;
-import com.aguri.captionlive.service.FileRecordService;
-import com.aguri.captionlive.service.OrganizationService;
-import com.aguri.captionlive.service.ProjectService;
+import com.aguri.captionlive.service.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -222,8 +220,18 @@ public class ProjectServiceImpl implements ProjectService {
         accessRepository.saveAll(accessList);
     }
 
+    @Autowired
+    TaskService taskService;
+
+    @Autowired
+    SegmentService segmentService;
+
     @Override
+    @Transactional
     public void deleteProject(Long id) {
+        Project project = projectRepository.getReferenceById(id);
+        List<Segment> segments = project.getSegments();
+        segmentService.deleteAllInBatch(segments);
         projectRepository.deleteById(id);
     }
 
@@ -319,7 +327,6 @@ public class ProjectServiceImpl implements ProjectService {
 
         return remark;
     }
-
 
 
 }

@@ -155,4 +155,9 @@ public class TaskServiceImpl implements TaskService {
         taskRepository.deleteAllInBatch(tasks);
     }
 
+    @Override
+    public List<Task> findAllInSegmentSegmentId(List<Long> segmentIds) {
+        return taskRepository.findAllInSegmentSegmentId(segmentIds);
+    }
+
 }
