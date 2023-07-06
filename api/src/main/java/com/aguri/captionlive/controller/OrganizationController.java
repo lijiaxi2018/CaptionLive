@@ -38,11 +38,11 @@ public class OrganizationController {
     @Autowired
     private UserService userService;
 
-    @GetMapping
-    public ResponseEntity<Resp> getAllOrganizations() {
-        List<Organization> organizations = organizationService.getAllOrganizations();
-        return ResponseEntity.ok(Resp.ok(organizations.stream().sorted(Comparator.comparing(Organization::getOrganizationId)).map(organization -> organizationService.getResp(organization)).toList()));
-    }
+//    @GetMapping
+//    public ResponseEntity<Resp> getAllOrganizations() {
+//        List<Organization> organizations = organizationService.getAllOrganizations();
+//        return ResponseEntity.ok(Resp.ok(organizations.stream().sorted(Comparator.comparing(Organization::getOrganizationId)).map(organization -> organizationService.getResp(organization)).toList()));
+//    }
 
     @Autowired
     JwtTokenProvider jwtTokenProvider;
@@ -108,6 +108,22 @@ public class OrganizationController {
     public ResponseEntity<Resp> updateAvatar(@io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Request body containing avatar information", required = true, content = @Content(mediaType = "application/json", schema = @Schema(implementation = HashMap.class), examples = @ExampleObject(value = "{\"avatarId\": 1}"))) @RequestBody HashMap<String, String> body, @PathVariable("organizationId") Long organizationId) {
         Long avatarId = Long.valueOf(body.get("avatarId"));
         return ResponseEntity.ok(Resp.ok(organizationService.updateAvatar(organizationId, avatarId)));
+    }
+
+
+    @GetMapping()
+    public ResponseEntity<Resp> getPagedOrganizations(
+            @RequestParam(value = "searchTxt", defaultValue = "") String searchTxt,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "createdTime") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortOrder) {
+
+//        List<Organization> organizations = organizationService.getAllOrganizations();
+
+
+        List<Organization> organizations = organizationService.getPagedOrganizations(searchTxt, page, size, sortBy, sortOrder);
+        return ResponseEntity.ok(Resp.ok(organizations.stream().sorted(Comparator.comparing(Organization::getOrganizationId)).map(organization -> organizationService.getResp(organization)).toList()));
     }
 
 }
