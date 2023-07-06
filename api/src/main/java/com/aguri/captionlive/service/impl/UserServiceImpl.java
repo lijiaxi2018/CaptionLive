@@ -12,6 +12,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -88,8 +89,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<ProjectInfo> getAllAccessibleProjects(Long userId) {
-        List<Project> accessibleProjects = getUserById(userId).getAccessibleProjects();
-        return ProjectInfo.generateProjectInfos(accessibleProjects);
+        User user = userRepository.getReferenceById(userId);
+        List<Project> accessibleProjects = user.getAccessibleProjects();
+        HashSet<Project> projectSet = new HashSet<>(accessibleProjects);
+        user.getOrganizations().forEach(organization -> {
+            projectSet.addAll(organization.getProjects());
+        });
+        List<Project> projects = projectSet.stream().toList();
+        return ProjectInfo.generateProjectInfos(projects);
     }
 
     @Override
