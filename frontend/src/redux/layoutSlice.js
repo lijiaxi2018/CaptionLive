@@ -29,6 +29,14 @@ export const layoutSlice = createSlice({
       state.openSignInOnWindow = !state.openSignInOnWindow;
     },
 
+    openSignInOnWindow: (state) => {
+      state.openSignInOnWindow = true;
+    },
+
+    closeSignInOnWindow: (state) => {
+      state.openSignInOnWindow = false;
+    },
+
     toggleSignInOnPage: (state) => {
       state.inSignIn = !state.inSignIn;
     },
@@ -140,6 +148,8 @@ export const {
   openPrompt,
   closePrompt,
   updatePromptMessage,
+  openSignInOnWindow,
+  closeSignInOnWindow,
 } = layoutSlice.actions
 
 export default layoutSlice.reducer

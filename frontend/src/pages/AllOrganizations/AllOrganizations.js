@@ -6,7 +6,7 @@ import AddOrganization from '../../components/Organization/AddOrganization';
 import EntityInfo from '../../components/InfoCard/EntityInfo';
 import Prompt from '../../components/InfoCard/Prompt';
 import { openAddOrganization } from '../../redux/layoutSlice';
-import { useGetAllOrganizationsQuery } from '../../services/organization';
+import { useGetAllOrganization } from '../../api/organization';
 import { ImSphere } from 'react-icons/im';
 
 function AllOrganizations() {
@@ -15,7 +15,7 @@ function AllOrganizations() {
   const isOpenAddOrganization = useSelector((state) => state.layout.inAddOrganization);
   const myUserId = useSelector((state) => state.userAuth.userId);
 
-  const allOrganizationData = useGetAllOrganizationsQuery();
+  const [fetched, allOrganizationData] = useGetAllOrganization();
 
   return (
     <div className='general-page-container'>
@@ -31,14 +31,14 @@ function AllOrganizations() {
       }
 
       <div className='general-page-container-reduced'>
-      { (myUserId !== -1 && !allOrganizationData.isFetching) &&
+      { (myUserId !== -1 && fetched) &&
         <div>
           <div className='general-row-align'>
             <button className='general-button-grey' style={{"marginLeft" : "auto"}} onClick={() => dispatch(openAddOrganization())}>新建字幕组</button>
           </div>
 
           <div>
-            {allOrganizationData.data.data.map((organization) =>
+            {allOrganizationData.map((organization) =>
               <div key={organization.organizationId}>
                 <EntityInfo userId = {organization.organizationId} type={1} access={organization.leaderIds.includes(myUserId)} apply={!organization.memberIds.includes(myUserId)} applicant={myUserId}/>
               </div>
