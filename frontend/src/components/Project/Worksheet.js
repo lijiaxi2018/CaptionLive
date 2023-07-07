@@ -13,6 +13,15 @@ import { allWorkflowList } from '../../assets/workflows';
 import { openPrompt, updatePromptMessage } from '../../redux/layoutSlice';
 import Prompt from '../../components/InfoCard/Prompt';
 
+function copyToClipboard(str) {
+  const el = document.createElement('textarea');
+  el.value = str;
+  document.body.appendChild(el);
+  el.select();
+  document.execCommand('copy');
+  document.body.removeChild(el);
+};
+
 function parseToStaffList(projectData) {
   let taskType2Nickname = {};
   for (const segment of projectData.segmentInfos) {
@@ -75,7 +84,8 @@ function Worksheet({data}) {
 
   function handleCopyStaff(projectData) {
     let staffList = parseToStaffList(projectData);
-    navigator.clipboard.writeText(staffList);
+    // navigator.clipboard.writeText(staffList);
+    copyToClipboard(staffList);
 
     dispatch(updatePromptMessage("制作人员名单已拷贝到剪贴板。"));
     dispatch(openPrompt());
