@@ -1,12 +1,12 @@
 export const myorgnizationSideBar = [
-    {path:'projects', name:'工作表'},
-    {path:'glossaries', name:'词汇表'},
+    {path:'projects', name:'项目'},
+    {path:'glossaries', name:'语料'},
     {path:'aboutorganization', name:'关于'}
 ]
 
 export const myprojectSideBar = [
-    {path:'accessibleprojects', name:'可访问的项目'},
-    {path:'committedprojects', name:'参与的项目'}
+    {path:'accessibleprojects', name:'所有项目'},
+    {path:'committedprojects', name:'我的项目'}
 ]
 
 export const mailSideBar = [

@@ -20,7 +20,7 @@ function AllOrganizations() {
   return (
     <div className='general-page-container'>
 
-      <Header title="所有字幕组" icon = {ImSphere} />
+      <Header title="群组一览" icon = {ImSphere} />
 
       <SignInUpContainer />
 
