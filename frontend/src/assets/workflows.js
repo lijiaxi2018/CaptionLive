@@ -14,3 +14,17 @@ export const globalWorkflow = [
   {key: 9, taskName:"终校", taskCode:"F_CHECK"},
   {key: 10, taskName:"压制", taskCode:"RENDERING"},
 ]
+
+export const allWorkflowList = [
+  "SOURCE",
+  "TIMELINE",
+  "S_TIMELINE",
+  "K_TIMELINE",
+  "TRANSLATION",
+  "EFFECT",
+  "CHECK",
+  "POLISHING",
+  "EMBEDDING",
+  "F_CHECK",
+  "RENDERING",
+]
