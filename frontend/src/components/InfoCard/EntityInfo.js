@@ -141,7 +141,7 @@ function EntityInfo({userId, type, access, apply, applicant}) {
         .then((secondResponse) => {
           let message = secondResponse.data.message;
           if (message === "success") {
-            dispatch(updatePromptMessage("申请成功，请在信箱中查看申请状态。"));
+            dispatch(updatePromptMessage("申请成功，请在消息中查看申请状态。"));
             dispatch(openPrompt());
           }
         })

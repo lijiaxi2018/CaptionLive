@@ -24,7 +24,7 @@ function AccessibleProjects() {
 
   return (
     <div className='general-page-container'>
-      <Header title="可访问的项目" icon = {AiOutlineProject} />
+      <Header title="所有项目" icon = {AiOutlineProject} />
       
       <SignInUpContainer />
 

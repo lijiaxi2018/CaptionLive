@@ -9,7 +9,7 @@ function CommittedProjects() {
   return (
     <div className='general-page-container'>
 
-    <Header title="参与的项目" icon = {AiOutlineProject} />
+    <Header title="我的项目" icon = {AiOutlineProject} />
     <Sidebarlvl2 
       prefix={`/myprojects/`}
       data={myprojectSideBar}

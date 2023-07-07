@@ -19,7 +19,7 @@ function AllMail() {
   return (
     <div className='general-page-container'>
 
-      <Header title="所有收件箱" icon = {AiOutlineMail} />
+      <Header title="所有消息" icon = {AiOutlineMail} />
       
       <SignInUpContainer />
       <Sidebarlvl2 
