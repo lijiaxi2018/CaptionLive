@@ -1,21 +1,15 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import Header from '../../components/Layout/Header/Header';
 import SignInUpContainer from '../../components/User/SignInUpContainer';
 import Request from '../../components/Mail/Request';
 import Messages from '../../components/Mail/Messages';
 import Sidebarlvl2 from '../../components/Layout/Sidebar/Sidebarlvl2';
 import { useGetRequestsForUserQuery } from '../../services/request';
-import { closeMessage } from '../../redux/layoutSlice';
-
-import { Icon } from '@rsuite/icons';
 import { AiOutlineMail } from 'react-icons/ai';
-import { AiOutlineArrowLeft } from 'react-icons/ai';
 import { mailSideBar } from '../../assets/sidebar';
 
 function AllMail() {
-  const dispatch = useDispatch();
-
   const myUserId = useSelector((state) => state.userAuth.userId);
   const userRequestsResults = useGetRequestsForUserQuery(myUserId);
 
