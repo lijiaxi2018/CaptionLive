@@ -16,6 +16,6 @@ public interface GlossaryService {
 
     void deleteGlossary(Long id);
 
-    List<Glossary> getAllGlossarysByOrganization(Long organizationId);
+    List<Glossary> getAllGlossariesByOrganization(Long organizationId);
 }
 
