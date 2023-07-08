@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.aguri.captionlive.DTO.RequestRequest;
 import com.aguri.captionlive.common.resp.Resp;
 import com.aguri.captionlive.model.Request;
 import com.aguri.captionlive.service.RequestService;
@@ -21,7 +22,7 @@ public class RequestController {
     }
 
     @PostMapping
-    public ResponseEntity<Resp> createRequest(@RequestBody Request newRequest) {
+    public ResponseEntity<Resp> createRequest(@RequestBody RequestRequest newRequest) {
         return ResponseEntity.ok(Resp.ok(requestService.createRequest(newRequest)));
     }
 
@@ -38,13 +39,18 @@ public class RequestController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Resp> updateRequest(@PathVariable("id") Long id, @RequestBody Request newRequest) {
+    public ResponseEntity<Resp> updateRequest(@PathVariable("id") Long id, @RequestBody RequestRequest newRequest) {
         return ResponseEntity.ok(Resp.ok(requestService.updateRequest(id, newRequest)));
     }
 
     @PutMapping("/read/{id}/{userId}")
     public ResponseEntity<Resp> markRequestAsRead(@PathVariable("id") Long id, @PathVariable("userId") Long userId) {
         return ResponseEntity.ok(Resp.ok(requestService.markRequestAsRead(id, userId)));
+    }
+
+    @PutMapping("/unread/{id}/{userId}")
+    public ResponseEntity<Resp> markRequestAsUnread(@PathVariable("id") Long id, @PathVariable("userId") Long userId) {
+        return ResponseEntity.ok(Resp.ok(requestService.markRequestAsUnread(id, userId)));
     }
 
     @PutMapping("/approve/{id}")
@@ -55,6 +61,16 @@ public class RequestController {
     @PutMapping("/reject/{id}")
     public ResponseEntity<Resp> rejectRequest(@PathVariable("id") Long id) {
         return ResponseEntity.ok(Resp.ok(requestService.rejectRequest(id)));
+    }
+
+    @GetMapping("/getAllSenderRequests/{userId}")
+    public ResponseEntity<Resp> getAllRequestsForSenderUser(@PathVariable("userId") Long userId) {
+        return ResponseEntity.ok(Resp.ok(requestService.getAllRequestsForSenderUser(userId)));
+    }
+
+    @GetMapping("/getAllRecipientRequests/{userId}")
+    public ResponseEntity<Resp> getAllRequestsForRecipientUser(@PathVariable("userId") Long userId) {
+        return ResponseEntity.ok(Resp.ok(requestService.getAllRequestsForRecipientUser(userId)));
     }
 
     @GetMapping("/getAllRequests/{userId}")

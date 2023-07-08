@@ -2,13 +2,23 @@ import { createSlice } from '@reduxjs/toolkit'
 
 const sessionSelectedOrgId = sessionStorage.getItem("clSelectedOrgId") !== null ? JSON.parse(sessionStorage.getItem("clSelectedOrgId")) : -1;
 const sessionSelectedLvl2Id = sessionStorage.getItem("clSelectedLvl2Id") !== null ? JSON.parse(sessionStorage.getItem("clSelectedLvl2Id")) : 0;
+const sessionOpenedSegmentIds = sessionStorage.getItem("clOpenedSegmentIds") !== null ? JSON.parse(sessionStorage.getItem("clOpenedSegmentIds")) : [];
 
 const initialState = {
   openSignInOnWindow: false,
   inSignIn: false,
-  inEditUser: false,
+  inAddSegment: false,
+  inAddOrganization: false,
+  inMessage: false,
+  inAddProject: false,
+  inShareProject: false,
+  inPrompt: false,
+  promptMessage: '',
+  selectedRequestId: -1,
+  selectedProjectId: -1,
   selectedOrgId: sessionSelectedOrgId,
-  selectedLvl2Id: sessionSelectedLvl2Id
+  selectedLvl2Id: sessionSelectedLvl2Id,
+  openedSegmentIds: sessionOpenedSegmentIds,
 }
 
 export const layoutSlice = createSlice({
@@ -19,12 +29,16 @@ export const layoutSlice = createSlice({
       state.openSignInOnWindow = !state.openSignInOnWindow;
     },
 
-    toggleSignInOnPage: (state) => {
-      state.inSignIn = !state.inSignIn;
+    openSignInOnWindow: (state) => {
+      state.openSignInOnWindow = true;
     },
 
-    toggleInEditUser: (state) => {
-      state.inEditUser = !state.inEditUser;
+    closeSignInOnWindow: (state) => {
+      state.openSignInOnWindow = false;
+    },
+
+    toggleSignInOnPage: (state) => {
+      state.inSignIn = !state.inSignIn;
     },
 
     updateSelectedOrgId: (state, action) => {
@@ -36,15 +50,106 @@ export const layoutSlice = createSlice({
       state.selectedLvl2Id = action.payload;
       sessionStorage.setItem("clSelectedLvl2Id", JSON.stringify(state.selectedLvl2Id));
     },
+
+    openSegment: (state, action) => {
+      state.openedSegmentIds.push(action.payload);
+      sessionStorage.setItem("clOpenedSegmentIds", JSON.stringify(state.openedSegmentIds));
+    },
+
+    closeSegment: (state, action) => {
+      let index = state.openedSegmentIds.indexOf(action.payload);
+      if (index !== -1) {
+        state.openedSegmentIds.splice(index, 1);
+      }
+      sessionStorage.setItem("clOpenedSegmentIds", JSON.stringify(state.openedSegmentIds));
+    },
+
+    openAddSegment: (state) => {
+      state.inAddSegment = true;
+    },
+
+    closeAddSegment: (state) => {
+      state.inAddSegment = false;
+    },
+
+    openAddOrganization: (state) => {
+      state.inAddOrganization = true;
+    },
+
+    closeAddOrganization: (state) => {
+      state.inAddOrganization = false;
+    },
+
+    openMessage: (state) => {
+      state.inMessage = true;
+    },
+
+    closeMessage: (state) => {
+      state.inMessage = false;
+    },
+
+    updateSelectedRequestId: (state, action) => {
+      state.selectedRequestId = action.payload;
+    },
+
+    openAddProject: (state) => {
+      state.inAddProject = true;
+    },
+
+    closeAddProject: (state) => {
+      state.inAddProject = false;
+    },
+
+    updateSelectedProjectId: (state, action) => {
+      state.selectedProjectId = action.payload;
+    },
+
+    openShareProject: (state) => {
+      state.inShareProject = true;
+    },
+
+    closeShareProject: (state) => {
+      state.inShareProject = false;
+    },
+
+    openPrompt: (state) => {
+      state.inPrompt = true;
+    },
+
+    closePrompt: (state) => {
+      state.inPrompt = false;
+    },
+
+    updatePromptMessage: (state, action) => {
+      state.promptMessage = action.payload;
+    },
   },
 })
 
 export const { 
   toggleSignInOnWindow, 
   toggleSignInOnPage, 
-  toggleInEditUser, 
   updateSelectedOrgId,
   updateSelectedLvl2Id, 
+  openSegment,
+  closeSegment, 
+  openAddSegment, 
+  closeAddSegment, 
+  openAddOrganization,
+  closeAddOrganization,
+  openMessage,
+  closeMessage,
+  updateSelectedRequestId,
+  openAddProject,
+  closeAddProject,
+  updateSelectedProjectId,
+  openShareProject,
+  closeShareProject,
+  openPrompt,
+  closePrompt,
+  updatePromptMessage,
+  openSignInOnWindow,
+  closeSignInOnWindow,
 } = layoutSlice.actions
 
 export default layoutSlice.reducer

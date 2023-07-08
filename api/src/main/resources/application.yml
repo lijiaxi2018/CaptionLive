@@ -8,10 +8,10 @@ spring:
   
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: ${CL_DDL_AUTO}
     show-sql: true
     defer-datasource-initialization: true # Loading Initialization Data
-    
+
   servlet:
     multipart:
       enabled: true
@@ -19,6 +19,7 @@ spring:
       max-file-size: 200MB
       max-request-size: 215MB
       location: /app/files
+  security:
 
 # Swagger UI Description
 apiTitle: "CaptionLive! API"
@@ -26,5 +27,6 @@ apiDescription: "A Project Management System for Fansub Groups, developed by Agu
 apiVersion: "0.1"
 
 # application.properties
-jwt.secret: your-secret-key
-jwt.expiration: 86400
+jwt:
+  secret: your-secret-key
+  expiration: 86400

@@ -24,4 +24,12 @@ public interface TaskService {
     Task assign(Long taskId, Long userId);
 
     Task uploadFileAndTaskStatusChange(Long taskId, Long fileRecordId);
+
+    List<Task> saveTasks(List<Task> taskList);
+
+    void deleteAllInBatch(List<Task> tasks);
+
+    List<Task> findAllInSegmentSegmentId(List<Long> segmentIds);
+
+    List<Task> findAllBySegmentSegmentId(Long segmentId);
 }

@@ -11,7 +11,6 @@ import AboutOrganization from './pages/MyOrganizations/AboutOrganization';
 
 import CommittedProjects from './pages/MyProjects/CommittedProjects';
 import AccessibleProjects from './pages/MyProjects/AccessibleProjects';
-import AllProjects from './pages/MyProjects/AllProjects';
 
 import AllOrganizations from './pages/AllOrganizations/AllOrganizations';
 
@@ -34,11 +33,10 @@ function App() {
           <Route path="/myorganizations/:id/glossaries" element={<Glossaries/>}/>
           <Route path="/myorganizations/:id/aboutorganization" element={<AboutOrganization/>}/>
 
-          <Route path="/myprojects" element={<CommittedProjects/>}/>
-          <Route path="/myprojects/committedprojects" element={<CommittedProjects/>}/>
+          <Route path="/myprojects" element={<AccessibleProjects/>}/>
           <Route path="/myprojects/accessibleprojects" element={<AccessibleProjects/>}/>
-          <Route path="/myprojects/allprojects" element={<AllProjects/>}/>
-
+          <Route path="/myprojects/committedprojects" element={<CommittedProjects/>}/>
+          
           <Route path="/allorganizations" element={<AllOrganizations/>}/>
 
           <Route path="/mail" element={<AllMails/>}/>

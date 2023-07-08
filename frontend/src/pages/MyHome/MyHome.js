@@ -1,8 +1,8 @@
 import React from 'react';
-import { useSelector } from 'react-redux'
+import { useSelector } from 'react-redux';
 import Header from '../../components/Layout/Header/Header';
 import SignInUpContainer from '../../components/User/SignInUpContainer';
-import EntityInfo from '../../components/InfoCard/EntityInfo';
+import UserInfo from '../../components/InfoCard/UserInfo';
 import { AiOutlineHome } from 'react-icons/ai';
 
 function MyHome() {
@@ -11,11 +11,11 @@ function MyHome() {
   return (
     <div className='general-page-container'>
 
-      <Header title="我的主页" icon = {AiOutlineHome} />
+      <Header title="个人信息" icon = {AiOutlineHome} />
 
       { myUserId !== -1 &&
         <div className='entity-info-container-my-home'>
-          <EntityInfo userId = {myUserId}/>
+          <UserInfo userId = {myUserId} access={true}/>
         </div>
       }
         

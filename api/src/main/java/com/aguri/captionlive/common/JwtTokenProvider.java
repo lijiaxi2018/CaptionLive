@@ -26,7 +26,7 @@ public class JwtTokenProvider {
                 .setSubject(username)
                 .setIssuedAt(new Date())
                 .setExpiration(expirationDate)
-                .signWith(SignatureAlgorithm.HS512, jwtSecret) 
+                .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
     }
 
@@ -53,6 +53,19 @@ public class JwtTokenProvider {
         }
 
         return false;
+    }
+
+    public String parseUserNameFromToken(String token) {
+        // 解析 JWT Token
+        Claims claims = Jwts.parser()
+                .setSigningKey(jwtSecret)
+                .parseClaimsJws(token)
+                .getBody();
+
+        // 获取声明数据
+        String username = claims.getSubject();
+        Date expirationDate = claims.getExpiration();
+        return username;
     }
 }
 

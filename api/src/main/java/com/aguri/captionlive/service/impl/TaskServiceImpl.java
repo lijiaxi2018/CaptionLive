@@ -7,7 +7,9 @@ import com.aguri.captionlive.model.Task;
 import com.aguri.captionlive.model.User;
 import com.aguri.captionlive.repository.TaskRepository;
 import com.aguri.captionlive.repository.UserRepository;
+import com.aguri.captionlive.service.FileRecordService;
 import com.aguri.captionlive.service.TaskService;
+import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -102,6 +104,7 @@ public class TaskServiceImpl implements TaskService {
         }
 
         existingTask.setStatus(Task.Status.NOT_ASSIGNED);
+        existingTask.setWorker(null);
         return taskRepository.save(existingTask);
     }
 
@@ -119,6 +122,9 @@ public class TaskServiceImpl implements TaskService {
         return taskRepository.save(existingTask);
     }
 
+    @Autowired
+    EntityManager entityManager;
+
     @Override
     public Task uploadFileAndTaskStatusChange(Long taskId, Long fileRecordId) {
         Task task = taskRepository.getReferenceById(taskId);
@@ -129,6 +135,34 @@ public class TaskServiceImpl implements TaskService {
         }
         task.setFile(fileRecord);
         return taskRepository.save(task);
+    }
+
+    @Override
+    public List<Task> saveTasks(List<Task> taskList) {
+        return taskRepository.saveAll(taskList);
+    }
+
+
+    @Autowired
+    FileRecordService fileRecordService;
+
+    @Override
+    public void deleteAllInBatch(List<Task> tasks) {
+        List<FileRecord> fileRecords = tasks.stream().map(Task::getFile).toList();
+        entityManager.flush();
+        fileRecordService.deleteFileRecordInBatch(fileRecords);
+        fileRecordService.deleteFileRecordInBatch(fileRecords);
+        taskRepository.deleteAllInBatch(tasks);
+    }
+
+    @Override
+    public List<Task> findAllInSegmentSegmentId(List<Long> segmentIds) {
+        return taskRepository.findAllBySegmentSegmentIdIn(segmentIds);
+    }
+
+    @Override
+    public List<Task> findAllBySegmentSegmentId(Long segmentId) {
+        return taskRepository.findAllBySegmentSegmentId(segmentId);
     }
 
 }

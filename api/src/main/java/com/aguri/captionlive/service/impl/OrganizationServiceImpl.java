@@ -1,13 +1,16 @@
 package com.aguri.captionlive.service.impl;
 
 import com.aguri.captionlive.DTO.OrganizationRequest;
+import com.aguri.captionlive.DTO.OrganizationResp;
 import com.aguri.captionlive.DTO.ProjectInfo;
 import com.aguri.captionlive.common.exception.EntityNotFoundException;
 import com.aguri.captionlive.common.util.FileRecordUtil;
 import com.aguri.captionlive.model.*;
+import com.aguri.captionlive.repository.MembershipRepository;
 import com.aguri.captionlive.repository.OrganizationRepository;
 import com.aguri.captionlive.repository.ProjectRepository;
 import com.aguri.captionlive.service.OrganizationService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -37,12 +40,23 @@ public class OrganizationServiceImpl implements OrganizationService {
         return organizationRepository.findAll();
     }
 
+
+    @Autowired
+    MembershipRepository membershipRepository;
+
     @Override
-    public Organization createOrganization(OrganizationRequest organizationRequest) {
+    @Transactional
+    public Organization createOrganization(OrganizationRequest organizationRequest, User user) {
         Organization organization = new Organization();
         BeanUtils.copyProperties(organizationRequest, organization);
         organization.setAvatar(FileRecordUtil.generateFileRecord(organizationRequest.getAvatarId()));
-        return organizationRepository.save(organization);
+        Membership membership = new Membership();
+        membership.setOrganization(organization);
+        membership.setUser(user);
+        membership.setPermission(Membership.Permission.LEADER);
+        Organization save = organizationRepository.save(organization);
+        membershipRepository.save(membership);
+        return save;
     }
 
     @Override
@@ -67,6 +81,31 @@ public class OrganizationServiceImpl implements OrganizationService {
         Page<Project> projectsPage = projectRepository.findAllByOrganizationsOrganizationIdAndNameContaining(organizationId, searchTxt, pageable);
         List<Project> projects = projectsPage.getContent();
         return ProjectInfo.generateProjectInfos(projects);
+    }
+
+    @Override
+    public Organization updateDescription(Long organizationId, String description) {
+        Organization referenceById = organizationRepository.getReferenceById(organizationId);
+        referenceById.setDescription(description);
+        return organizationRepository.save(referenceById);
+    }
+
+    @Override
+    public Organization updateAvatar(Long organizationId, Long avatarId) {
+        FileRecord fileRecord = FileRecordUtil.generateFileRecord(avatarId);
+        Organization referenceById = organizationRepository.getReferenceById(organizationId);
+        referenceById.setAvatar(fileRecord);
+        return organizationRepository.save(referenceById);
+    }
+
+    public OrganizationResp getResp(Organization organization) {
+        List<Long> leaderIds = membershipRepository.findAllByOrganizationOrganizationIdAndPermissionIn(organization.getOrganizationId(), List.of(Membership.Permission.LEADER)).stream().map(Membership::getUser).map(User::getUserId).toList();
+        OrganizationResp organizationResp = new OrganizationResp();
+        BeanUtils.copyProperties(organization, organizationResp);
+        organizationResp.setAvatarId(FileRecordUtil.generateFileRecordId(organization.getAvatar()));
+        organizationResp.setLeaderIds(leaderIds);
+        organizationResp.setMemberIds(organization.getUsers().stream().map(User::getUserId).toList());
+        return organizationResp;
     }
 
 }

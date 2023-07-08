@@ -26,6 +26,8 @@ public class Task {
 
     private LocalDate acceptedTime;
 
+    private Integer displayOrder;
+
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "segment_id")
@@ -51,15 +53,15 @@ public class Task {
     public static final Workflow[] AUDIO_AND_VIDEO_DEFAULT_WORKFLOWS = new Workflow[]{Workflow.SOURCE, Workflow.F_CHECK, Workflow.RENDERING};
 
     public enum Workflow {
-        TIMELINE(0),
-        K_TIMELINE(1),
+        SOURCE(0),
+        TIMELINE(1),
         S_TIMELINE(2),
-        TRANSLATION(3),
-        EFFECT(4),
-        POLISHING(5),
-        EMBEDDING(6),
-        CHECK(7),
-        SOURCE(8),
+        K_TIMELINE(3),
+        TRANSLATION(4),
+        EFFECT(5),
+        CHECK(6),
+        POLISHING(7),
+        EMBEDDING(8),
         F_CHECK(9),
         RENDERING(10);
 

@@ -99,9 +99,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateDescription(Long userId, String description) {
+    public User updateDescription(Long userId, String description, String nickname) {
         User user = getUserById(userId);
         user.setDescription(description);
+        user.setNickname(nickname);
         return userRepository.save(user);
     }
 

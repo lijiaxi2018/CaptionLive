@@ -4,20 +4,21 @@ import com.aguri.captionlive.common.exception.EntityNotFoundException;
 import com.aguri.captionlive.model.FileRecord;
 import com.aguri.captionlive.repository.FileRecordRepository;
 import com.aguri.captionlive.service.FileRecordService;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -55,6 +56,7 @@ public class FileRecordServiceImpl implements FileRecordService {
 
     @Override
     public void deleteFileRecord(Long id) {
+        deleteFile(fileRecordRepository.getReferenceById(id));
         fileRecordRepository.deleteById(id);
     }
 
@@ -76,10 +78,15 @@ public class FileRecordServiceImpl implements FileRecordService {
         String filePath = fileRecord.getPath();
         String storedName = fileRecord.getStoredName();
         Resource fileResource = new FileSystemResource(filePath + File.separator + storedName);
+
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.valueOf(fileRecord.getType()));
+        String encodedFileName = URLEncoder.encode(fileRecord.getOriginalName(), StandardCharsets.UTF_8);
+        headers.setContentDisposition(ContentDisposition.builder("attachment").filename(encodedFileName).build());
+
         return new ResponseEntity<>(fileResource, headers, HttpStatus.OK);
     }
+
 
     @Override
     public Long uploadSmallSizeFile(MultipartFile file) {
@@ -87,7 +94,7 @@ public class FileRecordServiceImpl implements FileRecordService {
         String storedName = UUID.randomUUID().toString().replaceAll("-", "");
         OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
         String logicalDirectory = DateTimeFormatter.ofPattern("yyyy-MM-dd").format(now);
-        String filePath = fileStorageDirectory + File.separator + logicalDirectory;
+        String filePath = fileStorageDirectory.replace('/', File.separatorChar) + File.separator + logicalDirectory;
 
         // Save the file to the storage directory
         String path = filePath + File.separator + storedName;
@@ -111,6 +118,41 @@ public class FileRecordServiceImpl implements FileRecordService {
         fileRecord.setPath(filePath);
 
         return fileRecordRepository.save(fileRecord).getFileRecordId();
+    }
+
+    @Autowired
+    EntityManager entityManager;
+
+    @Override
+    @Transactional
+    public void deleteFileRecordInBatch(List<FileRecord> fileRecords) {
+        fileRecords.forEach(this::deleteFile);
+        entityManager.flush();
+        fileRecordRepository.deleteAllInBatch(fileRecords);
+    }
+
+
+    private void deleteFile(String filePath, String storedName) {
+        deleteFile(filePath + File.separator + storedName);
+    }
+
+    private void deleteFile(FileRecord fileRecord) {
+        deleteFile(fileRecord.getPath(), fileRecord.getStoredName());
+    }
+
+    private void deleteFile(String filePath) {
+        File file = new File(filePath);
+
+        if (file.exists()) {
+            boolean deleted = file.delete();
+            if (deleted) {
+                System.out.println("文件删除成功。");
+            } else {
+                throw new RuntimeException("文件删除失败。");
+            }
+        } else {
+            throw new RuntimeException("文件不存在。");
+        }
     }
 
 }

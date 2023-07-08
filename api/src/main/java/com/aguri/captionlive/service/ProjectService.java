@@ -12,12 +12,13 @@ public interface ProjectService {
     List<Project> getAllProjects();
 
     Project createProject(ProjectRequest projectRequest);
+    Project createProject(Project newProject);
 
     Project getProjectById(Long id);
 
     void deleteProject(Long id);
 
-    Project updateProject(ProjectRequest projectRequest);
+    Project updateProject(Project project);
 
     List<User> getAllAccessibleUsers(Long projectId);
 
@@ -28,4 +29,7 @@ public interface ProjectService {
     Project updateCover(Long projectId, Long coverId);
 
     void shareProject2User(Long projectId, Long userId);
+
+    void shareProject2Organization(Long projectId, Long organizationId);
+
 }

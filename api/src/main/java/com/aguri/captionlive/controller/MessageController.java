@@ -1,5 +1,6 @@
 package com.aguri.captionlive.controller;
 
+import com.aguri.captionlive.DTO.MessageRequest;
 import com.aguri.captionlive.common.resp.Resp;
 import com.aguri.captionlive.model.Message;
 import com.aguri.captionlive.service.MessageService;
@@ -20,7 +21,7 @@ public class MessageController {
     }
 
     @PostMapping("/api/messages")
-    public ResponseEntity<Resp> createMessage(@RequestBody Message newMessage) {
+    public ResponseEntity<Resp> createMessage(@RequestBody MessageRequest newMessage) {
         return ResponseEntity.ok(Resp.ok(messageService.createMessage(newMessage)));
     }
 
@@ -37,7 +38,7 @@ public class MessageController {
     }
 
     @PutMapping("/api/messages/{id}")
-    public ResponseEntity<Resp> updateMessageById(@PathVariable("id") Long id, @RequestBody Message newMessage) {
+    public ResponseEntity<Resp> updateMessageById(@PathVariable("id") Long id, @RequestBody MessageRequest newMessage) {
         return ResponseEntity.ok(Resp.ok(messageService.updateMessage(id, newMessage)));
     }
 

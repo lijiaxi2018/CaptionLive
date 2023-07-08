@@ -17,7 +17,7 @@ public class Request {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long requestId;
 
-    private Long type;
+    private Type type;
 
     private int status;
 
@@ -39,5 +39,21 @@ public class Request {
 
     @CreationTimestamp
     private LocalDateTime createdTime;
-    
+
+    public enum Type {
+        ANNOUNCEMENT(0),
+        ADD_USER_TO_ORGANIZATION(1),
+        SHARE_PROJECT_TO_USER(2),
+        SHARE_PROJECT_TO_ORGANIZATION(3);
+        private final int value;
+
+        Type(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+    }
+
 }

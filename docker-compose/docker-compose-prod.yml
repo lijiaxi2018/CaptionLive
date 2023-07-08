@@ -1,0 +1,44 @@
+version: "3.7"
+name: captionlive
+
+services:
+  db:
+    image: postgres:14.7
+    volumes:
+      - "../docker-data/psql-data:/var/lib/postgresql/data"
+    container_name: captionlive_db_prod
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=114514
+  
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    depends_on:
+      - db
+    volumes:
+      - "../docker-data/pga4-data:/var/lib/pgadmin"
+    ports:
+      - "800:80"
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=pgadmin4@pgadmin.org
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    container_name: captionlive_pgadmin
+
+  api:
+    image: lijiaxi2018/cl_api_prod
+    volumes:
+      - "../docker-data/files:/app/files"
+    restart: unless-stopped
+    depends_on:
+      - db
+    container_name: captionlive_api_prod
+    ports:
+      - "8080:8080"
+  
+  frontend:
+    image: lijiaxi2018/cl_frontend_prod
+    container_name: captionlive_frontend_prod
+    ports:
+      - "80:3000"

@@ -5,6 +5,7 @@ import com.aguri.captionlive.DTO.UserRequest;
 import com.aguri.captionlive.common.resp.Resp;
 import com.aguri.captionlive.model.Organization;
 import com.aguri.captionlive.model.Project;
+import com.aguri.captionlive.service.OrganizationService;
 import com.aguri.captionlive.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -25,11 +27,11 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-//    @GetMapping
-//    public ResponseEntity<Resp> getAllUsers() {
-//        return ResponseEntity.ok(Resp.ok(userService.getAllUsers()));
-//    }
-//
+    @GetMapping
+    public ResponseEntity<Resp> getAllUsers() {
+        return ResponseEntity.ok(Resp.ok(userService.getAllUsers()));
+    }
+
     @PostMapping
     public ResponseEntity<Resp> createUser(@RequestBody UserRequest userRequest) {
         return ResponseEntity.ok(Resp.ok(userService.createUser(userRequest)));
@@ -64,11 +66,13 @@ public class UserController {
         return ResponseEntity.ok(Resp.ok(allAccessibleProjects));
     }
 
+    @Autowired
+    OrganizationService organizationService;
+
     @GetMapping("/{userId}/organizations")
     public ResponseEntity<Resp> getMyOrganizations(@PathVariable Long userId) {
-        System.out.println("/{userId}/organizations");
-        List<Organization> organizations = userService.getUserById(userId).getOrganizations();
-        return ResponseEntity.ok(Resp.ok(organizations));
+        List<Organization> organizations = userService.getUserById(userId).getOrganizations().stream().sorted(Comparator.comparing(Organization::getOrganizationId)).toList();
+        return ResponseEntity.ok(Resp.ok(organizations.stream().map(organization -> organizationService.getResp(organization)).toList()));
     }
 
 
@@ -82,7 +86,8 @@ public class UserController {
             @RequestBody HashMap<String, String> body,
             @PathVariable("userId") Long userId) {
         String description = body.get("description");
-        return ResponseEntity.ok(Resp.ok(userService.updateDescription(userId, description)));
+        String nickname = body.get("nickname");
+        return ResponseEntity.ok(Resp.ok(userService.updateDescription(userId, description, nickname)));
     }
 
     @PutMapping("/{userId}/avatar")

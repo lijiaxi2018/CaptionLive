@@ -1,10 +1,12 @@
+// DEPRECATED
+
 import React, { useCallback } from "react";
 import { useDropzone } from 'react-dropzone'
 import { usePostFilesMutation } from "../../../services/file";
 import { usePutUserAvatarIdMutation } from '../../../services/user';
 
 // Reference: https://www.npmjs.com/package/react-dropzone
-const FileUpload = ({id, type}) => {
+const FileDropZone = ({id, type}) => {
     const [postFiles] = usePostFilesMutation();
     const [putUserAvatarId] = usePutUserAvatarIdMutation();
 
@@ -25,7 +27,6 @@ const FileUpload = ({id, type}) => {
                   // TODO: Deal with other return messages
                 })
             }).catch(error => {
-                console.log(error);
             })
         }
         
@@ -46,4 +47,4 @@ const FileUpload = ({id, type}) => {
     );
 }
 
-export default FileUpload;
+export default FileDropZone;

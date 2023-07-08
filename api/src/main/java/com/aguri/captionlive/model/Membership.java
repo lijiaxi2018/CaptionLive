@@ -23,7 +23,7 @@ public class Membership {
     @JoinColumn(name = "organization_id")
     private Organization organization;
 
-    private Integer permission;
+    private Permission permission;
 
     private Integer position;
 
@@ -32,4 +32,19 @@ public class Membership {
 
     @CreationTimestamp
     private LocalDateTime createdTime;
+
+    public enum Permission {
+        MEMBER(0),
+        LEADER(1);
+
+        private final int value;
+
+        Permission(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+    }
 }

@@ -9,4 +9,5 @@ import java.util.List;
 
 @Repository
 public interface OwnershipRepository extends JpaRepository<Ownership, Long> {
+    List<Ownership> findAllByProjectProjectId(Long projectId);
 }

@@ -1,10 +1,12 @@
 package com.aguri.captionlive.DTO;
 
+import com.aguri.captionlive.common.util.FileRecordUtil;
 import com.aguri.captionlive.model.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Data
@@ -14,11 +16,11 @@ public class ProjectInfo {
 
     private Boolean isCompleted;
 
+    private Long coverFileRecordId;
+
     private String name;
 
     private LocalDateTime createdTime;
-
-    private List<SegmentInfo.TaskInfo> taskInfos;
 
     private List<SegmentInfo> segmentInfos;
 
@@ -30,6 +32,8 @@ public class ProjectInfo {
         private String summary;
 
         private String scope;
+
+        private Boolean isGlobal;
 
         private List<TaskInfo> taskInfos;
 
@@ -58,12 +62,18 @@ public class ProjectInfo {
         ProjectInfo projectInfo = new ProjectInfo();
         projectInfo.setProjectId(project.getProjectId());
         projectInfo.setIsCompleted(true);
+        FileRecord coverFileRecord = project.getCoverFileRecord();
+        if (coverFileRecord != null) {
+            projectInfo.setCoverFileRecordId(coverFileRecord.getFileRecordId());
+        } else {
+            projectInfo.setCoverFileRecordId(0L);
+        }
         projectInfo.setName(project.getName());
         List<Segment> segments = project.getSegments();
         projectInfo.setCreatedTime(project.getCreatedTime());
         projectInfo.setSegmentInfos(new ArrayList<>());
         segments.forEach(segment -> {
-            List<SegmentInfo.TaskInfo> taskInfos = segment.getTasks().stream().map(task -> {
+            List<SegmentInfo.TaskInfo> taskInfos = segment.getTasks().stream().sorted(Comparator.comparingInt(t -> t.getType().getValue())).map(task -> {
                 SegmentInfo.TaskInfo taskInfo = new SegmentInfo.TaskInfo();
                 taskInfo.setWorkerUser(task.getWorker());
                 Task.Status status = task.getStatus();
@@ -81,17 +91,14 @@ public class ProjectInfo {
                 taskInfo.setType(task.getType());
                 return taskInfo;
             }).toList();
-            if (segment.getIsGlobal()) {
-                projectInfo.setTaskInfos(taskInfos);
-            } else {
-                SegmentInfo segmentInfo = new SegmentInfo();
-                segmentInfo.setSegmentId(segment.getSegmentId());
-                segmentInfo.setSummary(segment.getSummary());
-                segmentInfo.setScope(segment.getScope());
-                segmentInfo.setRemarks(segment.getRemarks());
-                segmentInfo.setTaskInfos(taskInfos);
-                projectInfo.getSegmentInfos().add(segmentInfo);
-            }
+            SegmentInfo segmentInfo = new SegmentInfo();
+            segmentInfo.setSegmentId(segment.getSegmentId());
+            segmentInfo.setSummary(segment.getSummary());
+            segmentInfo.setScope(segment.getScope());
+            segmentInfo.setRemarks(segment.getRemarks());
+            segmentInfo.setTaskInfos(taskInfos);
+            segmentInfo.setIsGlobal(segment.getIsGlobal());
+            projectInfo.getSegmentInfos().add(segmentInfo);
         });
         return projectInfo;
     }

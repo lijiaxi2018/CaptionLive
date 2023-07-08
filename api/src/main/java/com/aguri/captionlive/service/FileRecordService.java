@@ -21,4 +21,6 @@ public interface FileRecordService {
     ResponseEntity<Resource> download(Long fileRecordId);
 
     Long uploadSmallSizeFile(MultipartFile file);
+
+    void deleteFileRecordInBatch(List<FileRecord> fileRecords);
 }

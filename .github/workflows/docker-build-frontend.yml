@@ -2,7 +2,7 @@ name: Build Frontend Image
 
 on:
   pull_request:
-    branches: [ "main" ]
+    branches: [ "staging", "production" ]
 
 jobs:
   build_images:

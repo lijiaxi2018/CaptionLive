@@ -2,7 +2,7 @@ name: Build API Image
 
 on:
   pull_request:
-    branches: [ "main" ]
+    branches: [ "staging", "production" ]
 
 jobs:
   build_images:
@@ -12,5 +12,5 @@ jobs:
       - name: Build API Image
         working-directory: ./api
         run: |
-          docker build --no-cache -t cl_api -f DockerFile .
+          docker build --no-cache -t cl_api -f staging.DockerFile .
       
