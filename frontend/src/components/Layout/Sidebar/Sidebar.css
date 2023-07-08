@@ -5,7 +5,7 @@
 .sidebar {
         width:240;
         height:100%;
-        position: absolute;
+        position: fixed;
         z-index: 20;
         background-color: #f7f7fa;
 }
