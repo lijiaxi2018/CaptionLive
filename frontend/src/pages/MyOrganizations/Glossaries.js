@@ -1,6 +1,7 @@
 import React from 'react';
 import Sidebarlvl2 from '../../components/Layout/Sidebar/Sidebarlvl2';
 import Header from '../../components/Layout/Header/Header';
+import SignInUpContainer from '../../components/User/SignInUpContainer';
 import { VscOrganization } from 'react-icons/vsc';
 import { useGetOrganizationQuery } from '../../services/organization';
 import { useParams } from 'react-router';
@@ -17,6 +18,7 @@ function Glossaries() {
     <div>
       <div className='general-page-container'>
         <Header title={organizationName} icon = {VscOrganization} />
+        <SignInUpContainer />
         <Sidebarlvl2 
           prefix={`/myorganizations/${organizationId}/`}
           data={myorgnizationSideBar}
