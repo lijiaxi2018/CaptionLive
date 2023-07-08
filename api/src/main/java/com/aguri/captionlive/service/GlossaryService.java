@@ -6,7 +6,7 @@ import com.aguri.captionlive.model.Glossary;
 
 public interface GlossaryService {
 
-    List<Glossary> getAllGlossarys();
+    List<Glossary> getAllGlossaries();
 
     Glossary getGlossaryById(Long id);
 

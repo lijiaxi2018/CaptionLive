@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface RemarkRepository extends JpaRepository<Remark, Long> {
-    Remark findOneBySegmentSegmentId(Long segmentId);
+    Remark findOneBySegmentId(Long segmentId);
 }
