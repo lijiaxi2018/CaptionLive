@@ -623,3 +623,14 @@
   padding: 20px;
   box-shadow: 0px 0px 30px;
 }
+
+.general-search-bar {
+  background-color : #e8e5e6; 
+  border-radius: 4px;
+  border: 0px;
+  height: 40px;
+  width: 1035px;
+  padding: 10px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}

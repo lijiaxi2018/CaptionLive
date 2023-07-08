@@ -18,7 +18,7 @@ public interface ProjectService {
 
     void deleteProject(Long id);
 
-    Project updateProject(ProjectRequest projectRequest);
+    Project updateProject(Project project);
 
     List<User> getAllAccessibleUsers(Long projectId);
 

@@ -16,6 +16,10 @@ function CommittedProjects() {
       type='myproject'
     />
     <SignInUpContainer />
+
+    <div className='general-page-container-reduced'>
+      <h2>制作中，敬请期待...</h2>
+    </div>
     
   </div>
   );

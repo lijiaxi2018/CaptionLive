@@ -17,9 +17,19 @@ export const authApi = createApi({
       invalidatesTags: ['Auth']
     }),
 
+    signUpUser: builder.mutation({
+      query: (signUpInfo) => ({
+          url: '/signUp',
+          method: 'POST',
+          body: signUpInfo
+      }),
+      invalidatesTags: ['Auth']
+    }),
+
   }),
 })
 
 export const { 
-  useLoginUserMutation
+  useLoginUserMutation,
+  useSignUpUserMutation,
 } = authApi

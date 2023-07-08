@@ -1,35 +1,29 @@
 import React, { useReducer, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { openUploaderWindow, updateCurrentIdToUpload, updateCurrentUploadType } from '../../redux/fileSlice';
-import { useGetUserQuery, usePutUserDescriptionMutation } from '../../services/user';
+import { usePutUserDescriptionMutation } from '../../services/user';
 import { parseDBTimeYMD } from '../../utils/time';
+
+import { useGetUser } from '../../api/user';
 
 import FileUploader from '../Layout/Modal/FileUploader';
 import Avatar from './Avatar';
 
 function UserInfo({userId, access}) {
-  const [editing, setEditing] = useState(false);
-
   const dispatch = useDispatch();
+
+  const [editing, setEditing] = useState(false);
 
   const [putUserDescription] = usePutUserDescriptionMutation();
 
   const isOpenUploaderWindow = useSelector((state) => state.file.openUploaderWindow);
   
-  var username;
+  const [fetched, userData] = useGetUser(userId);
+
   var userDescription;
-  var userCreatedTime;
   var userNickname;
-
-  const userData = useGetUserQuery(userId);
-
-  const fetched = userData.isFetching ? false : true;
-
-  // type = 0: User Info
-  username = userData.isFetching ? "获取中..." : userData.data.data.username;
-  userDescription = userData.isFetching ? "获取中..." : userData.data.data.description;
-  userCreatedTime = userData.isFetching ? "获取中..." : userData.data.data.createdTime;
-  userNickname = userData.isFetching ? "获取中..." : userData.data.data.nickname;
+  userDescription = fetched ? userData.description : "获取中...";
+  userNickname = fetched ? userData.nickname : "获取中...";
 
   const editReducer = (state, event) => {
     if (event.reset) {
@@ -118,7 +112,7 @@ function UserInfo({userId, access}) {
 
               <div className='entity-info-info'>
                 <div className='general-row-align'>
-                  <label style={{ 'color': '#767171' }} className='general-font-medium'>{userData.data.data.nickname}</label>
+                  <label style={{ 'color': '#767171' }} className='general-font-medium'>{userData.nickname}</label>
 
                   <div className='general-right-buttons'>
                     { access &&
@@ -128,8 +122,8 @@ function UserInfo({userId, access}) {
                   
                 </div>
                 
-                <label style={{ 'color': '#b3afaf' }} className='general-font-tiny'>{"用户名" + userData.data.data.username}</label><br/>
-                <label style={{ 'color': '#b3afaf' }} className='general-font-tiny'>{"创建于" + parseDBTimeYMD(userCreatedTime)}</label><br/>
+                <label style={{ 'color': '#b3afaf' }} className='general-font-tiny'>{"用户名" + userData.username}</label><br/>
+                <label style={{ 'color': '#b3afaf' }} className='general-font-tiny'>{"创建于" + parseDBTimeYMD(userData.createdTime)}</label><br/>
 
                 <div className='entity-info-info-description'>
                   <label style={{ 'color': '#afabab' }} className='general-font-small'>{userDescription}</label>
@@ -165,8 +159,8 @@ function UserInfo({userId, access}) {
                   </div>
                 </div>
                 
-                <label style={{ 'color': '#b3afaf' }} className='general-font-tiny'>{"用户名" + userData.data.data.username}</label><br/>
-                <label style={{ 'color': '#b3afaf' }} className='general-font-tiny'>{"创建于" + parseDBTimeYMD(userCreatedTime)}</label><br/>
+                <label style={{ 'color': '#b3afaf' }} className='general-font-tiny'>{"用户名" + userData.username}</label><br/>
+                <label style={{ 'color': '#b3afaf' }} className='general-font-tiny'>{"创建于" + parseDBTimeYMD(userData.createdTime)}</label><br/>
 
                 <textarea 
                   name="description" 

@@ -1,6 +1,6 @@
 import React, { useState, useReducer, useEffect } from 'react';
 import { useDispatch } from 'react-redux'
-import { usePostUserMutation } from '../../services/user';
+import { useSignUpUserMutation } from '../../services/auth';
 import { toggleSignInOnWindow, toggleSignInOnPage } from '../../redux/layoutSlice'
 import { sha256 } from 'js-sha256';
 
@@ -29,7 +29,7 @@ const formReducer = (state, event) => {
 
 function SignUp() {
   const dispatch = useDispatch() // Redux
-  const [postUser] = usePostUserMutation() // RTK QUery
+  const [signUpUserMutation] = useSignUpUserMutation() // RTK Query
 
   const [submitting, setSubmitting] = useState(false); // If is currently submitting the from
   
@@ -86,7 +86,7 @@ function SignUp() {
 
   const userSignUp = () => {
     const encrypted = sha256(formData.password);
-    postUser({ 
+    signUpUserMutation({ 
       permission: 0,
       username: formData.username,
       password: encrypted,

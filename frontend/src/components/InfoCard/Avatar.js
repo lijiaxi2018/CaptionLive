@@ -1,30 +1,36 @@
 import React from 'react';
-import { useGetUserQuery } from '../../services/user';
-import { useGetProjectQuery } from '../../services/project';
-import { useGetOrganizationQuery } from '../../services/organization';
+import { useGetUser } from '../../api/user';
+import { useGetProject } from '../../api/project';
+import { useGetOrganization } from '../../api/organization';
 import { configuration } from '../../config/config';
+import LazyImage from '../../utils/lazyimage';
 
 function Avatar({userId, avatarSize, type}) {
-  
+  const userToken = JSON.parse(localStorage.getItem("clAccessToken"));
   // type === 1
   function parseUserData(fetchedData) {
     let styleSheet = { 'width': avatarSize, 'height': avatarSize, 'fontSize': avatarSize/1.7, 'borderRadius': '50%' };
 
-    let initial = fetchedData.data.data.username[0];
+    let initial = fetchedData.username[0];
 
-    if (fetchedData.data.data.avatarId === 0) {
+    if (fetchedData.avatarId === 0) {
       return (
         <div style={styleSheet} className='general-avatar-text'>
           <label>{initial}</label>
         </div>
       );
     } else {
-      let avatarUrl = `url(http://${configuration.HOSTNAME}:8080/api/files/${fetchedData.data.data.avatarId})`;
-      styleSheet['backgroundImage'] = avatarUrl;
-
+      // let avatarUrl = `url(http://${configuration.HOSTNAME}:8080/api/files/${fetchedData.avatarId})`;
+      // styleSheet['backgroundImage'] = avatarUrl;
+      
       return (
         <div>
-          <div style={styleSheet} className='general-avatar'></div>
+          {/* <div style={styleSheet} className='general-avatar'></div> */}
+          <LazyImage 
+            imageFileId={fetchedData.avatarId} 
+            userToken={userToken}
+            stylesheet={styleSheet}
+          />
         </div>
       );
     }
@@ -34,21 +40,25 @@ function Avatar({userId, avatarSize, type}) {
   function parseProjectData(fetchedDataProject) {
     let styleSheet = { 'width': avatarSize * 1.33, 'height': avatarSize, 'fontSize': avatarSize/1.7, 'borderRadius': '10%' };
     
-    let initial = fetchedDataProject.data.data.name[0];
+    let initial = fetchedDataProject.name[0];
 
-    if (fetchedDataProject.data.data.coverFileRecordId === 0) {
+    if (fetchedDataProject.coverFileRecordId === 0) {
       return (
         <div style={styleSheet} className='general-avatar-text'>
           <label>{initial}</label>
         </div>
       );
     } else {
-      let avatarUrl = `url(http://${configuration.HOSTNAME}:8080/api/files/${fetchedDataProject.data.data.coverFileRecordId})`;
-      styleSheet['backgroundImage'] = avatarUrl;
+      // let avatarUrl = `url(http://${configuration.HOSTNAME}:8080/api/files/${fetchedDataProject.coverFileRecordId})`;
+      // styleSheet['backgroundImage'] = avatarUrl;
 
       return (
         <div>
-          <div style={styleSheet} className='general-avatar'></div>
+          <LazyImage 
+            imageFileId={fetchedDataProject.coverFileRecordId} 
+            userToken={userToken}
+            stylesheet={styleSheet}
+          />
         </div>
       );
     }
@@ -58,42 +68,43 @@ function Avatar({userId, avatarSize, type}) {
   function parseOrganizationData(fetchedDataOrganization) {
     let styleSheet = { 'width': avatarSize, 'height': avatarSize, 'fontSize': avatarSize/1.7, 'borderRadius': '10%' };
     
-    let initial = fetchedDataOrganization.data.data.name[0];
+    let initial = fetchedDataOrganization.name[0];
 
-    if (fetchedDataOrganization.data.data.avatarId === 0) {
+    if (fetchedDataOrganization.avatarId === 0) {
       return (
         <div style={styleSheet} className='general-avatar-text'>
           <label>{initial}</label>
         </div>
       );
     } else {
-      let avatarUrl = `url(http://${configuration.HOSTNAME}:8080/api/files/${fetchedDataOrganization.data.data.avatarId})`;
-      styleSheet['backgroundImage'] = avatarUrl;
+      // let avatarUrl = `url(http://${configuration.HOSTNAME}:8080/api/files/${fetchedDataOrganization.avatarId})`;
+      // styleSheet['backgroundImage'] = avatarUrl;
 
       return (
         <div>
-          <div style={styleSheet} className='general-avatar'></div>
+          <LazyImage 
+            imageFileId={fetchedDataOrganization.avatarId} 
+            userToken={userToken}
+            stylesheet={styleSheet}
+          />
         </div>
       );
     }
   }
 
-  const fetchedData = useGetUserQuery(userId);
-  const fetchedDataProject = useGetProjectQuery(userId);
-  const fetchedDataOrganization = useGetOrganizationQuery(userId);
+  const [userFetched, userData] = useGetUser(userId);
+  const [projectFetched, projectData] = useGetProject(userId);
+  const [organizationFetched, organizationData] = useGetOrganization(userId);
   
-  const fetched = 
-    userId === -1 ? false : 
-    (fetchedData.isFetching || fetchedDataProject.isFetching || fetchedDataOrganization.isFetching) ? false : 
-    true;
+  const fetched = (userId !== -1 && userFetched && projectFetched && organizationFetched) ? true : false;
 
   return (
     <div>
       { fetched &&
         <div>
-          { (type === 1) && parseUserData(fetchedData) }
-          { (type === 2) && parseProjectData(fetchedDataProject) }
-          { (type === 3) && parseOrganizationData(fetchedDataOrganization) }
+          { (type === 1) && parseUserData(userData) }
+          { (type === 2) && parseProjectData(projectData) }
+          { (type === 3) && parseOrganizationData(organizationData) }
         </div>
       }
     </div>
