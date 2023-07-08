@@ -1,5 +1,5 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import Header from '../../components/Layout/Header/Header';
 import SignInUpContainer from '../../components/User/SignInUpContainer';
 import Request from '../../components/Mail/Request';
@@ -8,15 +8,11 @@ import Sidebarlvl2 from '../../components/Layout/Sidebar/Sidebarlvl2';
 import { useGetRequestsForUserQuery } from '../../services/request';
 import { useGetRequestsForUser } from '../../api/request';
 import { closeMessage } from '../../redux/layoutSlice';
-
 import { Icon } from '@rsuite/icons';
 import { AiOutlineMail } from 'react-icons/ai';
-import { AiOutlineArrowLeft } from 'react-icons/ai';
 import { mailSideBar } from '../../assets/sidebar';
 
 function AllMail() {
-  const dispatch = useDispatch();
-
   const myUserId = useSelector((state) => state.userAuth.userId);
   const [fetched, userRequestsResults] = useGetRequestsForUser(myUserId);
 
@@ -26,7 +22,7 @@ function AllMail() {
   return (
     <div className='general-page-container'>
 
-      <Header title="所有收件箱" icon = {AiOutlineMail} />
+      <Header title="所有消息" icon = {AiOutlineMail} />
       
       <SignInUpContainer />
       <Sidebarlvl2 

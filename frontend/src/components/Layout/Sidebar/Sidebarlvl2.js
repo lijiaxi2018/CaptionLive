@@ -19,8 +19,8 @@ const Sidebarlvl2 = ({
     const selectedLvl2Id = useSelector((state) => state.layout.selectedLvl2Id);
     // console.log(data);
     // const data = [
-    //     {path:'projects', name:'工作表'},
-    //     {path:'glossaries', name:'词汇表'},
+    //     {path:'projects', name:'项目'},
+    //     {path:'glossaries', name:'语料'},
     //     {path:'aboutorganization', name:'关于'}
     // ]
 
