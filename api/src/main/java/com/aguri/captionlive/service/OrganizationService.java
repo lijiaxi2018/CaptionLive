@@ -28,4 +28,6 @@ public interface OrganizationService {
     Organization updateAvatar(Long organizationId, Long avatarId);
 
     OrganizationResp getResp(Organization organization);
+
+    List<Organization> getPagedOrganizations(String searchTxt, int page, int size, String sortBy, String sortOrder);
 }
