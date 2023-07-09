@@ -18,12 +18,12 @@ export const glossaryApi = createApi({
     endpoints: (builder) => ({
         getAllGlossaries: builder.query({
             query: (id) => `/glossaries/getAllGlossaries/${id}`,
-            providesTags: ['Glossaries']
+            providesTags: ['Glossaries'],
         }),
         
         getGlossaries: builder.query({
             query: () => `/glossaries`,
-            providesTags: ['Glossaries']
+            providesTags: ['Glossaries'],
         }),
 
         postGlossaries: builder.mutation({
@@ -31,7 +31,8 @@ export const glossaryApi = createApi({
                 url: 'glossaries',
                 method: 'POST',
                 body,
-            })
+            }),
+            invalidatesTags: ['Glossaries'],
         })
     }),
 })
