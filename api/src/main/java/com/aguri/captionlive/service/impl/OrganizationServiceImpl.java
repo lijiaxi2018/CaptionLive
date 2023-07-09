@@ -108,4 +108,11 @@ public class OrganizationServiceImpl implements OrganizationService {
         return organizationResp;
     }
 
+    @Override
+    public List<Organization> getPagedOrganizations(String searchTxt, int page, int size, String sortBy, String sortOrder) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(sortOrder), sortBy));
+        Page<Organization> organizationPage = organizationRepository.findAllByNameContaining(searchTxt, pageable);
+        return organizationPage.getContent();
+    }
+
 }
