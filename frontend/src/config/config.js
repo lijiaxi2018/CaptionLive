@@ -1,3 +1,3 @@
 export const configuration = {
-  HOSTNAME: "localhost",
+  HOSTNAME: "intruce.com",
 };
