@@ -37,60 +37,48 @@ const useSortedData = (data, config = null) => {
       return { data:sortedData, requestSort, sortConfig};
 }
 
-const GlossariesTable = ({glossaries=[]}) => {
-    // console.log('called table');
-    // console.log(glossaries);
-
+const GlossariesTable = ({glossaries=[], keyword}) => {
     const { Column, HeaderCell, Cell } = Table; // componets of rsuite table
     
     // const { data, requestSort, sortConfig } = useSortedData(glossaries);
     
-    const [search, setSearch] = useState(''); // search text
-
-    const handleSearchChange = (e) => {
-        setSearch(e.target.value);
-    }
-    
     return (
         <div className='glossary-table'>
-            <input 
-              type='text'
-              id='glossary-search-bar'
-              value={search}
-              placeholder='搜索单词...'
-              onChange={handleSearchChange}
-            />
             <Table
                 wordWrap="break-word"
                 height={400}
                 data={glossaries.filter(term => 
-                        term.source.toLowerCase().includes(search.toLowerCase()) ||
-                        term.category.toLowerCase().includes(search.toLowerCase())                    
+                        term.source.toLowerCase().includes(keyword.toLowerCase()) 
+                          || term.romanization.toLowerCase().includes(keyword.toLowerCase())
+                          || term.term.toLowerCase().includes(keyword.toLowerCase())
+                          || term.explanation.toLowerCase().includes(keyword.toLowerCase())
+                          || term.category.toLowerCase().includes(keyword.toLowerCase())
+                          || term.remark.toLowerCase().includes(keyword.toLowerCase())
                     )
                 }
                 // onSortColumn={(sortCol, sortType) => {console.log(sortCol, sortType)}}
             >
-              <Column width={120} align='center' fix>
+              <Column width={180} align='center' fix>
                 <HeaderCell>出自</HeaderCell>
                 <Cell dataKey='source' />
               </Column>
-              <Column width={150} align='center' fix>
+              <Column width={230} align='center' fix>
                 <HeaderCell>罗马字</HeaderCell>
                 <Cell dataKey='romanization' />
               </Column>
-              <Column width={150} align='center' fix>
+              <Column width={230} align='center' fix>
                 <HeaderCell>原文</HeaderCell>
                 <Cell dataKey='term' />
               </Column>
-              <Column width={150} align='center' fix>
+              <Column width={230} align='center' fix>
                 <HeaderCell>释义</HeaderCell>
                 <Cell dataKey='explanation' />
               </Column>
-              <Column width={60} align='center' fix>
+              <Column width={150} align='center' fix>
                 <HeaderCell>备注</HeaderCell>
                 <Cell dataKey='remark' />
               </Column>
-              <Column width={70} align='center' fix>
+              <Column width={180} align='center' fix>
                 <HeaderCell>分类</HeaderCell>
                 <Cell dataKey='category' />
               </Column>
