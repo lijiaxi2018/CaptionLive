@@ -149,8 +149,10 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void deleteAllInBatch(List<Task> tasks) {
         List<FileRecord> fileRecords = tasks.stream().map(Task::getFile).toList();
-        entityManager.flush();
-        fileRecordService.deleteFileRecordInBatch(fileRecords);
+        System.out.println("deleteAllInBatch Task flush");
+        System.out.println("***************************************************************************");
+        System.out.println("fileRecords : " + fileRecords.get(0).getPath());
+        //entityManager.flush();
         fileRecordService.deleteFileRecordInBatch(fileRecords);
         taskRepository.deleteAllInBatch(tasks);
     }

@@ -127,7 +127,8 @@ public class FileRecordServiceImpl implements FileRecordService {
     @Transactional
     public void deleteFileRecordInBatch(List<FileRecord> fileRecords) {
         fileRecords.forEach(this::deleteFile);
-        entityManager.flush();
+        System.out.println("deleteFileRecordInBatch flush");
+        //entityManager.flush();
         fileRecordRepository.deleteAllInBatch(fileRecords);
     }
 

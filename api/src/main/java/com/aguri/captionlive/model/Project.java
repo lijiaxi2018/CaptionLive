@@ -39,15 +39,15 @@ public class Project {
     )
     private List<Organization> organizations;
 
-    @OneToMany(mappedBy = "project", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "project", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private List<Segment> segments;
 
     @JsonIgnore
     @ManyToMany
     @JoinTable(
             name = "accesses",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "project_id")
+            joinColumns = @JoinColumn(name = "project_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private List<User> accessibleUsers;
 
