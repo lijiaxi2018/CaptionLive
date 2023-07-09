@@ -6,6 +6,7 @@ import { userApi } from '../services/user'
 import { authApi } from '../services/auth'
 import { fileApi } from '../services/file'
 import { organizationApi } from '../services/organization'
+import { glossaryApi } from '../services/glossary'
 import { projectApi } from '../services/project'
 import { requestApi } from '../services/request'
 
@@ -18,6 +19,7 @@ export const store = configureStore({
     [authApi.reducerPath]: authApi.reducer,
     [fileApi.reducerPath]: fileApi.reducer,
     [organizationApi.reducerPath]: organizationApi.reducer,
+    [glossaryApi.reducerPath]: glossaryApi.reducer,
     [projectApi.reducerPath]: projectApi.reducer,
     [requestApi.reducerPath]: requestApi.reducer,
   },
@@ -28,6 +30,7 @@ export const store = configureStore({
       authApi.middleware,
       fileApi.middleware,
       organizationApi.middleware,
+      glossaryApi.middleware,
       projectApi.middleware,
       requestApi.middleware,
     ]),
