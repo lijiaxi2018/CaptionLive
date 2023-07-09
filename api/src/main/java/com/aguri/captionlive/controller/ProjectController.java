@@ -150,7 +150,7 @@ public class ProjectController {
         }).toList());
         String username = (String) request.getAttribute("username");
         Long userId = userService.getUserByUsername(username).getUserId();
-        projectService.shareProject2User(project.getProjectId(), userId);
+        projectService.shareProject2UserWithPermission(project.getProjectId(), userId, Access.Permission.Creator);
         // 返回响应
         return Resp.ok(project);
     }
