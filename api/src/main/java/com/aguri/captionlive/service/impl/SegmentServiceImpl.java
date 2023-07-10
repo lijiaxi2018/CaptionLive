@@ -83,7 +83,6 @@ public class SegmentServiceImpl implements SegmentService {
     public void deleteAllInBatch(List<Segment> segments) {
         List<Long> segmentIds = segments.stream().map(Segment::getSegmentId).toList();
         List<Task> tasks = taskService.findAllInSegmentSegmentId(segmentIds);
-        System.out.println("deleteAllInBatch Segment flush");
         //entityManager.flush();
         taskService.deleteAllInBatch(tasks);
         segmentRepository.deleteAllInBatch(segments);
