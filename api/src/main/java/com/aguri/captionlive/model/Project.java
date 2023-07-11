@@ -39,7 +39,7 @@ public class Project {
     )
     private List<Organization> organizations;
 
-    @OneToMany(mappedBy = "project", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "project", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private List<Segment> segments;
 
     @JsonIgnore
