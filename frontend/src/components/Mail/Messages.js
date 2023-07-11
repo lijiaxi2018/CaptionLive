@@ -1,9 +1,10 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import SingleMessage from './SingleMessage';
 import { useGetMessagesForRequestQuery, useGetRequestQuery, useUnreadRequestMutation } from '../../services/request';
 import { usePostMessageMutation, useApproveRequestMutation, useReadRequestMutation } from '../../services/request';
 import { closeMessage } from '../../redux/layoutSlice';
+import { languagedata } from '../../assets/language';
 
 import { Icon } from '@rsuite/icons';
 import { AiOutlineArrowLeft } from 'react-icons/ai';
@@ -24,13 +25,14 @@ function Messages({requestId, userId}) {
 
   const messages = useGetMessagesForRequestQuery(requestId);
   const request = useGetRequestQuery(requestId);
+  const language = useSelector((state) => state.layout.language);
 
   function handleReject(myRequestId, otherUserId) {
     // TODO: Change Request Status
     postMessageMutation({ 
       requestId: myRequestId,
       isReply: true,
-      content: "请求已被拒绝。"
+      content: languagedata[language]['requestRejected']
     })
     .then((response) => {
       
@@ -54,7 +56,7 @@ function Messages({requestId, userId}) {
     postMessageMutation({ 
       requestId: myRequestId,
       isReply: true,
-      content: "请求已被批准。"
+      content: languagedata[language]['requestApproved']
     })
     .then((response) => {
 

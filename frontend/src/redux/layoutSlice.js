@@ -19,6 +19,7 @@ const initialState = {
   selectedOrgId: sessionSelectedOrgId,
   selectedLvl2Id: sessionSelectedLvl2Id,
   openedSegmentIds: sessionOpenedSegmentIds,
+  language: 'cn',
 }
 
 export const layoutSlice = createSlice({
@@ -123,6 +124,10 @@ export const layoutSlice = createSlice({
     updatePromptMessage: (state, action) => {
       state.promptMessage = action.payload;
     },
+
+    updateLanguage: (state, action) => {
+      state.language = action.payload;
+    }
   },
 })
 
@@ -150,6 +155,7 @@ export const {
   updatePromptMessage,
   openSignInOnWindow,
   closeSignInOnWindow,
+  updateLanguage,
 } = layoutSlice.actions
 
 export default layoutSlice.reducer

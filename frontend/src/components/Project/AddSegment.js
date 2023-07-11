@@ -1,9 +1,10 @@
 import React, { useState, useReducer, useEffect } from 'react';
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux';
 import { generalWorkflow } from '../../assets/workflows';
 import { parseWorkflowCode } from '../../utils/segment';
 import { useCreateSegmentMutation } from '../../services/organization';
-import { closeAddSegment } from '../../redux/layoutSlice'
+import { closeAddSegment } from '../../redux/layoutSlice';
+import { languagedata } from '../../assets/language';
 
 const formReducer = (state, event) => {
   if (event.reset) {
@@ -34,6 +35,8 @@ function AddSegment({projectId}) {
     workflow: 0,
   });
 
+  const language = useSelector((state) => state.layout.language);
+
   const [filled, setFilled] = useState(false); // If all required fields are fulfilled
   useEffect(() => {
     setFilled(formData.summary.length > 0 && formData.start.length > 0 && formData.end.length > 0)
@@ -43,7 +46,7 @@ function AddSegment({projectId}) {
   useEffect(() => {
     if (!submitting) {
       if (!filled) {
-        setPrompt('请填写所有必填信息')
+        setPrompt(languagedata[language]['pleaseFillNecessaryInformation'])
       } else {
         setPrompt('')
       }
@@ -81,7 +84,7 @@ function AddSegment({projectId}) {
     .then((response) => {
       let message = response.data.message;
       if (message === "success") {
-        setPrompt("创建段落成功");
+        setPrompt(languagedata[language]['successfullyCreated']);
       }
     })
   }
@@ -115,17 +118,26 @@ function AddSegment({projectId}) {
 
   return (
     <div className="add-segment-container">
-      <p className="sign-in-up-title">新建段落</p>
+      <p className="sign-in-up-title">{languagedata[language]['newSegment']}</p>
 
       <label style={{ color: '#ff6765' }}>{prompt}</label><br/>
       
-      <input name="summary" className="sign-in-up-input" placeholder="请输入段落简介" onChange={handleFormChange} value={formData.summary}/>
+      <input name="summary" className="sign-in-up-input" 
+        placeholder={languagedata[language]['pleaseFillSegmentDescription']}
+        onChange={handleFormChange} value={formData.summary}
+      />
       <label className="star-mark">*</label>
       <br/>
 
-      <input name="start" className="sign-in-up-input" placeholder="请输入开始时间点" onChange={handleFormChange} value={formData.start}/>
+      <input name="start" className="sign-in-up-input" 
+        placeholder={languagedata[language]['pleaseFillSegmentStart']}
+        onChange={handleFormChange} value={formData.start}
+      />
       <label className="star-mark">*</label>
-      <input name="end" className="sign-in-up-input" placeholder="请输入结束时间点" onChange={handleFormChange} value={formData.end}/>
+      <input name="end" className="sign-in-up-input" 
+        placeholder={languagedata[language]['pleaseFillSegmentEnd']}
+        onChange={handleFormChange} value={formData.end}
+      />
       <label className="star-mark">*</label>
       <br/>
 
@@ -141,8 +153,12 @@ function AddSegment({projectId}) {
       </div>
 
       <div className="sign-in-up-button-list">
-        <button className="general-button-red" onClick={handleCancel}>取消</button>
-        <button className="general-button-green" onClick={handleComplete}>完成</button>
+        <button className="general-button-red" onClick={handleCancel}>
+          {languagedata[language]['cancel']}
+        </button>
+        <button className="general-button-green" onClick={handleComplete}>
+          {languagedata[language]['complete']}
+        </button>
       </div>
       
     </div>

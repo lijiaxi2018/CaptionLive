@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Avatar from '../InfoCard/Avatar';
 import { useGetSharedUsersQuery, useGetSharedOrgsQuery, useShareProjectToUserMutation, useShareProjectToOrgMutation } from '../../services/organization';
 import { closeShareProject } from '../../redux/layoutSlice';
+import { languagedata } from '../../assets/language';
 
 function ShareProject({projectId}) {
   const dispatch = useDispatch() // Redux
@@ -10,6 +11,7 @@ function ShareProject({projectId}) {
   const shareUsers = useGetSharedUsersQuery(projectId);
   const shareOrgs = useGetSharedOrgsQuery(projectId);
   const fetched = (shareUsers.isFetching || shareOrgs.isFetching) ? false : true;
+  const language = useSelector((state) => state.layout.language);
 
   const [shareProjectToUserMutation] = useShareProjectToUserMutation();
   const [shareProjectToOrgMutation] = useShareProjectToOrgMutation();
@@ -71,7 +73,7 @@ function ShareProject({projectId}) {
     <div>
       { fetched && 
         <div className="share-project-container">
-          <p className="sign-in-up-title">分享项目</p>
+          <p className="sign-in-up-title">{languagedata[language]['shareProject']}</p>
 
           <div className='general-row-align'>
             <input id="ns-users-input" list="ns-users" className="sign-in-up-input" placeholder="分享给用户" onChange={(e) => setUsername(e.target.value)}></input>
@@ -82,7 +84,9 @@ function ShareProject({projectId}) {
                   </div>
                 )}
               </datalist>
-            <button className="general-button-green" onClick={() => handleShareUser(projectId, username, shareUsers.data.data.noSharedUserList)}>分享</button>
+            <button className="general-button-green" onClick={() => handleShareUser(projectId, username, shareUsers.data.data.noSharedUserList)}>
+              {languagedata[language]['share']}
+            </button>
           </div>
 
           <div className='general-flex-wrap'>
@@ -120,7 +124,9 @@ function ShareProject({projectId}) {
                   </div>
                 )}
               </datalist>
-            <button className="general-button-green" onClick={() => handleShareOrg(projectId, orgname, shareOrgs.data.data.noSharedOrganizationList)}>分享</button>
+            <button className="general-button-green" onClick={() => handleShareOrg(projectId, orgname, shareOrgs.data.data.noSharedOrganizationList)}>
+              {languagedata[language]['share']}
+            </button>
           </div>
 
           <div className='general-flex-wrap'>
@@ -150,7 +156,9 @@ function ShareProject({projectId}) {
 
 
           <div className="sign-in-up-button-list">
-            <button className="general-button-red" onClick={handleCancel}>取消</button>
+            <button className="general-button-red" onClick={handleCancel}>
+              {languagedata[language]['cancel']}
+            </button>
           </div>
           
         </div>

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import Header from '../../components/Layout/Header/Header';
 import SignInUpContainer from '../../components/User/SignInUpContainer';
 import Worksheet from '../../components/Project/Worksheet';
 import AddProject from '../../components/Project/AddProject';
@@ -9,6 +8,8 @@ import { useGetAccessibleProjects } from '../../api/organization';
 import { openAddProject } from '../../redux/layoutSlice';
 import { myprojectSideBar } from '../../assets/sidebar';
 import Sidebarlvl2 from '../../components/Layout/Sidebar/Sidebarlvl2';
+import { languagedata } from '../../assets/language';
+import { Icon } from '@rsuite/icons';
 
 
 function AccessibleProjects() {
@@ -23,6 +24,7 @@ function AccessibleProjects() {
   const myUserId = useSelector((state) => state.userAuth.userId);
 
   const isOpenAddProject = useSelector((state) => state.layout.inAddProject);
+  const language = useSelector((state) => state.layout.language);
 
   const [fetched, myAccessibleProjects] = useGetAccessibleProjects(myUserId);
 
@@ -30,7 +32,9 @@ function AccessibleProjects() {
 
   return (
     <div className='general-page-container'>
-      <Header title="所有项目" icon = {AiOutlineProject} />
+
+      <Icon as={AiOutlineProject} size="3.1em" style={{ marginRight: '20px' }}/>
+      <label className="page-header-title">{languagedata[language]['allProjects']}</label>
       
       <SignInUpContainer />
 
@@ -46,7 +50,10 @@ function AccessibleProjects() {
         <div className='general-page-container-reduced'>
 
           <div className='general-row-align'>
-            <input name="keyword" className="general-search-bar" placeholder="搜索项目" onChange={(e) => setKeyword(e.target.value)}/>
+            <input name="keyword" className="general-search-bar" 
+              placeholder={languagedata[language]['searchProject']}
+              onChange={(e) => setKeyword(e.target.value)}
+            />
             <button className='general-button-grey' onClick={() => dispatch(openAddProject())}>新建项目</button>
           </div>
 

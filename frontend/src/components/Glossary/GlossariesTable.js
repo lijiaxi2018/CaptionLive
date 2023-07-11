@@ -1,5 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Table } from 'rsuite';
+import { useSelector } from 'react-redux';
+import { languagedata } from '../../assets/language';
 
 /** 
  * for guide of using rsuite/Table, please refer 
@@ -41,6 +43,7 @@ const GlossariesTable = ({glossaries=[], keyword}) => {
     const { Column, HeaderCell, Cell } = Table; // componets of rsuite table
     
     // const { data, requestSort, sortConfig } = useSortedData(glossaries);
+    const language = useSelector((state) => state.layout.language);
     
     return (
         <div className='glossary-table'>
@@ -59,27 +62,27 @@ const GlossariesTable = ({glossaries=[], keyword}) => {
                 // onSortColumn={(sortCol, sortType) => {console.log(sortCol, sortType)}}
             >
               <Column width={180} align='center' fix>
-                <HeaderCell>出自</HeaderCell>
+                <HeaderCell>{languagedata[language]['source']}</HeaderCell>
                 <Cell dataKey='source' />
               </Column>
               <Column width={230} align='center' fix>
-                <HeaderCell>罗马字</HeaderCell>
+                <HeaderCell>{languagedata[language]['romanization']}</HeaderCell>
                 <Cell dataKey='romanization' />
               </Column>
               <Column width={230} align='center' fix>
-                <HeaderCell>原文</HeaderCell>
+                <HeaderCell>{languagedata[language]['original']}</HeaderCell>
                 <Cell dataKey='term' />
               </Column>
               <Column width={230} align='center' fix>
-                <HeaderCell>释义</HeaderCell>
+                <HeaderCell>{languagedata[language]['paraphrase']}</HeaderCell>
                 <Cell dataKey='explanation' />
               </Column>
               <Column width={150} align='center' fix>
-                <HeaderCell>备注</HeaderCell>
+                <HeaderCell>{languagedata[language]['remark']}</HeaderCell>
                 <Cell dataKey='remark' />
               </Column>
               <Column width={180} align='center' fix>
-                <HeaderCell>分类</HeaderCell>
+                <HeaderCell>{languagedata[language]['category']}</HeaderCell>
                 <Cell dataKey='category' />
               </Column>
             </Table>

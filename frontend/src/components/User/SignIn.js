@@ -1,9 +1,10 @@
 import React, { useState, useReducer, useEffect } from 'react';
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useLoginUserMutation } from '../../services/auth';
 import { updateUserId, updateAccessToken } from '../../redux/userSlice';
 import { toggleSignInOnWindow, toggleSignInOnPage } from '../../redux/layoutSlice'
 import { sha256 } from 'js-sha256';
+import { languagedata } from '../../assets/language';
 
 const formReducer = (state, event) => {
   if (event.reset) {
@@ -25,6 +26,8 @@ function SignIn() {
 
   const [submitting, setSubmitting] = useState(false); // If is currently submitting the from
   
+  const language = useSelector((state) => state.layout.language);
+
   const [formData, setFormData] = useReducer(formReducer, {
     username: "",
     password: "",
@@ -41,7 +44,7 @@ function SignIn() {
       if (filled) {
         setPrompt('')
       } else {
-        setPrompt('请填写所有必填信息')
+        setPrompt(languagedata[language]['pleaseFillNecessaryInformation'])
       }
     }
   }, [filled, submitting]);
@@ -62,14 +65,14 @@ function SignIn() {
     .then((response) => {
       let message = response.data.message;
       if (message === "success") {
-        setPrompt("登录成功");
+        setPrompt(languagedata[language]['loginSuccess']);
         dispatch(updateUserId(response.data.token.id));
         dispatch(updateAccessToken(response.data.token.token));
         dispatch(toggleSignInOnWindow());
       } else if (message.startsWith("invalid")) {
-        setPrompt("密码错误");
+        setPrompt(languagedata[language]['passwordIncorrect']);
       } else if (message.startsWith("User")) {
-        setPrompt("用户不存在");
+        setPrompt(languagedata[language]['userNotFound']);
       }
     })
   }
@@ -101,21 +104,33 @@ function SignIn() {
 
   return (
     <div className="sign-in-window">
-      <p className="sign-in-up-title">登陆</p>
+      <p className="sign-in-up-title">{languagedata[language]['login']}</p>
 
       <label style={{ color: '#ff6765' }}>{prompt}</label><br/>
-      <input name="username" className="sign-in-up-input" placeholder="请输入用户名" onChange={handleChange} value={formData.username}/>
+      <input name="username" className="sign-in-up-input" 
+        placeholder={languagedata[language]['pleaseFillUsername']} 
+        onChange={handleChange} value={formData.username}
+      />
       <label className="star-mark">*</label>
       <br/>
 
-      <input type="password" name="password" className="sign-in-up-input" placeholder="请输入密码" onChange={handleChange} value={formData.password}/>
+      <input type="password" name="password" className="sign-in-up-input" 
+        placeholder={languagedata[language]['pleaseFillPassword']}
+        onChange={handleChange} value={formData.password}
+      />
       <label className="star-mark">*</label>
       <br/>
 
       <div className="sign-in-up-button-list">
-        <button className="general-button-grey" onClick={handleSignUp}>前往注册</button>
-        <button className="general-button-red" onClick={handleCancel}>取消</button>
-        <button className="general-button-green" onClick={handleLogIn}>登陆</button>
+        <button className="general-button-grey" onClick={handleSignUp}>
+          {languagedata[language]['register']}
+        </button>
+        <button className="general-button-red" onClick={handleCancel}>
+          {languagedata[language]['cancel']}
+        </button>
+        <button className="general-button-green" onClick={handleLogIn}>
+          {languagedata[language]['login']}
+        </button>
       </div>
     </div>
   )

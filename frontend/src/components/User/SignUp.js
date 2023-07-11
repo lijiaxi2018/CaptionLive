@@ -1,8 +1,9 @@
 import React, { useState, useReducer, useEffect } from 'react';
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useSignUpUserMutation } from '../../services/auth';
 import { toggleSignInOnWindow, toggleSignInOnPage } from '../../redux/layoutSlice'
 import { sha256 } from 'js-sha256';
+import { languagedata } from '../../assets/language';
 
 const isValidPasswordChar = str => {
   const regex = /^[~`!@#$%^&*()_+=[\]\{}|;':",.\/<>?a-zA-Z0-9-]+$/;
@@ -33,6 +34,8 @@ function SignUp() {
 
   const [submitting, setSubmitting] = useState(false); // If is currently submitting the from
   
+  const language = useSelector((state) => state.layout.language);
+
   const [formData, setFormData] = useReducer(formReducer, {
     username: "",
     password: "",
@@ -62,15 +65,15 @@ function SignUp() {
     if (!submitting) {
       let message = '';
       if (!filled) {
-        message = message + '请填写所有必填信息; ';
+        message = message + `${languagedata[language]['pleaseFillNecessaryInformation']}; `;
       } 
       
       if (!matching) {
-        message = message + '请输入相同密码; ';
+        message = message + `${languagedata[language]['pleaseFillSamePassword']}; `;
       }
 
       if (!validUsername) {
-        message = message + '用户名只能由英文字母与数字组成; ';
+        message = message + `${languagedata[language]['pleaseFillValidUsername']}; `;
       }
 
       setPrompt(message);
@@ -97,7 +100,7 @@ function SignUp() {
     .then((response) => {
       let message = response.data.message;
       if (message === "success") {
-        setPrompt("注册成功，请登录");
+        setPrompt(languagedata[language]['registerSuccess']);
       // } else if (message.startsWith("invalid")) {
       //   setPrompt("密码错误");
       // } else if (message.startsWith("User")) {
@@ -133,29 +136,55 @@ function SignUp() {
 
   return (
     <div className="sign-up-window">
-      <p className="sign-in-up-title">注册账号</p>
+      <p className="sign-in-up-title">
+        {languagedata[language]['register']}
+      </p>
 
       <label style={{ color: '#ff6765' }}>{prompt}</label><br/>
-      <input name="username" className="sign-in-up-input" placeholder="请输入用户名" onChange={handleChange} value={formData.username}/>
+      <input name="username" className="sign-in-up-input" 
+        placeholder={languagedata[language]['pleaseFillUsername']}
+        onChange={handleChange} value={formData.username}
+      />
       <label className="star-mark">*</label>
-      <input name="nickname" className="sign-in-up-input" placeholder="请输入昵称" onChange={handleChange} value={formData.nickname}/>
+      <input name="nickname" className="sign-in-up-input" 
+        placeholder={languagedata[language]['pleaseFillNickname']}
+        onChange={handleChange} value={formData.nickname}
+      />
       <label className="star-mark">*</label>
       <br/>
 
-      <input type="password" name="password" className="sign-in-up-input" placeholder="请输入密码" onChange={handleChange} value={formData.password}/>
+      <input type="password" name="password" className="sign-in-up-input" 
+        placeholder={languagedata[language]['pleaseFillPassword']}
+        onChange={handleChange} value={formData.password}
+      />
       <label className="star-mark">*</label>
-      <input type="password" name="confirm" className="sign-in-up-input" placeholder="请确认密码" onChange={handleChange} value={formData.confirm}/>
+      <input type="password" name="confirm" className="sign-in-up-input" 
+        placeholder={languagedata[language]['pleaseConfirmPassword']}
+        onChange={handleChange} value={formData.confirm}
+      />
       <label className="star-mark">*</label>
       <br/>
 
-      <input name="qq" className="sign-in-up-input-non-required" placeholder="请输入QQ" onChange={handleChange} value={formData.qq}/>
-      <input name="email" className="sign-in-up-input-non-required" placeholder="请输入邮箱" onChange={handleChange} value={formData.email}/>
+      <input name="qq" className="sign-in-up-input-non-required" 
+        placeholder={languagedata[language]['pleaseFillQQNumber']}
+        onChange={handleChange} value={formData.qq}
+      />
+      <input name="email" className="sign-in-up-input-non-required" 
+        placeholder={languagedata[language]['pleaseFillMail']}
+        onChange={handleChange} value={formData.email}
+      />
       <br/>
 
       <div className="sign-in-up-button-list">
-        <button className="general-button-grey" onClick={handleLoginIn}>前往登陆</button>
-        <button className="general-button-red" onClick={handleCancel}>取消</button>
-        <button className="general-button-green" onClick={handleSignUp}>注册</button>
+        <button className="general-button-grey" onClick={handleLoginIn}>
+          {languagedata[language]['login']}
+        </button>
+        <button className="general-button-red" onClick={handleCancel}>
+          {languagedata[language]['cancel']}
+        </button>
+        <button className="general-button-green" onClick={handleSignUp}>
+          {languagedata[language]['register']}
+        </button>
       </div>
     </div>
   )

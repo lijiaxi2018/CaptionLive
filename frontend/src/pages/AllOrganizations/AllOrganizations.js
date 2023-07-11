@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
-import Header from '../../components/Layout/Header/Header';
 import SignInUpContainer from '../../components/User/SignInUpContainer';
 import AddOrganization from '../../components/Organization/AddOrganization';
 import EntityInfo from '../../components/InfoCard/EntityInfo';
@@ -8,6 +7,8 @@ import Prompt from '../../components/InfoCard/Prompt';
 import { openAddOrganization } from '../../redux/layoutSlice';
 import { useGetAllOrganization } from '../../api/organization';
 import { ImSphere } from 'react-icons/im';
+import { languagedata } from '../../assets/language';
+import { Icon } from '@rsuite/icons';
 
 function AllOrganizations() {
   function filterByKeyword(keyword, organization) {
@@ -20,6 +21,7 @@ function AllOrganizations() {
 
   const isOpenAddOrganization = useSelector((state) => state.layout.inAddOrganization);
   const myUserId = useSelector((state) => state.userAuth.userId);
+  const language = useSelector((state) => state.layout.language);
 
   const [fetched, allOrganizationData] = useGetAllOrganization();
 
@@ -28,7 +30,8 @@ function AllOrganizations() {
   return (
     <div className='general-page-container'>
 
-      <Header title="群组一览" icon = {ImSphere} />
+      <Icon as={ImSphere} size="3.1em" style={{ marginRight: '20px' }}/>
+      <label className="page-header-title">{languagedata[language]['allOrganizations']}</label>
 
       <SignInUpContainer />
 
@@ -43,8 +46,13 @@ function AllOrganizations() {
         <div>
 
           <div className='general-row-align'>
-            <input name="keyword" className="general-search-bar" placeholder="搜索项目" onChange={(e) => setKeyword(e.target.value)}/>
-            <button className='general-button-grey' onClick={() => dispatch(openAddOrganization())}>新建字幕组</button>
+            <input name="keyword" className="general-search-bar" 
+              placeholder={languagedata[language]['searchProject']}
+              onChange={(e) => setKeyword(e.target.value)}
+            />
+            <button className='general-button-grey' onClick={() => dispatch(openAddOrganization())}>
+              {languagedata[language]['newOrganization']}
+            </button>
           </div>
 
           <div>

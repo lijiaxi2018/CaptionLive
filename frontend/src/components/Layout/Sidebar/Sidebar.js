@@ -4,7 +4,7 @@ import { ImSphere } from 'react-icons/im';
 import { AiOutlineHome, AiOutlineMail, AiOutlineProject } from 'react-icons/ai';
 import { VscOrganization } from 'react-icons/vsc';
 // import { Link } from 'react-router-dom'
-// import { SidebarData } from './SidebarData';
+import { languagedata } from '../../../assets/language';
 import "rsuite/dist/rsuite.css"
 import './Sidebar.css';
 import { IconContext } from 'react-icons';
@@ -20,6 +20,7 @@ function Sidebar() {
   const [activeKey, setActiveKey] = useState('1');
   const [myorganizations, setMyorganizations] = useState([]);
   const myUserId = useSelector((state) => state.userAuth.userId);
+  const language = useSelector((state) => state.layout.language);
   // const organizations = useGetOrganizationsByUserQuery(myUserId);
 
   const organizations= useGetOrganizationsByUserQuery(myUserId, {
@@ -65,10 +66,14 @@ function Sidebar() {
             <Nav activeKey={activeKey} onSelect={setActiveKey}>
               
               <Nav.Item href='/myhome' eventKey="1" icon={<Icon as={AiOutlineHome} size="1em"/>}>
-                个人信息
+                {languagedata[language]['personalInformation']}
               </Nav.Item>
 
-              <Nav.Menu eventKey="2" title="相关群组" icon={<Icon as={VscOrganization} size="1em"/>}>
+              <Nav.Menu 
+                eventKey="2" 
+                title={languagedata[language]['myOrganizations']} 
+                icon={<Icon as={VscOrganization} size="1em"/>}
+              >
                 {myorganizations.map((org) => {
                   const id = org.organizationId
                   return (
@@ -85,15 +90,15 @@ function Sidebar() {
               </Nav.Menu>
               
               <Nav.Item href='/myprojects/accessibleprojects' eventKey="3" icon={<Icon as={AiOutlineProject} size="1em"/>}>
-                项目一览
+                {languagedata[language]['allProjects']}
               </Nav.Item>        
 
               <Nav.Item href='/allorganizations' eventKey="4" icon={<Icon as={ImSphere} size="1em"/>}>
-                群组一览
+                {languagedata[language]['allOrganizations']}
               </Nav.Item>
               
               <Nav.Item href='/mail/allmails' eventKey="5" icon={<Icon as={AiOutlineMail} size="1em"/>}>
-                消息
+                {languagedata[language]['message']}
               </Nav.Item>
 
             </Nav>

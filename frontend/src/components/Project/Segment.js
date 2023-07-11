@@ -10,6 +10,7 @@ import { Icon } from '@rsuite/icons';
 import { FaAngleUp, FaAngleDown, FaTrash } from 'react-icons/fa';
 import FileUploader from '../Layout/Modal/FileUploader';
 import { configuration } from '../../config/config';
+import { languagedata } from '../../assets/language';
 
 function parseTaskText(task) {
   if (task.workerUser === null) {
@@ -25,6 +26,7 @@ function Segment({data}) {
   const myUserId = useSelector((state) => state.userAuth.userId);
   const myOpenedSegmentIds = useSelector((state) => state.layout.openedSegmentIds);
   const isOpenUploaderWindow = useSelector((state) => state.file.openUploaderWindow);
+  const language = useSelector((state) => state.layout.language);
 
   const [assignTaskMutation] = useAssignTaskMutation();
   const [withdrawTaskMutation] = useWithdrawTaskMutation();
@@ -86,20 +88,26 @@ function Segment({data}) {
     })
   }
 
-  const summary = data.isGlobal ? '概览' : data.summary;
+  const summary = data.isGlobal ? languagedata[language]['summary'] : data.summary;
   const scope = data.isGlobal ? '' : data.scope;
   const tasks = data.taskInfos;
   
   function parseTaskButton(task) {
     if (task.status === 'NOT_ASSIGNED') {
-      return (<button className='general-button-green' onClick={() => assignTask(myUserId, task.taskId)}>承接</button>);
+      return (<button className='general-button-green' onClick={() => assignTask(myUserId, task.taskId)}>
+        {languagedata[language]['accept']}
+      </button>);
     } else if (task.status === 'IN_PROGRESS' && task.workerUser.userId !== myUserId) {
       return;
     } else if (task.status === 'IN_PROGRESS' && task.workerUser.userId === myUserId) {
       return (
         <div>
-          <button className='general-button-grey' onClick={() => handleUpload(task.taskId)}>上传</button>
-          <button className='general-button-red' onClick={() => withdrawTask(task.taskId)}>放弃</button>
+          <button className='general-button-grey' onClick={() => handleUpload(task.taskId)}>
+            {languagedata[language]['upload']}
+          </button>
+          <button className='general-button-red' onClick={() => withdrawTask(task.taskId)}>
+            {languagedata[language]['abort']}
+          </button>
         </div>
       );
     } else if (task.status === 'COMPLETED' && task.workerUser.userId !== myUserId) {
@@ -109,18 +117,24 @@ function Segment({data}) {
           <button 
             className='general-button-grey'
             onClick={() => handleDownload(downloadUrl)}
-          >下载</button>
+          >
+            {languagedata[language]['download']}
+          </button>
         </div>
       );
     } else if (task.status === 'COMPLETED' && task.workerUser.userId === myUserId) {
       let downloadUrl = `http://${configuration.HOSTNAME}:8080/api/files/` + task.fileId;
       return (
         <div>
-          <button className='general-button-grey' onClick={() => handleDeleteTask(task.taskId)}>删除</button>
+          <button className='general-button-grey' onClick={() => handleDeleteTask(task.taskId)}>
+            {languagedata[language]['delete']}
+          </button>
           <button 
             className='general-button-grey'
             onClick={() => handleDownload(downloadUrl)}
-          >下载</button>
+          >
+            {languagedata[language]['download']}
+          </button>
         </div>
       );
     }
@@ -171,7 +185,9 @@ function Segment({data}) {
       <div>
         { !data.isGlobal && 
           <div className='segment-item-container'>
-            <label className='general-font-medium-small-bold'>起讫: </label>
+            <label className='general-font-medium-small-bold'>
+              {`${languagedata[language]['startEnd']}:`}
+            </label>
             <label className='general-font-medium-small'>{parseScope(scope)}</label>
           </div>
         }
