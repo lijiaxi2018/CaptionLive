@@ -3,9 +3,10 @@ import { useGetUser } from '../../api/user';
 import { useGetProject } from '../../api/project';
 import { useGetOrganization } from '../../api/organization';
 import { configuration } from '../../config/config';
+import LazyImage from '../../utils/lazyimage';
 
 function Avatar({userId, avatarSize, type}) {
-  
+  const userToken = JSON.parse(localStorage.getItem("clAccessToken"));
   // type === 1
   function parseUserData(fetchedData) {
     let styleSheet = { 'width': avatarSize, 'height': avatarSize, 'fontSize': avatarSize/1.7, 'borderRadius': '50%' };
@@ -19,12 +20,17 @@ function Avatar({userId, avatarSize, type}) {
         </div>
       );
     } else {
-      let avatarUrl = `url(http://${configuration.HOSTNAME}:8080/api/files/${fetchedData.avatarId})`;
-      styleSheet['backgroundImage'] = avatarUrl;
-
+      // let avatarUrl = `url(http://${configuration.HOSTNAME}:8080/api/files/${fetchedData.avatarId})`;
+      // styleSheet['backgroundImage'] = avatarUrl;
+      
       return (
         <div>
-          <div style={styleSheet} className='general-avatar'></div>
+          {/* <div style={styleSheet} className='general-avatar'></div> */}
+          <LazyImage 
+            imageFileId={fetchedData.avatarId} 
+            userToken={userToken}
+            stylesheet={styleSheet}
+          />
         </div>
       );
     }
@@ -43,12 +49,16 @@ function Avatar({userId, avatarSize, type}) {
         </div>
       );
     } else {
-      let avatarUrl = `url(http://${configuration.HOSTNAME}:8080/api/files/${fetchedDataProject.coverFileRecordId})`;
-      styleSheet['backgroundImage'] = avatarUrl;
+      // let avatarUrl = `url(http://${configuration.HOSTNAME}:8080/api/files/${fetchedDataProject.coverFileRecordId})`;
+      // styleSheet['backgroundImage'] = avatarUrl;
 
       return (
         <div>
-          <div style={styleSheet} className='general-avatar'></div>
+          <LazyImage 
+            imageFileId={fetchedDataProject.coverFileRecordId} 
+            userToken={userToken}
+            stylesheet={styleSheet}
+          />
         </div>
       );
     }
@@ -67,12 +77,16 @@ function Avatar({userId, avatarSize, type}) {
         </div>
       );
     } else {
-      let avatarUrl = `url(http://${configuration.HOSTNAME}:8080/api/files/${fetchedDataOrganization.avatarId})`;
-      styleSheet['backgroundImage'] = avatarUrl;
+      // let avatarUrl = `url(http://${configuration.HOSTNAME}:8080/api/files/${fetchedDataOrganization.avatarId})`;
+      // styleSheet['backgroundImage'] = avatarUrl;
 
       return (
         <div>
-          <div style={styleSheet} className='general-avatar'></div>
+          <LazyImage 
+            imageFileId={fetchedDataOrganization.avatarId} 
+            userToken={userToken}
+            stylesheet={styleSheet}
+          />
         </div>
       );
     }

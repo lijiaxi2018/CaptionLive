@@ -11,7 +11,7 @@ function MyHome() {
   return (
     <div className='general-page-container'>
 
-      <Header title="我的主页" icon = {AiOutlineHome} />
+      <Header title="个人信息" icon = {AiOutlineHome} />
 
       { myUserId !== -1 &&
         <div className='entity-info-container-my-home'>

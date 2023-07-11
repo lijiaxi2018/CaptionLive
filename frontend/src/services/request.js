@@ -21,6 +21,11 @@ export const requestApi = createApi({
       providesTags: ['Requests']
     }),
 
+    getSentRequestsForUser: builder.query({
+      query: (userId) => `/requests/getAllSenderRequests/${userId}`,
+      providesTags: ['Requests']
+    }),
+
     postRequest: builder.mutation({
       query: (request) => ({
           url: '/requests',
@@ -85,6 +90,7 @@ export const requestApi = createApi({
 
 export const { 
   useGetRequestsForUserQuery, 
+  useGetSentRequestsForUserQuery,
   usePostRequestMutation, 
   usePostMessageMutation, 
   useGetMessagesForRequestQuery, 

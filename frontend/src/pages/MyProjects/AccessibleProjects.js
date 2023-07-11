@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Header from '../../components/Layout/Header/Header';
 import SignInUpContainer from '../../components/User/SignInUpContainer';
@@ -12,6 +12,12 @@ import Sidebarlvl2 from '../../components/Layout/Sidebar/Sidebarlvl2';
 
 
 function AccessibleProjects() {
+  function filterByKeyword(keyword, project) {
+    if (keyword === "" || project.name.includes(keyword)) {
+      return (<Worksheet data={project}/>);
+    }
+  }
+
   const dispatch = useDispatch();
 
   const myUserId = useSelector((state) => state.userAuth.userId);
@@ -20,9 +26,11 @@ function AccessibleProjects() {
 
   const [fetched, myAccessibleProjects] = useGetAccessibleProjects(myUserId);
 
+  const [keyword, setKeyword] = useState("");
+
   return (
     <div className='general-page-container'>
-      <Header title="可访问的项目" icon = {AiOutlineProject} />
+      <Header title="所有项目" icon = {AiOutlineProject} />
       
       <SignInUpContainer />
 
@@ -38,14 +46,15 @@ function AccessibleProjects() {
         <div className='general-page-container-reduced'>
 
           <div className='general-row-align'>
-            <button className='general-button-grey' style={{"marginLeft" : "950px"}} onClick={() => dispatch(openAddProject())}>新建项目</button>
+            <input name="keyword" className="general-search-bar" placeholder="搜索项目" onChange={(e) => setKeyword(e.target.value)}/>
+            <button className='general-button-grey' onClick={() => dispatch(openAddProject())}>新建项目</button>
           </div>
 
           <div style={{'marginTop' : '40px'}}></div>
 
           {myAccessibleProjects.map((project) =>
             <div key={project.projectId}>
-              <Worksheet data={project}/>
+              {filterByKeyword(keyword, project)}
             </div>
           )}
         </div>

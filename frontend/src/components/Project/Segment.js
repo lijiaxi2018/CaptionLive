@@ -54,6 +54,21 @@ function Segment({data}) {
     dispatch(openUploaderWindow());
   }
 
+  const handleDownload = (url) => {
+    const userToken = JSON.parse(localStorage.getItem("clAccessToken"));
+    fetch(url, {headers:{'Authorization': userToken}}).then(
+      (res) => res.blob()
+    ).then((blob) => {
+      let a = document.createElement('a');
+      let url = URL.createObjectURL(blob);
+      let filename = 'downloaded';
+      a.href = url;
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(url);
+    })
+  }
+
   function handleDeleteTask(myTaskId) {
     assignFileToTaskMutation({
       taskId: myTaskId,
@@ -91,11 +106,10 @@ function Segment({data}) {
       let downloadUrl = `http://${configuration.HOSTNAME}:8080/api/files/` + task.fileId;
       return (
         <div>
-          <a
-            href={downloadUrl}
-          >
-            <button className='general-button-grey'>下载</button>
-          </a>
+          <button 
+            className='general-button-grey'
+            onClick={() => handleDownload(downloadUrl)}
+          >下载</button>
         </div>
       );
     } else if (task.status === 'COMPLETED' && task.workerUser.userId === myUserId) {
@@ -103,12 +117,10 @@ function Segment({data}) {
       return (
         <div>
           <button className='general-button-grey' onClick={() => handleDeleteTask(task.taskId)}>删除</button>
-          <a
-            href={downloadUrl}
-          >
-            <button className='general-button-grey'>下载</button>
-          </a>
-          
+          <button 
+            className='general-button-grey'
+            onClick={() => handleDownload(downloadUrl)}
+          >下载</button>
         </div>
       );
     }
