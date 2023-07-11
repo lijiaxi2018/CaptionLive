@@ -211,12 +211,12 @@ public class ProjectController {
         List<Task> updatedTasks = workflows.stream().map(Task.Workflow::valueOf)
                 .filter(workflow -> !existingWorkflowSet.contains(workflow))
                 .map(workflow -> {
-            Task task = new Task();
-            task.setSegment(globalSegment);
-            task.setStatus(Task.Status.NOT_ASSIGNED);
-            task.setType(workflow);
-            return task;
-        }).toList();
+                    Task task = new Task();
+                    task.setSegment(globalSegment);
+                    task.setStatus(Task.Status.NOT_ASSIGNED);
+                    task.setType(workflow);
+                    return task;
+                }).toList();
         taskService.saveTasks(updatedTasks); // 保存更新后的任务
 
         // 返回响应
