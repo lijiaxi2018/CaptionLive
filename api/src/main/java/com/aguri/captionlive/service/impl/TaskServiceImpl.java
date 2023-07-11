@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class TaskServiceImpl implements TaskService {
@@ -151,9 +152,12 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void deleteAllInBatch(List<Task> tasks) {
         List<FileRecord> fileRecords = tasks.stream().map(Task::getFile).toList();
-        entityManager.flush();
-        fileRecordService.deleteFileRecordInBatch(fileRecords);
-        //taskRepository.deleteAllInBatch(tasks);
+        List<FileRecord> filteredList = fileRecords.stream()
+        .filter(element -> element != null)
+        .collect(Collectors.toList());
+        if(filteredList.size() != 0){
+            fileRecordService.deleteFileRecordInBatch(filteredList);
+        }
     }
 
     @Override
