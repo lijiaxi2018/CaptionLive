@@ -63,7 +63,7 @@ public class SegmentServiceImpl implements SegmentService {
         List<Task> tasks = taskService.findAllBySegmentSegmentId(segmentId);
         System.out.println("deleteSegment flush");
         //entityManager.flush();
-        //taskService.deleteAllInBatch(tasks);
+        taskService.deleteAllInBatch(tasks);
         segmentRepository.deleteById(segmentId);
     }
 
@@ -86,6 +86,6 @@ public class SegmentServiceImpl implements SegmentService {
         System.out.println("deleteAllInBatch Segment flush");
         //entityManager.flush();
         taskService.deleteAllInBatch(tasks);
-        segmentRepository.deleteAllInBatch(segments);
+        //segmentRepository.deleteAllInBatch(segments);
     }
 }

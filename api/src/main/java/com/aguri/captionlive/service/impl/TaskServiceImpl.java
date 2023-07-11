@@ -12,6 +12,7 @@ import com.aguri.captionlive.service.TaskService;
 import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.stream.Collectors;
 
 import java.util.List;
 import java.util.Objects;
@@ -62,6 +63,8 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public void deleteTask(Long taskId) {
+        Task task = getTaskById(taskId);
+        fileRecordService.deleteFileRecord(task.getFile().getFileRecordId());
         taskRepository.deleteById(taskId);
     }
 
@@ -151,10 +154,15 @@ public class TaskServiceImpl implements TaskService {
         List<FileRecord> fileRecords = tasks.stream().map(Task::getFile).toList();
         System.out.println("deleteAllInBatch Task flush");
         System.out.println("***************************************************************************");
-        System.out.println("fileRecords : " + fileRecords.get(0).getPath());
+        //System.out.println("fileRecords : " + fileRecords.get(0).getPath());
         //entityManager.flush();
-        fileRecordService.deleteFileRecordInBatch(fileRecords);
-        taskRepository.deleteAllInBatch(tasks);
+        List<FileRecord> filteredList = fileRecords.stream()
+        .filter(element -> element != null)
+        .collect(Collectors.toList());
+        if(filteredList.size() != 0){
+            fileRecordService.deleteFileRecordInBatch(filteredList);
+        }
+        //taskRepository.deleteAllInBatch(tasks);
     }
 
     @Override
