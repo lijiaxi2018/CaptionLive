@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import Sidebarlvl2 from '../../components/Layout/Sidebar/Sidebarlvl2';
-import Header from '../../components/Layout/Header/Header';
 import SignInUpContainer from '../../components/User/SignInUpContainer';
 import { VscOrganization } from 'react-icons/vsc';
 import { useGetOrganization } from '../../api/organization';
@@ -9,6 +8,9 @@ import { useParams } from 'react-router';
 import GlossariesTable from '../../components/Glossary/GlossariesTable';
 import GlossaryForm from '../../components/Glossary/GlossaryForm';
 import { myorgnizationSideBar } from '../../assets/sidebar';
+import { languagedata } from '../../assets/language';
+import { Icon } from '@rsuite/icons';
+import { useSelector } from 'react-redux'
 
 function Glossaries() {
   const organizationId = useParams().id;
@@ -17,7 +19,9 @@ function Glossaries() {
   const [glossaryFetched, glossaryData] = useGetAllGlossaries(organizationId);
   const fetched = (organizationFetched && glossaryFetched) ? true : false;
 
-  const organizationName = fetched ? organizationData.name : "获取中...";
+  const language = useSelector((state) => state.layout.language);
+
+  const organizationName = fetched ? organizationData.name : languagedata[language]['loading'];
   
   const glossaries = fetched ? glossaryData : [];
 
@@ -26,7 +30,10 @@ function Glossaries() {
   return (
     <div>
       <div className='general-page-container'>
-        <Header title={organizationName} icon = {VscOrganization} />
+
+        <Icon as={VscOrganization} size="3.1em" style={{ marginRight: '20px' }}/>
+        <label className="page-header-title">{organizationName}</label>
+
         <SignInUpContainer />
         <Sidebarlvl2 
           prefix={`/myorganizations/${organizationId}/`}
@@ -36,8 +43,13 @@ function Glossaries() {
         
         <div className='general-page-container-reduced'>
           <div className='general-row-align'>
-            <input name="keyword" className="general-search-bar" placeholder="搜索词汇" onChange={(e) => setKeyword(e.target.value)}/>
-            <button className='general-button-grey' onClick={() => setFormOpen(!formOpen)}>新增词汇</button>
+            <input name="keyword" className="general-search-bar" 
+              placeholder={languagedata[language]['loading']}
+              onChange={(e) => setKeyword(e.target.value)}
+            />
+            <button className='general-button-grey' onClick={() => setFormOpen(!formOpen)}>
+              {languagedata[language]['newGlossary']}
+            </button>
           </div>
           
           {formOpen && (

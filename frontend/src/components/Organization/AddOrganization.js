@@ -1,7 +1,8 @@
 import React, { useState, useReducer, useEffect } from 'react';
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useAddOrganizationMutation } from '../../services/organization';
 import { closeAddOrganization } from '../../redux/layoutSlice';
+import { languagedata } from '../../assets/language';
 
 const formReducer = (state, event) => {
   if (event.reset) {
@@ -29,6 +30,8 @@ function AddOrganization() {
     description: "",
   });
 
+  const language = useSelector((state) => state.layout.language);
+
   const [filled, setFilled] = useState(false); // If all required fields are fulfilled
   useEffect(() => {
     setFilled(formData.name.length > 0)
@@ -38,7 +41,7 @@ function AddOrganization() {
   useEffect(() => {
     if (!submitting) {
       if (!filled) {
-        setPrompt('请填写所有必填信息')
+        setPrompt(languagedata[language]['pleaseFillNecessaryInformation'])
       } else {
         setPrompt('')
       }
@@ -61,9 +64,9 @@ function AddOrganization() {
     .then((secondResponse) => {
       let message = secondResponse.data.message;
       if (message === "success") {
-        setPrompt("新建成功");
+        setPrompt(languagedata[language]['successfullyCreated']);
       } else {
-        setPrompt("发生了未知错误");
+        setPrompt(languagedata[language]['unknownError']);
       }
     })
   }
@@ -93,11 +96,14 @@ function AddOrganization() {
 
   return (
     <div className="add-organization-container">
-      <p className="sign-in-up-title">新建字幕组</p>
+      <p className="sign-in-up-title">{languagedata[language]['newOrganization']}</p>
 
       <label style={{ color: '#ff6765' }}>{prompt}</label><br/>
       
-      <input name="name" className="general-input-single-line-long" placeholder="请输入字幕组组名" onChange={handleFormChange} value={formData.summary}/>
+      <input name="name" className="general-input-single-line-long" 
+        placeholder={languagedata[language]['pleaseFillOrganizationName']} 
+        onChange={handleFormChange} value={formData.summary}
+      />
       <label className="star-mark">*</label>
       <br/>
 
@@ -105,15 +111,19 @@ function AddOrganization() {
         name="description" 
         style={{ 'resize': 'none' }} 
         className='general-input-multiple-lines-long' 
-        placeholder="请输入字幕组简介"
+        placeholder={languagedata[language]['pleaseFillOrganizationIntroduction']}
         onChange={handleFormChange} 
         value={formData.description}
       >
       </textarea>
 
       <div className="sign-in-up-button-list">
-        <button className="general-button-red" onClick={handleCancel}>取消</button>
-        <button className="general-button-green" onClick={handleComplete}>完成</button>
+        <button className="general-button-red" onClick={handleCancel}>
+          {languagedata[language]['cancel']}
+        </button>
+        <button className="general-button-green" onClick={handleComplete}>
+          {languagedata[language]['complete']}
+        </button>
       </div>
       
     </div>

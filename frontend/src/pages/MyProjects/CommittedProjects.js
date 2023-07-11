@@ -1,15 +1,20 @@
 import React from 'react';
-import Header from '../../components/Layout/Header/Header';
 import SignInUpContainer from '../../components/User/SignInUpContainer';
 import { AiOutlineProject } from 'react-icons/ai';
 import { myprojectSideBar } from '../../assets/sidebar';
 import Sidebarlvl2 from '../../components/Layout/Sidebar/Sidebarlvl2';
+import { languagedata } from '../../assets/language';
+import { Icon } from '@rsuite/icons';
+import { useSelector } from 'react-redux';
 
 function CommittedProjects() {
+  const language = useSelector((state) => state.layout.language);
   return (
     <div className='general-page-container'>
 
-    <Header title="我的项目" icon = {AiOutlineProject} />
+    <Icon as={AiOutlineProject} size="3.1em" style={{ marginRight: '20px' }}/>
+    <label className="page-header-title">{languagedata[language]['myProject']}</label>
+
     <Sidebarlvl2 
       prefix={`/myprojects/`}
       data={myprojectSideBar}
@@ -18,7 +23,7 @@ function CommittedProjects() {
     <SignInUpContainer />
 
     <div className='general-page-container-reduced'>
-      <h2>制作中，敬请期待...</h2>
+      <h2>{languagedata[language]['comingSoon']}</h2>
     </div>
     
   </div>

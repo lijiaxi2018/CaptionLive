@@ -12,6 +12,7 @@ import { parseTaskType } from '../../utils/segment';
 import { allWorkflowList } from '../../assets/workflows';
 import { openPrompt, updatePromptMessage } from '../../redux/layoutSlice';
 import Prompt from '../../components/InfoCard/Prompt';
+import { languagedata } from '../../assets/language';
 
 function copyToClipboard(str) {
   const el = document.createElement('textarea');
@@ -65,6 +66,7 @@ function Worksheet({data}) {
   const isOpenAddSegment = useSelector((state) => state.layout.inAddSegment);
   const isOpenShareProject = useSelector((state) => state.layout.inShareProject);
   const currentSelectedProjectId = useSelector((state) => state.layout.selectedProjectId);
+  const language = useSelector((state) => state.layout.language);
 
   function handleUpload(myProjectId) {
     dispatch(updateCurrentIdToUpload(myProjectId));
@@ -87,7 +89,7 @@ function Worksheet({data}) {
     // navigator.clipboard.writeText(staffList);
     copyToClipboard(staffList);
 
-    dispatch(updatePromptMessage("制作人员名单已拷贝到剪贴板。"));
+    dispatch(updatePromptMessage(languagedata[language]['copiedToClipboard']));
     dispatch(openPrompt());
   }
 
@@ -148,16 +150,24 @@ function Worksheet({data}) {
       </div>
 
       <div className='worksheet-buttons-container'>
-        <button className='general-button-grey' onClick={() => handleUpload(data.projectId)}>上传封面</button>
+        <button className='general-button-grey' onClick={() => handleUpload(data.projectId)}>
+          {languagedata[language]['uploadCover']}
+        </button>
         <div style={{ marginTop: '10px' }}></div>
-        <button className='general-button-grey' onClick={() => handleOpenShareProject(data.projectId)}>分享项目</button>
+        <button className='general-button-grey' onClick={() => handleOpenShareProject(data.projectId)}>
+          {languagedata[language]['shareProject']}
+        </button>
         <div style={{ marginTop: '10px' }}></div>
-        <button className='general-button-grey' onClick={() => handleOpenAddSegment(data.projectId)}>新建段落</button>
+        <button className='general-button-grey' onClick={() => handleOpenAddSegment(data.projectId)}>
+          {languagedata[language]['newSegment']}
+        </button>
 
         { data.isCompleted &&
           <div>
             <div style={{ marginTop: '10px' }}></div>
-            <button className='general-button-grey' onClick={() => handleCopyStaff(data)}>名单抓取</button>
+            <button className='general-button-grey' onClick={() => handleCopyStaff(data)}>
+              {languagedata[language]['copyCredits']}
+            </button>
           </div>
         }
       </div>

@@ -1,10 +1,13 @@
 import React, { useState, useReducer, useEffect } from 'react';
 import { usePostGlossariesMutation } from '../../services/glossary';
+import { useSelector } from 'react-redux';
+import { languagedata } from '../../assets/language';
 
 function GlossaryForm({organizationId, onClose}) {
   const [postGlossary] = usePostGlossariesMutation();
 
   const [submitting, setSubmitting] = useState(false); // If is currently submitting the from
+  const language = useSelector((state) => state.layout.language);
 
   const formReducer = (state, event) => {
     if (event.reset) {
@@ -46,7 +49,7 @@ function GlossaryForm({organizationId, onClose}) {
   useEffect(() => {
     if (!submitting) {
       if (!filled) {
-        setPrompt('请填写所有必填信息')
+        setPrompt(languagedata[language]['pleaseFillNecessaryInformation'])
       } else {
         setPrompt('')
       }
@@ -65,9 +68,9 @@ function GlossaryForm({organizationId, onClose}) {
     .then((secondResponse) => {
       let message = secondResponse.data.message;
       if (message === "success") {
-        setPrompt("新建成功");
+        setPrompt(languagedata[language]['successfullyCreated']);
       } else {
-        setPrompt("发生了未知错误");
+        setPrompt(languagedata[language]['unknownError']);
       }
     })
   }
@@ -93,35 +96,58 @@ function GlossaryForm({organizationId, onClose}) {
 
   return (
     <div className="form-container">
-      <p className="sign-in-up-title">新增语料</p>
+      <p className="sign-in-up-title">{languagedata[language]['newGlossary']}</p>
 
       <label style={{ color: '#ff6765' }}>{prompt}</label><br/>
       
-      <input name="term" className="general-input-single-line-long" placeholder="请输入词汇原文" onChange={handleFormChange} value={formData.term}/>
+      <input name="term" className="general-input-single-line-long" 
+        placeholder={languagedata[language]['pleaseFillOriginal']}
+        onChange={handleFormChange} value={formData.term}
+      />
       <label className="star-mark">*</label>
       <br/>
 
-      <input name="explanation" className="general-input-single-line-long" placeholder="请输入词汇释义" onChange={handleFormChange} value={formData.explanation}/>
+      <input name="explanation" className="general-input-single-line-long" 
+        placeholder={languagedata[language]['pleaseFillParaphrase']} 
+        onChange={handleFormChange} value={formData.explanation}
+      />
       <label className="star-mark">*</label>
       <br/>
 
-      <input name="romanization" className="general-input-single-line-long" placeholder="请输入词汇罗马字" onChange={handleFormChange} value={formData.romanization}/>
+      <input name="romanization" className="general-input-single-line-long" 
+        placeholder={languagedata[language]['pleaseFillRomanization']} 
+        onChange={handleFormChange} value={formData.romanization}
+      />
       <br/>
 
-      <input name="source" className="general-input-single-line-long" placeholder="请输入词汇出自" onChange={handleFormChange} value={formData.source}/>
+      <input name="source" className="general-input-single-line-long" 
+        placeholder={languagedata[language]['pleaseFillSource']}
+        onChange={handleFormChange} 
+        value={formData.source}
+      />
       <br/>
 
-      <input name="category" className="general-input-single-line-long" placeholder="请输入词汇分类" onChange={handleFormChange} value={formData.category}/>
+      <input name="category" className="general-input-single-line-long" 
+        placeholder={languagedata[language]['pleaseFillCategory']}
+        onChange={handleFormChange} value={formData.category}
+      />
       <br/>
 
-      <input name="remark" className="general-input-single-line-long" placeholder="请输入备注" onChange={handleFormChange} value={formData.remark}/>
+      <input name="remark" className="general-input-single-line-long" 
+        placeholder={languagedata[language]['pleaseFillRemark']}
+        onChange={handleFormChange} value={formData.remark}
+      />
       <br/>
 
 
 
       <div className="sign-in-up-button-list">
-        <button className="general-button-red" onClick={onClose}>取消</button>
-        <button className="general-button-green" onClick={handleComplete}>完成</button>
+        <button className="general-button-red" onClick={onClose}>
+          {languagedata[language]['cancel']}
+        </button>
+        <button className="general-button-green" onClick={handleComplete}>
+          {languagedata[language]['complete']}
+        </button>
       </div>
       
     </div>

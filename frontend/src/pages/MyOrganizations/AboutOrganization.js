@@ -1,13 +1,14 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import Sidebarlvl2 from '../../components/Layout/Sidebar/Sidebarlvl2';
-import Header from '../../components/Layout/Header/Header';
 import SignInUpContainer from '../../components/User/SignInUpContainer';
 import EntityInfo from '../../components/InfoCard/EntityInfo';
 import { VscOrganization } from 'react-icons/vsc';
 import { useGetOrganization } from '../../api/organization';
 import { useParams } from 'react-router';
 import { myorgnizationSideBar } from '../../assets/sidebar';
+import { languagedata } from '../../assets/language';
+import { Icon } from '@rsuite/icons';
 
 function AboutOrganization() {
   const currentUserId = useSelector((state) => state.userAuth.userId);
@@ -16,13 +17,19 @@ function AboutOrganization() {
 
   const [fetched, organizationData] = useGetOrganization(organizationId);
 
-  const organizationName = fetched ? organizationData.name : "获取中...";
-  
   const myUserId = useSelector((state) => state.userAuth.userId);
+  const language = useSelector((state) => state.layout.language);
+
+  const organizationName = fetched ? organizationData.name : languagedata[language]['loading'];
+  
+  
   return (
     <div>
       <div className='general-page-container'>
-        <Header title={organizationName} icon = {VscOrganization} />
+
+        <Icon as={VscOrganization} size="3.1em" style={{ marginRight: '20px' }}/>
+        <label className="page-header-title">{organizationName}</label>
+
         <SignInUpContainer />
         <Sidebarlvl2 
           prefix={`/myorganizations/${organizationId}/`}

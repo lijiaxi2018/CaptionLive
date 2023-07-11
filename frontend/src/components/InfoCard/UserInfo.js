@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { openUploaderWindow, updateCurrentIdToUpload, updateCurrentUploadType } from '../../redux/fileSlice';
 import { usePutUserDescriptionMutation } from '../../services/user';
 import { parseDBTimeYMD } from '../../utils/time';
-
+import { languagedata } from '../../assets/language';
 import { useGetUser } from '../../api/user';
 
 import FileUploader from '../Layout/Modal/FileUploader';
@@ -18,12 +18,14 @@ function UserInfo({userId, access}) {
 
   const isOpenUploaderWindow = useSelector((state) => state.file.openUploaderWindow);
   
+  const language = useSelector((state) => state.layout.language);
+
   const [fetched, userData] = useGetUser(userId);
 
   var userDescription;
   var userNickname;
-  userDescription = fetched ? userData.description : "获取中...";
-  userNickname = fetched ? userData.nickname : "获取中...";
+  userDescription = fetched ? userData.description : languagedata[language]['loading'];
+  userNickname = fetched ? userData.nickname : languagedata[language]['loading'];
 
   const editReducer = (state, event) => {
     if (event.reset) {
@@ -116,14 +118,14 @@ function UserInfo({userId, access}) {
 
                   <div className='general-right-buttons'>
                     { access &&
-                      <button className="general-button-grey" onClick={handleEdit}>编辑</button>
+                      <button className="general-button-grey" onClick={handleEdit}>{languagedata[language]['edit']}</button>
                     }
                   </div>
                   
                 </div>
                 
-                <label style={{ 'color': '#b3afaf' }} className='general-font-tiny'>{"用户名" + userData.username}</label><br/>
-                <label style={{ 'color': '#b3afaf' }} className='general-font-tiny'>{"创建于" + parseDBTimeYMD(userData.createdTime)}</label><br/>
+                <label style={{ 'color': '#b3afaf' }} className='general-font-tiny'>{languagedata[language]['username'] + ' ' + userData.username}</label><br/>
+                <label style={{ 'color': '#b3afaf' }} className='general-font-tiny'>{languagedata[language]['created'] + parseDBTimeYMD(userData.createdTime)}</label><br/>
 
                 <div className='entity-info-info-description'>
                   <label style={{ 'color': '#afabab' }} className='general-font-small'>{userDescription}</label>
@@ -140,7 +142,7 @@ function UserInfo({userId, access}) {
                 </div>
                 
                 <div style={{ 'marginTop': '25px' }}>
-                  <button className='general-button-grey' onClick={() => handleUpload(userId)}>上传头像</button>
+                  <button className='general-button-grey' onClick={() => handleUpload(userId)}>{languagedata[language]['uploadAvatar']}</button>
                 </div>
               </div>
 
@@ -154,13 +156,13 @@ function UserInfo({userId, access}) {
                   />
                   
                   <div className='general-right-buttons'>
-                    <button className="general-button-green" onClick={handleSubmit}>完成</button>
-                    <button className="general-button-grey" onClick={handleEdit}>取消</button>
+                    <button className="general-button-green" onClick={handleSubmit}>{languagedata[language]['complete']}</button>
+                    <button className="general-button-grey" onClick={handleEdit}>{languagedata[language]['cancel']}</button>
                   </div>
                 </div>
                 
-                <label style={{ 'color': '#b3afaf' }} className='general-font-tiny'>{"用户名" + userData.username}</label><br/>
-                <label style={{ 'color': '#b3afaf' }} className='general-font-tiny'>{"创建于" + parseDBTimeYMD(userData.createdTime)}</label><br/>
+                <label style={{ 'color': '#b3afaf' }} className='general-font-tiny'>{languagedata[language]['username'] + ' ' +userData.username}</label><br/>
+                <label style={{ 'color': '#b3afaf' }} className='general-font-tiny'>{languagedata[language]['created'] + parseDBTimeYMD(userData.createdTime)}</label><br/>
 
                 <textarea 
                   name="description" 

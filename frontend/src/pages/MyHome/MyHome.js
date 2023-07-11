@@ -1,17 +1,21 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import Header from '../../components/Layout/Header/Header';
 import SignInUpContainer from '../../components/User/SignInUpContainer';
 import UserInfo from '../../components/InfoCard/UserInfo';
 import { AiOutlineHome } from 'react-icons/ai';
+import { languagedata } from '../../assets/language';
+import { Icon } from '@rsuite/icons';
 
 function MyHome() {
   const myUserId = useSelector((state) => state.userAuth.userId);
+  const language = useSelector((state) => state.layout.language);
 
   return (
     <div className='general-page-container'>
 
-      <Header title="个人信息" icon = {AiOutlineHome} />
+      <Icon as={AiOutlineHome} size="3.1em" style={{ marginRight: '20px' }}/>
+      <label className="page-header-title">{languagedata[language]['personalInformation']}</label>
+
 
       { myUserId !== -1 &&
         <div className='entity-info-container-my-home'>

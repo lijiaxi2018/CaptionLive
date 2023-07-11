@@ -1,9 +1,10 @@
 import React, { useState, useReducer, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { globalWorkflow } from '../../assets/workflows';
 import { parseWorkflowCode } from '../../utils/segment';
 import { useAddProjectMutation } from '../../services/organization';
 import { closeAddProject } from '../../redux/layoutSlice';
+import { languagedata } from '../../assets/language';
 
 const formReducer = (state, event) => {
   if (event.reset) {
@@ -33,6 +34,8 @@ function AddProject() {
     workflow: 0,
   });
 
+  const language = useSelector((state) => state.layout.language)
+
   const [filled, setFilled] = useState(false); // If all required fields are fulfilled
   useEffect(() => {
     setFilled(formData.name.length > 0)
@@ -42,7 +45,7 @@ function AddProject() {
   useEffect(() => {
     if (!submitting) {
       if (!filled) {
-        setPrompt('请填写所有必填信息')
+        setPrompt(languagedata[language]['pleaseFillNecessaryInformation'])
       } else {
         setPrompt('')
       }
@@ -65,9 +68,9 @@ function AddProject() {
     .then((secondResponse) => {
       let message = secondResponse.data.message;
       if (message === "success") {
-        setPrompt("新建成功");
+        setPrompt(languagedata[language]['successfullyCreated']);
       } else {
-        setPrompt("发生了未知错误");
+        setPrompt(languagedata[language]['unknownError']);
       }
     })
   }
@@ -131,20 +134,27 @@ function AddProject() {
 
   return (
     <div className="add-project-container">
-      <p className="sign-in-up-title">新建项目</p>
+      <p className="sign-in-up-title">{languagedata[language]['newProject']}</p>
 
       <label style={{ color: '#ff6765' }}>{prompt}</label><br/>
 
       <div className='general-row-align'>
-        <input name="name" className="sign-in-up-input" placeholder="请输入项目名" onChange={handleFormChange} value={formData.name}/>
+        <input name="name" className="sign-in-up-input" 
+          placeholder={languagedata[language]['pleaseFillProjectName']} 
+          onChange={handleFormChange} value={formData.name}
+        />
         <label className="star-mark">*</label>
 
         <div className='general-flex-wrap' style={{ marginLeft: '20px' }}>
           <div className='general-row-align'>
-            <label className='general-font-tiny' style={{ marginRight: '10px' }}>音视频</label>
+            <label className='general-font-tiny' style={{ marginRight: '10px' }}>
+              {languagedata[language]['audioVideo']}
+            </label>
             <input className='general-checkbox' style={{ marginRight: '30px' }} type="checkbox" id="video-checkbox" checked={formData.isVideo} onChange={handleVideoChecked}/>
 
-            <label className='general-font-tiny' style={{ marginRight: '10px' }}>文本</label>
+            <label className='general-font-tiny' style={{ marginRight: '10px' }}>
+              {languagedata[language]['text']}
+            </label>
             <input className='general-checkbox' style={{ marginRight: '30px' }} type="checkbox" id="text-checkbox" checked={!formData.isVideo} onChange={handleTextChecked}/>
           </div>
           <label className="star-mark-global-task-checkbox">*</label>
@@ -161,8 +171,12 @@ function AddProject() {
       </div>
 
       <div className="sign-in-up-button-list">
-        <button className="general-button-red" onClick={handleCancel}>取消</button>
-        <button className="general-button-green" onClick={handleComplete}>完成</button>
+        <button className="general-button-red" onClick={handleCancel}>
+          {languagedata[language]['cancel']}
+        </button>
+        <button className="general-button-green" onClick={handleComplete}>
+          {languagedata[language]['complete']}
+        </button>
       </div>
       
     </div>

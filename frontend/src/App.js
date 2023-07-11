@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import Sidebar from './components/Layout/Sidebar/Sidebar';
 
 import MyHome from './pages/MyHome/MyHome'
-
+import Header from './components/Layout/Header/Header';
 import Projects from './pages/MyOrganizations/Projects';
 import Glossaries from './pages/MyOrganizations/Glossaries';
 import AboutOrganization from './pages/MyOrganizations/AboutOrganization';
@@ -23,6 +23,7 @@ function App() {
     <>
       <Router>
         <Sidebar />
+        <Header />
         <Routes>
           <Route path="/" element={<></>}/>
 
