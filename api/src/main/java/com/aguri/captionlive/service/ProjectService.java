@@ -31,7 +31,7 @@ public interface ProjectService {
 
     void shareProject2User(Long projectId, Long userId);
 
-    void shareProject2UserWithPermission(Long userId, Long projectId, Access.Permission permission);
+    void shareProject2UserWithPermission(Long projectId, Long userId, Access.Permission permission);
 
     void shareProject2Organization(Long projectId, Long organizationId);
 

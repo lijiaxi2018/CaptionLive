@@ -76,7 +76,7 @@ public class ProjectServiceImpl implements ProjectService {
 
         shareProject2Organization(projectId, projectRequest.getOrganizationId());
 
-        shareProject2UserWithPermission(projectRequest.getOperatorId(), projectId, Access.Permission.Creator);
+        shareProject2UserWithPermission(projectId, projectRequest.getOperatorId(), Access.Permission.Creator);
 
         return project;
     }
@@ -179,17 +179,11 @@ public class ProjectServiceImpl implements ProjectService {
         segments.add(segment);
     }
 
-    public void shareProject2UserWithPermission(Long userId, Long projectId, Access.Permission permission) {
-//        Access access1 = accessRepository.findAccessByProjectProjectIdAndUserUserId(projectId, userId);
-//        if (access1 != null) {
-//            return;
-//        }
+    public void shareProject2UserWithPermission(Long projectId, Long userId, Access.Permission permission) {
         Access access = new Access();
-        Project p2 = new Project();
-        p2.setProjectId(projectId);
-        access.setProject(p2);
-        User user = new User();
-        user.setUserId(userId);
+        Project project = projectRepository.getReferenceById(projectId);
+        access.setProject(project);
+        User user = userRepository.getReferenceById(userId);
         access.setUser(user);
         access.setCommitment(Access.Commitment.NONE);
         access.setPermission(permission);
@@ -285,7 +279,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public void shareProject2User(Long projectId, Long userId) {
-        shareProject2UserWithPermission(userId, projectId, Access.Permission.Editable);
+        shareProject2UserWithPermission(projectId, userId, Access.Permission.Editable);
     }
 
 
