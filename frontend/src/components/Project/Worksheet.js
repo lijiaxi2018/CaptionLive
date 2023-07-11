@@ -89,6 +89,7 @@ function Worksheet({data}) {
     .then((response) => {
       // TODO: Deal with other return messages
     })
+  }
     
   function handleCopyStaff(projectData) {
     let staffList = parseToStaffList(projectData);
