@@ -62,6 +62,8 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public void deleteTask(Long taskId) {
+        Task task = getTaskById(taskId);
+        fileRecordService.deleteFileRecord(task.getFile().getFileRecordId());
         taskRepository.deleteById(taskId);
     }
 
@@ -151,8 +153,7 @@ public class TaskServiceImpl implements TaskService {
         List<FileRecord> fileRecords = tasks.stream().map(Task::getFile).toList();
         entityManager.flush();
         fileRecordService.deleteFileRecordInBatch(fileRecords);
-        fileRecordService.deleteFileRecordInBatch(fileRecords);
-        taskRepository.deleteAllInBatch(tasks);
+        //taskRepository.deleteAllInBatch(tasks);
     }
 
     @Override
