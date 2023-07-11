@@ -228,8 +228,8 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     @Transactional
     public void deleteProject(Long id) {
-        List<Access> accessList = accessRepository.findAllByProjectProjectId(id);
-        accessRepository.deleteAll(accessList);
+        //List<Access> accessList = accessRepository.findAllByProjectProjectId(id);
+        //accessRepository.deleteAll(accessList);
         Project project = projectRepository.getReferenceById(id);
         List<Segment> segments = project.getSegments();
         segmentService.deleteAllInBatch(segments);

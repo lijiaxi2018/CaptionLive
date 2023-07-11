@@ -39,7 +39,7 @@ public class Task {
     private User worker;
 
     @JsonIgnore
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "file_record_id")
     private FileRecord file;
 
