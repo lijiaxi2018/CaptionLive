@@ -2,8 +2,13 @@ package com.aguri.captionlive.service.impl;
 
 import com.aguri.captionlive.common.exception.EntityNotFoundException;
 import com.aguri.captionlive.model.Segment;
+import com.aguri.captionlive.model.Task;
 import com.aguri.captionlive.repository.SegmentRepository;
+import com.aguri.captionlive.repository.TaskRepository;
 import com.aguri.captionlive.service.SegmentService;
+import com.aguri.captionlive.service.TaskService;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -55,11 +60,30 @@ public class SegmentServiceImpl implements SegmentService {
 
     @Override
     public void deleteSegment(Long segmentId) {
+        List<Task> tasks = taskService.findAllBySegmentSegmentId(segmentId);
+        //entityManager.flush();
+        taskService.deleteAllInBatch(tasks);
         segmentRepository.deleteById(segmentId);
     }
 
     @Override
     public List<Segment> getAllSegments(Long projectId) {
         return segmentRepository.findAllByProjectProjectId(projectId);
+    }
+
+    @Autowired
+    TaskService taskService;
+
+    @Autowired
+    EntityManager entityManager;
+
+    @Override
+    @Transactional
+    public void deleteAllInBatch(List<Segment> segments) {
+        List<Long> segmentIds = segments.stream().map(Segment::getSegmentId).toList();
+        List<Task> tasks = taskService.findAllInSegmentSegmentId(segmentIds);
+        //entityManager.flush();
+        taskService.deleteAllInBatch(tasks);
+        //segmentRepository.deleteAllInBatch(segments);
     }
 }

@@ -395,6 +395,77 @@
   margin-right: 2px;
 }
 
+/* for GlossaryTable.js  */
+.glossary-table {
+  width: 100%;
+}
+.glossary-table table {
+  width: 100%;
+}
+
+.glossary-button-group{
+  width: 100%;
+  /* background-color: #5bc96d; */
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.glossary-button-modal {
+  /* position: absolute; */
+  /* position:; */
+  /* width: ; */
+  position: relative;
+  left: 80%;
+  width: 100px;
+  border-radius: 10px;
+}
+
+.glossary-button-modal:hover {
+  color: #e8e5e6;
+  background-color: #7f7f7f;
+  /* position: relative;
+  left: 80%;
+  width: 100px;
+  border-radius: 10px; */
+}
+
+#glossary-search-bar {
+  width: 100%;
+  font-size: 25px;
+  height: 40px;
+  border-radius: 30px;
+  padding-left: 20px;
+  color: #4c4747;
+  background-color: #98989839;
+  border-style: none;
+}
+
+.glossary-form {
+  z-index: 10;
+  position: absolute;
+  left: 200px;
+  width: 440px;
+  padding-left: 40px;
+  padding-right: 40px;
+  height: 550px;
+  padding-top: 40px;
+  background-color: #7f7f7fd3;
+  border-radius: 40px;
+}
+
+.rs-btn {
+  margin-right: 10px;
+}
+
+.rs-form-group {
+  display: flex;
+}
+
+.rs-form-control-label {
+  padding-top: 7px;
+  width: 100px;
+}
+
 /* Worksheet */
 .worksheet-container {
   display: flex;
@@ -613,6 +684,31 @@
 .prompt-container {
   position: fixed;
   z-index: 2;
+  top: 25%;
+  left: 30%;
+  
+  width: 600px;
+  border-radius: 8px;
+  border: 0px solid #b0acad;
+  background-color: #ffffff;
+  padding: 20px;
+  box-shadow: 0px 0px 30px;
+}
+
+.general-search-bar {
+  background-color : #e8e5e6; 
+  border-radius: 4px;
+  border: 0px;
+  height: 40px;
+  width: 1035px;
+  padding: 10px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.form-container {
+  position: fixed;
+  z-index: 10;
   top: 25%;
   left: 30%;
   

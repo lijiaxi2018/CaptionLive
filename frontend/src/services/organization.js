@@ -138,6 +138,14 @@ export const organizationApi = createApi({
       }),
       invalidatesTags: ['Organizations']
     }),
+
+    deleteProject: builder.mutation({
+      query: (projectId) => ({
+        url: `/projects/${projectId}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Organizations']
+    }),
   }),
 })
 
@@ -159,4 +167,5 @@ export const {
   useGetSharedOrgsQuery, 
   useShareProjectToUserMutation,
   useShareProjectToOrgMutation,
+  useDeleteProjectMutation, 
 } = organizationApi

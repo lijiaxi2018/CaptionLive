@@ -2,6 +2,7 @@ package com.aguri.captionlive.service;
 
 import com.aguri.captionlive.DTO.ProjectInfo;
 import com.aguri.captionlive.DTO.ProjectRequest;
+import com.aguri.captionlive.model.Access;
 import com.aguri.captionlive.model.Organization;
 import com.aguri.captionlive.model.Project;
 import com.aguri.captionlive.model.User;
@@ -18,7 +19,7 @@ public interface ProjectService {
 
     void deleteProject(Long id);
 
-    Project updateProject(ProjectRequest projectRequest);
+    Project updateProject(Project project);
 
     List<User> getAllAccessibleUsers(Long projectId);
 
@@ -29,6 +30,8 @@ public interface ProjectService {
     Project updateCover(Long projectId, Long coverId);
 
     void shareProject2User(Long projectId, Long userId);
+
+    void shareProject2UserWithPermission(Long projectId, Long userId, Access.Permission permission);
 
     void shareProject2Organization(Long projectId, Long organizationId);
 

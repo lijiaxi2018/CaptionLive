@@ -8,6 +8,7 @@ import ShareProject from '../../components/Project/ShareProject';
 import FileUploader from '../Layout/Modal/FileUploader';
 import { openUploaderWindow, updateCurrentIdToUpload, updateCurrentUploadType } from '../../redux/fileSlice';
 import { openAddSegment, updateSelectedProjectId, openShareProject } from '../../redux/layoutSlice';
+import { useDeleteProjectMutation } from '../../services/organization';
 import { parseTaskType } from '../../utils/segment';
 import { allWorkflowList } from '../../assets/workflows';
 import { openPrompt, updatePromptMessage } from '../../redux/layoutSlice';
@@ -65,6 +66,7 @@ function Worksheet({data}) {
   const isOpenAddSegment = useSelector((state) => state.layout.inAddSegment);
   const isOpenShareProject = useSelector((state) => state.layout.inShareProject);
   const currentSelectedProjectId = useSelector((state) => state.layout.selectedProjectId);
+  const [deleteProjectMutation] = useDeleteProjectMutation();
 
   function handleUpload(myProjectId) {
     dispatch(updateCurrentIdToUpload(myProjectId));
@@ -82,6 +84,13 @@ function Worksheet({data}) {
     dispatch(openShareProject());
   }
 
+  function handleDeleteProject(myProjectId) {
+    deleteProjectMutation(myProjectId)
+    .then((response) => {
+      // TODO: Deal with other return messages
+    })
+  }
+    
   function handleCopyStaff(projectData) {
     let staffList = parseToStaffList(projectData);
     // navigator.clipboard.writeText(staffList);
@@ -153,6 +162,8 @@ function Worksheet({data}) {
         <button className='general-button-grey' onClick={() => handleOpenShareProject(data.projectId)}>分享项目</button>
         <div style={{ marginTop: '10px' }}></div>
         <button className='general-button-grey' onClick={() => handleOpenAddSegment(data.projectId)}>新建段落</button>
+        <div style={{ marginTop: '10px' }}></div>
+        <button className='general-button-red' onClick={() => handleDeleteProject(data.projectId)}>删除项目</button>
 
         { data.isCompleted &&
           <div>

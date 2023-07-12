@@ -1,24 +1,24 @@
 import React from 'react';
-import { updateUserId } from '../../../redux/userSlice'
-import { toggleSignInOnWindow } from '../../../redux/layoutSlice'
-import { useSelector, useDispatch } from 'react-redux'
+import { updateUserId } from '../../../redux/userSlice';
+import { toggleSignInOnWindow } from '../../../redux/layoutSlice';
+import { useSelector, useDispatch } from 'react-redux';
 import { Icon } from '@rsuite/icons';
 // import { useGetUserQuery } from '../../../services/user'
 import Avatar from '../../InfoCard/Avatar';
 
 function Header({title, icon}) {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const userId = useSelector((state) => state.userAuth.userId);
   // const userData = useGetUserQuery(userId);
   // const welcomePrompt = userId === -1 ? "未登录" : userData.isFetching ? "获取中..." : "欢迎, " + userData.data.data.username;
 
   const loginOut = () => {
-    dispatch(updateUserId(-1))
+    dispatch(updateUserId(-1));
   }
 
   const openloginInOut = () => {
-    dispatch(toggleSignInOnWindow())
+    dispatch(toggleSignInOnWindow());
   }
 
   return (

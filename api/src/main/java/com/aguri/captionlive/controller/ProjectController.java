@@ -1,13 +1,14 @@
 package com.aguri.captionlive.controller;
 
 import com.aguri.captionlive.DTO.ProjectInfo;
-import com.aguri.captionlive.DTO.ProjectRequest;
 import com.aguri.captionlive.DTO.Re4Orgs;
 import com.aguri.captionlive.DTO.Re4Users;
 import com.aguri.captionlive.common.resp.Resp;
 import com.aguri.captionlive.model.*;
 import com.aguri.captionlive.repository.AccessRepository;
 import com.aguri.captionlive.repository.OwnershipRepository;
+import com.aguri.captionlive.repository.ProjectRepository;
+import com.aguri.captionlive.repository.TaskRepository;
 import com.aguri.captionlive.service.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -20,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -49,12 +51,6 @@ public class ProjectController {
         return ResponseEntity.ok(Resp.ok(projects));
     }
 
-//    @PostMapping
-//    public ResponseEntity<Resp> createProject(@RequestBody ProjectRequest projectRequest) {
-//        Project createdProject = projectService.createProject(projectRequest);
-//        return ResponseEntity.ok(Resp.ok(createdProject));
-//    }
-
     @GetMapping("/{id}")
     public ResponseEntity<Resp> getProjectById(@PathVariable Long id) {
         ProjectInfo projectInfo = ProjectInfo.generateProjectInfo(projectService.getProjectById(id));
@@ -65,12 +61,6 @@ public class ProjectController {
     public ResponseEntity<Resp> deleteProject(@PathVariable Long id) {
         projectService.deleteProject(id);
         return ResponseEntity.ok(Resp.ok());
-    }
-
-    @PutMapping
-    public ResponseEntity<Resp> updateProject(@RequestBody ProjectRequest projectRequest) {
-        ProjectInfo updatedProject = ProjectInfo.generateProjectInfo(projectService.updateProject(projectRequest));
-        return ResponseEntity.ok(Resp.ok(updatedProject));
     }
 
     @GetMapping("/{projectIid}/users")
@@ -132,7 +122,7 @@ public class ProjectController {
                     examples = @ExampleObject(value = "{\"name\": \"TEST_PROJECT\", \"type\": \"AUDIO_AND_VIDEO\", \"workflows\":[\"TIMELINE\", \"SOURCE\"]}")
             )
     )
-    public Resp createSegment(@RequestBody Map<String, Object> body, HttpServletRequest request) {
+    public Resp createProject(@RequestBody Map<String, Object> body, HttpServletRequest request) {
         // 从请求参数中获取name、type和workflows
         String name = (String) body.get("name");
         String type = (String) body.get("type");
@@ -160,14 +150,81 @@ public class ProjectController {
         }).toList());
         String username = (String) request.getAttribute("username");
         Long userId = userService.getUserByUsername(username).getUserId();
-        projectService.shareProject2User(project.getProjectId(), userId);
+        projectService.shareProject2UserWithPermission(project.getProjectId(), userId, Access.Permission.Creator);
         // 返回响应
         return Resp.ok(project);
     }
 
     @Autowired
-    AccessRepository accessRepository;
+    ProjectRepository projectRepository;
 
+    @Autowired
+    TaskRepository taskRepository;
+
+
+    /**
+     * 更新项目和全局片段
+     *
+     * @param projectId 项目ID
+     * @param body      包含请求参数的Map，包括name、type和workflows
+     * @return Resp对象表示响应结果
+     */
+    @PutMapping("/{projectId}")
+    @Operation(summary = "Update project and global segment", description = "Update an existing project and its global segment")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Project and segment updated successfully",
+                    content = @Content(schema = @Schema(implementation = Resp.class))),
+            @ApiResponse(responseCode = "404", description = "Project not found",
+                    content = @Content(schema = @Schema(implementation = Resp.class)))
+    })
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "Request body containing name, type, and workflows",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = Map.class, requiredProperties = {"name", "type", "workflows"}),
+                    examples = @ExampleObject(value = "{\"name\": \"UPDATED_PROJECT\", \"type\": \"AUDIO_AND_VIDEO\", \"workflows\":[\"TIMELINE\", \"SOURCE\"]}")
+            )
+    )
+    public Resp updateProject(@PathVariable("projectId") Long projectId, @RequestBody Map<String, Object> body, HttpServletRequest request) {
+        // 检查项目是否存在
+        Project existingProject = projectRepository.getReferenceById(projectId);
+
+        // 更新项目属性
+        String name = (String) body.get("name");
+        String type = (String) body.get("type");
+        List<String> workflows = (List<String>) body.get("workflows");
+
+        existingProject.setName(name);
+        existingProject.setType(Project.Type.valueOf(type));
+        existingProject = projectRepository.save(existingProject);
+
+        // 全局片段
+        Segment globalSegment = existingProject.getSegments().get(0);
+        List<Task> tasks = globalSegment.getTasks();
+        Set<Task.Workflow> newWorkFlowSet = workflows.stream().map(Task.Workflow::valueOf).collect(Collectors.toSet());
+        // 更新任务
+        // 删除任务
+        List<Task> delTaskList = tasks.stream().filter(task -> !newWorkFlowSet.contains(task.getType())).toList();
+        taskService.deleteAllInBatch(delTaskList);
+
+        //新增任务
+        Set<Task.Workflow> existingWorkflowSet = tasks.stream().map(Task::getType).collect(Collectors.toSet());
+        List<Task> updatedTasks = workflows.stream().map(Task.Workflow::valueOf)
+                .filter(workflow -> !existingWorkflowSet.contains(workflow))
+                .map(workflow -> {
+                    Task task = new Task();
+                    task.setSegment(globalSegment);
+                    task.setStatus(Task.Status.NOT_ASSIGNED);
+                    task.setType(workflow);
+                    return task;
+                }).toList();
+        taskService.saveTasks(updatedTasks); // 保存更新后的任务
+
+        // 返回响应
+        return Resp.ok(existingProject);
+    }
+
+    @Autowired
+    AccessRepository accessRepository;
 
     @GetMapping("/{projectId}/shareInfo/users")
     public Resp getAllUserPermissionByProject(@PathVariable Long projectId) {
@@ -199,7 +256,6 @@ public class ProjectController {
         List<Organization> sharedOrganizationList = ownershipList.stream().map(Ownership::getOrganization).toList();
         Set<Long> sharedOrgSet = sharedOrganizationList.stream().map(Organization::getOrganizationId).collect(Collectors.toSet());
         List<Organization> noSharedOrganizationList = allOrganizations.stream().filter(organization -> !sharedOrgSet.contains(organization.getOrganizationId())).toList();
-
 
         Re4Orgs re = new Re4Orgs();
         re.noSharedOrganizationList = noSharedOrganizationList;

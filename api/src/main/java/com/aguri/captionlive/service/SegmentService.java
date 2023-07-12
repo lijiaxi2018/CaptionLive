@@ -16,4 +16,6 @@ public interface SegmentService {
 
     void deleteSegment(Long segmentId);
     List<Segment> getAllSegments(Long projectId);
+
+    void deleteAllInBatch(List<Segment> segments);
 }
