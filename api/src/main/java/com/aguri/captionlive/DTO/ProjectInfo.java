@@ -1,15 +1,17 @@
 package com.aguri.captionlive.DTO;
 
-import com.aguri.captionlive.common.util.FileRecordUtil;
 import com.aguri.captionlive.model.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.beans.BeanUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 public class ProjectInfo {
 
     private Long projectId;
@@ -24,7 +26,8 @@ public class ProjectInfo {
 
     private List<SegmentInfo> segmentInfos;
 
-    @Data
+    @Getter
+    @Setter
     public static class SegmentInfo {
 
         private Long segmentId;
@@ -39,19 +42,52 @@ public class ProjectInfo {
 
         private List<Remark> remarks;
 
-        @Data
+        @Getter
+        @Setter
         public static class TaskInfo {
 
             private Long taskId;
 
-            private User workerUser;
+            private UserInfo workerUser;
 
             private Long fileId;
 
             private Task.Workflow type;
 
             private Task.Status status;
+
+            @Getter
+            @Setter
+            public static class UserInfo {
+                private Long userId;
+
+                private Integer permission;
+
+                private String username;
+
+                private String qq;
+
+                private String email;
+
+                private String nickname;
+
+                private String description;
+
+                private Long avatarId;
+
+//            private List<Organization> organizations;
+
+//            private List<Project> accessibleProjects;
+
+                private LocalDateTime lastUpdatedTime;
+
+                private LocalDateTime createdTime;
+
+            }
+
         }
+
+
     }
 
     public static List<ProjectInfo> generateProjectInfos(List<Project> projects) {
@@ -75,7 +111,12 @@ public class ProjectInfo {
         segments.forEach(segment -> {
             List<SegmentInfo.TaskInfo> taskInfos = segment.getTasks().stream().sorted(Comparator.comparingInt(t -> t.getType().getValue())).map(task -> {
                 SegmentInfo.TaskInfo taskInfo = new SegmentInfo.TaskInfo();
-                taskInfo.setWorkerUser(task.getWorker());
+                User worker = task.getWorker();
+                if (worker != null) {
+                    SegmentInfo.TaskInfo.UserInfo workerInfo = new SegmentInfo.TaskInfo.UserInfo();
+                    BeanUtils.copyProperties(worker, workerInfo);
+                    taskInfo.setWorkerUser(workerInfo);
+                }
                 Task.Status status = task.getStatus();
                 if (status != Task.Status.COMPLETED) {
                     projectInfo.setIsCompleted(false);

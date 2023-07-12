@@ -41,7 +41,6 @@ public class JwtAuthenticationFilter implements Filter {
 
         if (!OPEN) {
             request.setAttribute("username", "this request dependence on Authorization Header, please open this filter: " + JwtTokenProvider.class.getName());
-            request.setAttribute("username", "this request dependence on Authorization Header, please open this filter: " + JwtTokenProvider.class.getName());
             filterChain.doFilter(request, response);
             return;
         }
@@ -68,7 +67,6 @@ public class JwtAuthenticationFilter implements Filter {
         User operator = byUsername.get();
         request.setAttribute("username", username);
         request.setAttribute("operator", operator);
-
         filterChain.doFilter(request, response);
         return;
     }
