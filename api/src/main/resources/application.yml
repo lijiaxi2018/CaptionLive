@@ -1,5 +1,5 @@
 spring:
-  sql.init.mode: always # Loading Initialization Data
+  # sql.init.mode: always # Loading Initialization Data
   
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres

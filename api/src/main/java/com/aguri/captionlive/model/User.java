@@ -1,6 +1,8 @@
 package com.aguri.captionlive.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -55,6 +57,7 @@ public class User {
     private List<Organization> organizations;
 
 
+    //@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @JsonIgnore
     @ManyToMany
     @JoinTable(
