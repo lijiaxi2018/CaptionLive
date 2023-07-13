@@ -1,9 +1,9 @@
 package com.aguri.captionlive.service.impl;
 
+import com.aguri.captionlive.common.exception.ReturnErrorMessageException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.aguri.captionlive.common.exception.EntityNotFoundException;
 import com.aguri.captionlive.model.Glossary;
 import com.aguri.captionlive.repository.GlossaryRepository;
 import com.aguri.captionlive.service.GlossaryService;
@@ -28,7 +28,7 @@ public class GlossaryServiceImpl implements GlossaryService {
     @Override
     public Glossary getGlossaryById(Long id) {
         return glossaryRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Glossary not found with id: " + id));
+                .orElseThrow(() -> new ReturnErrorMessageException("Glossary not found with id: " + id));
     }
 
     @Override
@@ -39,7 +39,7 @@ public class GlossaryServiceImpl implements GlossaryService {
     @Override
     public Glossary updateGlossary(Long id, Glossary glossary) {
         Glossary existingGlossary = getGlossaryById(id);
-        //Need to confirm what attributes should be update
+        //Need to confirm what attributes should be updated
         existingGlossary.setCategory(glossary.getCategory());
         return glossaryRepository.save(existingGlossary);
     }

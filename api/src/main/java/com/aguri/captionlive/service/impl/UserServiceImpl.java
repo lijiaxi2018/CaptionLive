@@ -2,7 +2,7 @@ package com.aguri.captionlive.service.impl;
 
 import com.aguri.captionlive.DTO.ProjectInfo;
 import com.aguri.captionlive.DTO.UserRequest;
-import com.aguri.captionlive.common.exception.EntityNotFoundException;
+import com.aguri.captionlive.common.exception.ReturnErrorMessageException;
 import com.aguri.captionlive.common.util.FileRecordUtil;
 import com.aguri.captionlive.model.*;
 import com.aguri.captionlive.repository.*;
@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserById(Long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
+                .orElseThrow(() -> new ReturnErrorMessageException("User not found with id: " + id));
     }
 
 //    @Autowired
@@ -79,7 +79,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserByUsername(String username) {
         return userRepository.findByUsername(username)
-                .orElseThrow(() -> new EntityNotFoundException("User not found with username: " + username));
+                .orElseThrow(() -> new ReturnErrorMessageException("User not found with username: " + username));
     }
 
     @Override

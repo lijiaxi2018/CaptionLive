@@ -1,6 +1,6 @@
 package com.aguri.captionlive.service.impl;
 
-import com.aguri.captionlive.common.exception.EntityNotFoundException;
+import com.aguri.captionlive.common.exception.ReturnErrorMessageException;
 import com.aguri.captionlive.model.FileRecord;
 import com.aguri.captionlive.repository.FileRecordRepository;
 import com.aguri.captionlive.service.FileRecordService;
@@ -41,7 +41,7 @@ public class FileRecordServiceImpl implements FileRecordService {
     @Override
     public FileRecord getFileRecordById(Long id) {
         return fileRecordRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("FileRecord not found with id: " + id));
+                .orElseThrow(() -> new ReturnErrorMessageException("FileRecord not found with id: " + id));
     }
 
     @Override

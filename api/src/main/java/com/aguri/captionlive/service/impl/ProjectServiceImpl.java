@@ -2,17 +2,16 @@ package com.aguri.captionlive.service.impl;
 
 import com.aguri.captionlive.DTO.ProjectInfo;
 import com.aguri.captionlive.DTO.ProjectRequest;
-import com.aguri.captionlive.common.exception.EntityNotFoundException;
 import com.aguri.captionlive.common.util.FileRecordUtil;
 import com.aguri.captionlive.model.*;
 import com.aguri.captionlive.repository.*;
 import com.aguri.captionlive.service.*;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static com.aguri.captionlive.model.Task.AUDIO_AND_VIDEO_DEFAULT_WORKFLOWS;
 import static com.aguri.captionlive.model.Task.TXT_DEFAULT_WORKFLOWS;

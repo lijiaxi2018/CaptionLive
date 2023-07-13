@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import com.aguri.captionlive.common.exception.ReturnErrorMessageException;
 import com.aguri.captionlive.model.*;
 import com.aguri.captionlive.repository.*;
 import com.google.gson.Gson;
@@ -15,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.aguri.captionlive.DTO.RequestRequest;
-import com.aguri.captionlive.common.exception.EntityNotFoundException;
 import com.aguri.captionlive.common.util.TimeComparator;
 import com.aguri.captionlive.service.RequestService;
 
@@ -54,7 +54,7 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public Request getRequestById(Long id) {
         return requestRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Request not found with id: " + id));
+                .orElseThrow(() -> new ReturnErrorMessageException("Request not found with id: " + id));
     }
 
     @Override
