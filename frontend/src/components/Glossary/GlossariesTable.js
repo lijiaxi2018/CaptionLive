@@ -1,5 +1,8 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Table } from 'rsuite';
+import { Icon } from '@rsuite/icons';
+import { FaTrash } from 'react-icons/fa';
+import { useDeleteGlossaryMutation } from '../../services/glossary';
 
 /** 
  * for guide of using rsuite/Table, please refer 
@@ -39,7 +42,14 @@ const useSortedData = (data, config = null) => {
 
 const GlossariesTable = ({glossaries=[], keyword}) => {
     const { Column, HeaderCell, Cell } = Table; // componets of rsuite table
-    
+    const [deleteGlossary] = useDeleteGlossaryMutation();
+
+    const handleDeleteGlossary = (rowData) => {
+      if (rowData) {
+        deleteGlossary(rowData.glossaryId);
+        // this api has no response to handle
+      }
+    }
     // const { data, requestSort, sortConfig } = useSortedData(glossaries);
     
     return (
@@ -81,6 +91,16 @@ const GlossariesTable = ({glossaries=[], keyword}) => {
               <Column width={180} align='center' fix>
                 <HeaderCell>分类</HeaderCell>
                 <Cell dataKey='category' />
+              </Column>
+              <Column width={180} align='center' fix>
+                <HeaderCell>删除</HeaderCell>
+                <Cell>
+                  {rowData => (
+                    <button onClick={() => handleDeleteGlossary(rowData)}>
+                      <Icon as={FaTrash} size='1.75em' style={{color:'#a0a0a0'}}/>
+                    </button>
+                  )}
+                </Cell>
               </Column>
             </Table>
         </div>

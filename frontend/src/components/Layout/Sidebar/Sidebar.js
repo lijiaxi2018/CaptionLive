@@ -60,7 +60,7 @@ function Sidebar() {
     <div className='sidebar'>
       <IconContext.Provider value={{ color: '#4c4747' }}>
         <Sidenav expanded={expanded}>
-          <Sidenav.Toggle onToggle={expanded => setExpanded(expanded)} />
+          <Sidenav.Toggle style={{'padding-left': '19px'}} onToggle={expanded => setExpanded(expanded)} />
           <Sidenav.Body>
             <Nav activeKey={activeKey} onSelect={setActiveKey}>
               
