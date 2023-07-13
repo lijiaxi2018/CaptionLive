@@ -3,19 +3,32 @@
 
 
 .sidebar {
-        width:240;
-        height:100%;
-        position: fixed;
-        z-index: 20;
-        background-color: #f7f7fa;
+  width:240;
+  height:100%;
+  position: fixed;
+  z-index: 20;
+  background-color: #f7f7fa;
 }
 
 a {
-        text-decoration: none;
-        color:#575757;
+  text-decoration: none;
+  color:#575757;
 }
 
 a:hover {
-        text-decoration: none;
-        color:#575757;
+  text-decoration: none;
+  color:#575757;
+}
+
+/* .rs-ripple-pond {
+  position: relative;
+  margin: 0 auto;
+} */
+
+.rs-btn-icon.rs-btn > .rs-icon {
+  margin: 0 auto;
+}
+
+.rs-sidenav-toggle-button {
+  width: 100%;
 }
