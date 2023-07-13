@@ -1,10 +1,9 @@
 package com.aguri.captionlive.service.impl;
 
-import com.aguri.captionlive.common.exception.EntityNotFoundException;
+import com.aguri.captionlive.common.exception.ReturnErrorMessageException;
 import com.aguri.captionlive.model.Segment;
 import com.aguri.captionlive.model.Task;
 import com.aguri.captionlive.repository.SegmentRepository;
-import com.aguri.captionlive.repository.TaskRepository;
 import com.aguri.captionlive.service.SegmentService;
 import com.aguri.captionlive.service.TaskService;
 import jakarta.persistence.EntityManager;
@@ -33,7 +32,7 @@ public class SegmentServiceImpl implements SegmentService {
     @Override
     public Segment updateSegment(Long id, Segment segment) {
         Segment existingSegment = segmentRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Segment not found with id: " + id));
+                .orElseThrow(() -> new ReturnErrorMessageException("Segment not found with id: " + id));
 
         // Update the segment properties
         existingSegment.setIsGlobal(segment.getIsGlobal());
@@ -49,7 +48,7 @@ public class SegmentServiceImpl implements SegmentService {
     public Segment getSegmentById(Long segmentId) {
         Optional<Segment> segmentOptional = segmentRepository.findById(segmentId);
         return segmentOptional
-                .orElseThrow(() -> new EntityNotFoundException("Segment not found with id: " + segmentId));
+                .orElseThrow(() -> new ReturnErrorMessageException("Segment not found with id: " + segmentId));
 
     }
 

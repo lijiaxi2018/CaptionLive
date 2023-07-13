@@ -1,11 +1,10 @@
 package com.aguri.captionlive.service.impl;
 
+import com.aguri.captionlive.common.exception.ReturnErrorMessageException;
 import com.aguri.captionlive.model.Message;
 import com.aguri.captionlive.model.Request;
 import com.aguri.captionlive.DTO.MessageRequest;
-import com.aguri.captionlive.common.exception.EntityNotFoundException;
 import com.aguri.captionlive.repository.MessageRepository;
-import com.aguri.captionlive.repository.RequestRepository;
 import com.aguri.captionlive.service.MessageService;
 import com.aguri.captionlive.service.RequestService;
 
@@ -54,7 +53,7 @@ public class MessageServiceImpl implements MessageService {
     public Message getMessageById(Long id) {
 
         return messageRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Message not found with id: " + id));
+                .orElseThrow(() -> new ReturnErrorMessageException("Message not found with id: " + id));
     }
 
     @Override

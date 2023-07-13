@@ -3,7 +3,7 @@ package com.aguri.captionlive.service.impl;
 import com.aguri.captionlive.DTO.OrganizationRequest;
 import com.aguri.captionlive.DTO.OrganizationResp;
 import com.aguri.captionlive.DTO.ProjectInfo;
-import com.aguri.captionlive.common.exception.EntityNotFoundException;
+import com.aguri.captionlive.common.exception.ReturnErrorMessageException;
 import com.aguri.captionlive.common.util.FileRecordUtil;
 import com.aguri.captionlive.model.*;
 import com.aguri.captionlive.repository.MembershipRepository;
@@ -32,7 +32,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Override
     public Organization getOrganizationById(Long id) {
-        return organizationRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Organization not found with id: " + id));
+        return organizationRepository.findById(id).orElseThrow(() -> new ReturnErrorMessageException("Organization not found with id: " + id));
     }
 
     @Override

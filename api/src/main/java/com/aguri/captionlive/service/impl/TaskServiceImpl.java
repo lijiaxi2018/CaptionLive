@@ -1,6 +1,6 @@
 package com.aguri.captionlive.service.impl;
 
-import com.aguri.captionlive.common.exception.EntityNotFoundException;
+import com.aguri.captionlive.common.exception.ReturnErrorMessageException;
 import com.aguri.captionlive.common.util.FileRecordUtil;
 import com.aguri.captionlive.model.FileRecord;
 import com.aguri.captionlive.model.Task;
@@ -36,14 +36,14 @@ public class TaskServiceImpl implements TaskService {
     public Task getTaskById(Long taskId) {
         Optional<Task> taskOptional = taskRepository.findById(taskId);
         return taskOptional
-                .orElseThrow(() -> new EntityNotFoundException("Task not found with id: " + taskId));
+                .orElseThrow(() -> new ReturnErrorMessageException("Task not found with id: " + taskId));
 
     }
 
     @Override
     public Task updateTask(Long id, Task task) {
         Task existingTask = taskRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Task not found with id: " + id));
+                .orElseThrow(() -> new ReturnErrorMessageException("Task not found with id: " + id));
 
         // Update the task properties
         existingTask.setType(task.getType());
