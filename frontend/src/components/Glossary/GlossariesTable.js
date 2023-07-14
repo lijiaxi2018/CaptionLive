@@ -92,7 +92,7 @@ const GlossariesTable = ({glossaries=[], keyword}) => {
                 <HeaderCell>分类</HeaderCell>
                 <Cell dataKey='category' />
               </Column>
-              <Column width={180} align='center' fix>
+              <Column width={50} align='center' fix>
                 <HeaderCell>删除</HeaderCell>
                 <Cell >
                   {rowData => (
@@ -100,7 +100,7 @@ const GlossariesTable = ({glossaries=[], keyword}) => {
                       onClick={() => handleDeleteGlossary(rowData)}
                       style={{'backgroundColor':'transparent'}}
                     >
-                      <Icon as={FaTrash} size='1.75em' style={{color:'#a0a0a0'}}/>
+                      <Icon as={FaTrash} size='1.5em' style={{color:'#a0a0a0'}}/>
                     </button>
                   )}
                 </Cell>
