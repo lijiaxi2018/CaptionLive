@@ -94,9 +94,12 @@ const GlossariesTable = ({glossaries=[], keyword}) => {
               </Column>
               <Column width={180} align='center' fix>
                 <HeaderCell>删除</HeaderCell>
-                <Cell>
+                <Cell >
                   {rowData => (
-                    <button onClick={() => handleDeleteGlossary(rowData)}>
+                    <button 
+                      onClick={() => handleDeleteGlossary(rowData)}
+                      style={{'backgroundColor':'transparent'}}
+                    >
                       <Icon as={FaTrash} size='1.75em' style={{color:'#a0a0a0'}}/>
                     </button>
                   )}
