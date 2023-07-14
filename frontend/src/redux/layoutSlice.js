@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit'
 const sessionSelectedOrgId = sessionStorage.getItem("clSelectedOrgId") !== null ? JSON.parse(sessionStorage.getItem("clSelectedOrgId")) : -1;
 const sessionSelectedLvl2Id = sessionStorage.getItem("clSelectedLvl2Id") !== null ? JSON.parse(sessionStorage.getItem("clSelectedLvl2Id")) : 0;
 const sessionOpenedSegmentIds = sessionStorage.getItem("clOpenedSegmentIds") !== null ? JSON.parse(sessionStorage.getItem("clOpenedSegmentIds")) : [];
+const sessionLanguage = sessionStorage.getItem("clLanguage") !== null ? JSON.parse(sessionStorage.getItem("clLanguage")) : 'cn';
 
 const initialState = {
   openSignInOnWindow: false,
@@ -19,7 +20,7 @@ const initialState = {
   selectedOrgId: sessionSelectedOrgId,
   selectedLvl2Id: sessionSelectedLvl2Id,
   openedSegmentIds: sessionOpenedSegmentIds,
-  language: 'cn',
+  language: sessionLanguage,
 }
 
 export const layoutSlice = createSlice({
@@ -127,6 +128,7 @@ export const layoutSlice = createSlice({
 
     updateLanguage: (state, action) => {
       state.language = action.payload;
+      sessionStorage.setItem("clLanguage", JSON.stringify(state.language));
     }
   },
 })

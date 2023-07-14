@@ -29,11 +29,12 @@ function Glossaries() {
   const [keyword, setKeyword] = useState("");
   return (
     <div>
-      <div className='general-page-container'>
-
+      <div className="header-title">
         <Icon as={VscOrganization} size="3.1em" style={{ marginRight: '20px' }}/>
         <label className="page-header-title">{organizationName}</label>
+      </div>
 
+      <div className='general-page-container'>
         <SignInUpContainer />
         <Sidebarlvl2 
           prefix={`/myorganizations/${organizationId}/`}

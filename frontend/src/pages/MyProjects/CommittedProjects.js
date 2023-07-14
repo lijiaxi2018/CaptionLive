@@ -10,23 +10,26 @@ import { useSelector } from 'react-redux';
 function CommittedProjects() {
   const language = useSelector((state) => state.layout.language);
   return (
-    <div className='general-page-container'>
+    <div>
+      <div className="header-title">
+        <Icon as={AiOutlineProject} size="3.1em" style={{ marginRight: '20px' }}/>
+        <label className="page-header-title">{languagedata[language]['myProject']}</label>
+      </div>
 
-    <Icon as={AiOutlineProject} size="3.1em" style={{ marginRight: '20px' }}/>
-    <label className="page-header-title">{languagedata[language]['myProject']}</label>
+      <div className='general-page-container'>
+        <Sidebarlvl2 
+          prefix={`/myprojects/`}
+          data={myprojectSideBar}
+          type='myproject'
+        />
+        <SignInUpContainer />
 
-    <Sidebarlvl2 
-      prefix={`/myprojects/`}
-      data={myprojectSideBar}
-      type='myproject'
-    />
-    <SignInUpContainer />
-
-    <div className='general-page-container-reduced'>
-      <h2>{languagedata[language]['comingSoon']}</h2>
+        <div className='general-page-container-reduced'>
+          <h2>{languagedata[language]['comingSoon']}</h2>
+        </div>
+        
+      </div>
     </div>
-    
-  </div>
   );
 }
 

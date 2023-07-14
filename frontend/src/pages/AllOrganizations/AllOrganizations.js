@@ -28,42 +28,45 @@ function AllOrganizations() {
   const [keyword, setKeyword] = useState("");
 
   return (
-    <div className='general-page-container'>
+    <div>
+      <div className="header-title">
+        <Icon as={ImSphere} size="3.1em" style={{ marginRight: '20px' }}/>
+        <label className="page-header-title">{languagedata[language]['allOrganizations']}</label>
+      </div>
 
-      <Icon as={ImSphere} size="3.1em" style={{ marginRight: '20px' }}/>
-      <label className="page-header-title">{languagedata[language]['allOrganizations']}</label>
+      <div className='general-page-container'>
+        <SignInUpContainer />
 
-      <SignInUpContainer />
+        <Prompt />
 
-      <Prompt />
+        { isOpenAddOrganization &&
+          <AddOrganization />
+        }
 
-      { isOpenAddOrganization &&
-        <AddOrganization />
-      }
-
-      <div className='general-page-container-reduced'>
-      { (myUserId !== -1 && fetched) &&
-        <div>
-
-          <div className='general-row-align'>
-            <input name="keyword" className="general-search-bar" 
-              placeholder={languagedata[language]['searchProject']}
-              onChange={(e) => setKeyword(e.target.value)}
-            />
-            <button className='general-button-grey' onClick={() => dispatch(openAddOrganization())}>
-              {languagedata[language]['newOrganization']}
-            </button>
-          </div>
-
+        <div className='general-page-container-reduced'>
+        { (myUserId !== -1 && fetched) &&
           <div>
-            {allOrganizationData.map((organization) =>
-              <div key={organization.organizationId}>
-                {filterByKeyword(keyword, organization)}
-              </div>
-            )}
+
+            <div className='general-row-align'>
+              <input name="keyword" className="general-search-bar" 
+                placeholder={languagedata[language]['searchProject']}
+                onChange={(e) => setKeyword(e.target.value)}
+              />
+              <button className='general-button-grey' onClick={() => dispatch(openAddOrganization())}>
+                {languagedata[language]['newOrganization']}
+              </button>
+            </div>
+
+            <div>
+              {allOrganizationData.map((organization) =>
+                <div key={organization.organizationId}>
+                  {filterByKeyword(keyword, organization)}
+                </div>
+              )}
+            </div>
           </div>
+        }
         </div>
-      }
       </div>
     </div>
   );

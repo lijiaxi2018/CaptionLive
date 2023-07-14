@@ -26,43 +26,45 @@ function UnreadMails() {
   const language = useSelector((state) => state.layout.language);
 
   return (
-    <div className='general-page-container'>
+    <div>
+      <div className="header-title">
+        <Icon as={AiOutlineMail} size="3.1em" style={{ marginRight: '20px' }}/>
+        <label className="page-header-title">{languagedata[language]['unread']}</label>
+      </div>
 
-      <Icon as={AiOutlineMail} size="3.1em" style={{ marginRight: '20px' }}/>
-      <label className="page-header-title">{languagedata[language]['unread']}</label>
-      
-      <SignInUpContainer />
-      <Sidebarlvl2 
-        prefix={`/mail/`}
-        data={mailSideBar}
-        type='mail'
-      />
-      { myUserId !== -1 &&
-          <div className='general-page-container-reduced'>
-            { !userRequestsResults.isFetching &&
-            <div>
-              { !isInMessage &&
-                <div>
-                  {userRequestsResults.data.data.map((request) =>
-                    <div key={request.requestId}>
-                      {parseRequests(request, myUserId)}
-                    </div>
-                  )}
-                </div>
+      <div className='general-page-container'>
+        <SignInUpContainer />
+        <Sidebarlvl2 
+          prefix={`/mail/`}
+          data={mailSideBar}
+          type='mail'
+        />
+        { myUserId !== -1 &&
+            <div className='general-page-container-reduced'>
+              { !userRequestsResults.isFetching &&
+              <div>
+                { !isInMessage &&
+                  <div>
+                    {userRequestsResults.data.data.map((request) =>
+                      <div key={request.requestId}>
+                        {parseRequests(request, myUserId)}
+                      </div>
+                    )}
+                  </div>
+                }
+
+                { isInMessage &&
+                  <div>
+                    <Messages requestId={currentSelectedRequestId} userId={myUserId}/>
+                  </div>
+                }
+
+                
+              </div>
               }
-
-              { isInMessage &&
-                <div>
-                  <Messages requestId={currentSelectedRequestId} userId={myUserId}/>
-                </div>
-              }
-
-              
             </div>
-            }
-          </div>
-        }
-      
+          }
+      </div>
     </div>
   );
 }

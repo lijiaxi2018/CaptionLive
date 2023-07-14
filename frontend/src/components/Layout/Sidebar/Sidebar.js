@@ -90,7 +90,7 @@ function Sidebar() {
               </Nav.Menu>
               
               <Nav.Item href='/myprojects/accessibleprojects' eventKey="3" icon={<Icon as={AiOutlineProject} size="1em"/>}>
-                {languagedata[language]['allProjects']}
+                {languagedata[language]['allProjectsTitle']}
               </Nav.Item>        
 
               <Nav.Item href='/allorganizations' eventKey="4" icon={<Icon as={ImSphere} size="1em"/>}>
@@ -98,7 +98,7 @@ function Sidebar() {
               </Nav.Item>
               
               <Nav.Item href='/mail/allmails' eventKey="5" icon={<Icon as={AiOutlineMail} size="1em"/>}>
-                {languagedata[language]['message']}
+                {languagedata[language]['messageTitle']}
               </Nav.Item>
 
             </Nav>

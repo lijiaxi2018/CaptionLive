@@ -11,20 +11,22 @@ function MyHome() {
   const language = useSelector((state) => state.layout.language);
 
   return (
-    <div className='general-page-container'>
+    <div>
+      <div className="header-title">
+        <Icon as={AiOutlineHome} size="3.1em" style={{ marginRight: '20px' }}/>
+        <label className="page-header-title">{languagedata[language]['personalInformation']}</label>
+      </div>
 
-      <Icon as={AiOutlineHome} size="3.1em" style={{ marginRight: '20px' }}/>
-      <label className="page-header-title">{languagedata[language]['personalInformation']}</label>
-
-
-      { myUserId !== -1 &&
-        <div className='entity-info-container-my-home'>
-          <UserInfo userId = {myUserId} access={true}/>
-        </div>
-      }
+      <div className='general-page-container'>
+        { myUserId !== -1 &&
+          <div className='entity-info-container-my-home'>
+            <UserInfo userId = {myUserId} access={true}/>
+          </div>
+        }
+          
+        <SignInUpContainer />
         
-      <SignInUpContainer />
-      
+      </div>
     </div>
   );
 }

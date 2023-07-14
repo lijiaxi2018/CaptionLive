@@ -35,12 +35,13 @@ function Projects() {
 
   return (
     <div>
+      <div className="header-title">
+        <Icon as={VscOrganization} size="3.1em" style={{ marginRight: '20px' }}/>
+        <label className="page-header-title">{organizationData.name}</label>
+      </div>
+
       { fetched &&
         <div className='general-page-container'>
-
-          <Icon as={VscOrganization} size="3.1em" style={{ marginRight: '20px' }}/>
-          <label className="page-header-title">{organizationData.name}</label>
-
           <SignInUpContainer />
 
           { isOpenAddProject &&

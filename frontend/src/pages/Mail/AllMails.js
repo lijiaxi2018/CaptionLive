@@ -21,43 +21,44 @@ function AllMail() {
   const language = useSelector((state) => state.layout.language);
 
   return (
-    <div className='general-page-container'>
+    <div>
+      <div className="header-title">
+        <Icon as={AiOutlineMail} size="3.1em" style={{ marginRight: '20px' }}/>
+        <label className="page-header-title">{languagedata[language]['message']}</label>
+      </div>
+    
+    <div className='general-page-container'><SignInUpContainer />
+        <Sidebarlvl2 
+          prefix={`/mail/`}
+          data={mailSideBar}
+          type='mail'
+        />
+        { myUserId !== -1 &&
+            <div className='general-page-container-reduced'>
+              { fetched &&
+              <div>
+                { !isInMessage &&
+                  <div>
+                    {userRequestsResults.map((request) =>
+                      <div key={request.requestId}>
+                        <Request request={request} myUserId={myUserId}/>
+                      </div>
+                    )}
+                  </div>
+                }
 
-      <Icon as={AiOutlineMail} size="3.1em" style={{ marginRight: '20px' }}/>
-      <label className="page-header-title">{languagedata[language]['message']}</label>
+                { isInMessage &&
+                  <div>
+                    <Messages requestId={currentSelectedRequestId} userId={myUserId}/>
+                  </div>
+                }
 
-      <SignInUpContainer />
-      <Sidebarlvl2 
-        prefix={`/mail/`}
-        data={mailSideBar}
-        type='mail'
-      />
-      { myUserId !== -1 &&
-          <div className='general-page-container-reduced'>
-            { fetched &&
-            <div>
-              { !isInMessage &&
-                <div>
-                  {userRequestsResults.map((request) =>
-                    <div key={request.requestId}>
-                      <Request request={request} myUserId={myUserId}/>
-                    </div>
-                  )}
-                </div>
+                
+              </div>
               }
-
-              { isInMessage &&
-                <div>
-                  <Messages requestId={currentSelectedRequestId} userId={myUserId}/>
-                </div>
-              }
-
-              
             </div>
-            }
-          </div>
-        }
-      
+          }    
+      </div>
     </div>
   );
 }
