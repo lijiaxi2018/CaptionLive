@@ -13,7 +13,6 @@ import { parseTaskType } from '../../utils/segment';
 import { allWorkflowList } from '../../assets/workflows';
 import { openPrompt, updatePromptMessage } from '../../redux/layoutSlice';
 import Prompt from '../../components/InfoCard/Prompt';
-
 import Confirm from '../../components/InfoCard/Confirm';
 
 function copyToClipboard(str) {
@@ -117,13 +116,10 @@ function Worksheet({data}) {
     <div className='worksheet-container' style={{ 'border' : parseStatusBorder(data.isCompleted) }}>
       { confirmOpen &&
         <Confirm 
-          message={"确认删除此项目？"}
+          message={"确认删除" + data.name + "？"}
           onClose={() => setConfirmOpen(false)}
           onConfirm={() => {
-            deleteProjectMutation(data.projectId)
-            .then((response) => {
-              
-            })
+            deleteProjectMutation(data.projectId);
           }}
         />
       }
