@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { FaCircle } from 'react-icons/fa';
 import Segment from './Segment';
@@ -13,6 +13,7 @@ import { parseTaskType } from '../../utils/segment';
 import { allWorkflowList } from '../../assets/workflows';
 import { openPrompt, updatePromptMessage } from '../../redux/layoutSlice';
 import Prompt from '../../components/InfoCard/Prompt';
+import Confirm from '../../components/InfoCard/Confirm';
 
 function copyToClipboard(str) {
   const el = document.createElement('textarea');
@@ -68,6 +69,8 @@ function Worksheet({data}) {
   const currentSelectedProjectId = useSelector((state) => state.layout.selectedProjectId);
   const [deleteProjectMutation] = useDeleteProjectMutation();
 
+  const [confirmOpen, setConfirmOpen] = useState(false);
+
   function handleUpload(myProjectId) {
     dispatch(updateCurrentIdToUpload(myProjectId));
     dispatch(updateCurrentUploadType(2));
@@ -82,13 +85,6 @@ function Worksheet({data}) {
   function handleOpenShareProject(myProjectId) {
     dispatch(updateSelectedProjectId(myProjectId));
     dispatch(openShareProject());
-  }
-
-  function handleDeleteProject(myProjectId) {
-    deleteProjectMutation(myProjectId)
-    .then((response) => {
-      // TODO: Deal with other return messages
-    })
   }
     
   function handleCopyStaff(projectData) {
@@ -118,6 +114,15 @@ function Worksheet({data}) {
 
   return (
     <div className='worksheet-container' style={{ 'border' : parseStatusBorder(data.isCompleted) }}>
+      { confirmOpen &&
+        <Confirm 
+          message={"确认删除" + data.name + "？"}
+          onClose={() => setConfirmOpen(false)}
+          onConfirm={() => {
+            deleteProjectMutation(data.projectId);
+          }}
+        />
+      }
 
       { isOpenUploaderWindow === 1 &&
         <FileUploader />
@@ -163,7 +168,7 @@ function Worksheet({data}) {
         <div style={{ marginTop: '10px' }}></div>
         <button className='general-button-grey' onClick={() => handleOpenAddSegment(data.projectId)}>新建段落</button>
         <div style={{ marginTop: '10px' }}></div>
-        <button className='general-button-red' onClick={() => handleDeleteProject(data.projectId)}>删除项目</button>
+        <button className='general-button-red' onClick={() => setConfirmOpen(true)}>删除项目</button>
 
         { data.isCompleted &&
           <div>
