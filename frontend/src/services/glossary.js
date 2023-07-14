@@ -20,6 +20,14 @@ export const glossaryApi = createApi({
             query: (id) => `/glossaries/getAllGlossaries/${id}`,
             providesTags: ['Glossaries'],
         }),
+
+        deleteGlossary: builder.mutation({
+            query: (id) => ({
+                url: `/glossaries/${id}`,
+                method: 'DELETE',
+            }),
+            invalidatesTags: ['Glossaries'],
+        }),
         
         getGlossaries: builder.query({
             query: () => `/glossaries`,
@@ -35,10 +43,12 @@ export const glossaryApi = createApi({
             invalidatesTags: ['Glossaries'],
         })
     }),
+
 })
 
 export const {
     useGetAllGlossariesQuery,
     useGetGlossariesQuery,
     usePostGlossariesMutation,
+    useDeleteGlossaryMutation,
 } = glossaryApi

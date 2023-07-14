@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
 
 import TaskStatusIcon from '../InfoCard/TaskStatusIcon';
@@ -10,6 +10,8 @@ import { Icon } from '@rsuite/icons';
 import { FaAngleUp, FaAngleDown, FaTrash } from 'react-icons/fa';
 import FileUploader from '../Layout/Modal/FileUploader';
 import { configuration } from '../../config/config';
+
+import Confirm from '../../components/InfoCard/Confirm';
 
 function parseTaskText(task) {
   if (task.workerUser === null) {
@@ -30,6 +32,8 @@ function Segment({data}) {
   const [withdrawTaskMutation] = useWithdrawTaskMutation();
   const [assignFileToTaskMutation] = useAssignFileToTaskMutation();
   const [deleteSegmentMutation] = useDeleteSegmentMutation();
+
+  const [confirmOpen, setConfirmOpen] = useState(false);
   
   function assignTask(userId, taskId) {
     assignTaskMutation({
@@ -74,13 +78,6 @@ function Segment({data}) {
       taskId: myTaskId,
       fileRecordId: 0,
     })
-    .then((response) => {
-      // TODO: Deal with other return messages
-    })
-  }
-
-  function handleDeleteSegment(mySegmentId) {
-    deleteSegmentMutation(mySegmentId)
     .then((response) => {
       // TODO: Deal with other return messages
     })
@@ -136,6 +133,15 @@ function Segment({data}) {
 
   return (
     <div className='segment-container'>
+      { confirmOpen &&
+        <Confirm 
+          message={"确认删除" + data.summary + "？"}
+          onClose={() => setConfirmOpen(false)}
+          onConfirm={() => {
+            deleteSegmentMutation(data.segmentId);
+          }}
+        />
+      }
       
       { isOpenUploaderWindow === 1 &&
         <FileUploader />
@@ -154,7 +160,7 @@ function Segment({data}) {
         <label className='general-font-medium-small-bold'>{summary}</label>
         
         { !data.isGlobal && 
-          <button className='general-icon-button' onClick={() => handleDeleteSegment(data.segmentId)}><Icon as={FaTrash} size="1.75em" style={{ color : '#a0a0a0' }}/></button>
+          <button className='general-icon-button' onClick={() => setConfirmOpen(true)}><Icon as={FaTrash} size="1.75em" style={{ color : '#a0a0a0' }}/></button>
         } 
         
       </div>
